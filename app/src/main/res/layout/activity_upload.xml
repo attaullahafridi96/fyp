@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fp"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".main.UploadActivity">
+
+    <LinearLayout
+        android:id="@+id/selected_file"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/list_view_bg_design"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/file_type_icon"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:contentDescription="image"
+            android:src="@drawable/pdf_96px" />
+
+        <TextView
+            android:id="@+id/selected_filename"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-condensed"
+            android:paddingLeft="10dp"
+            android:text="File Name"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/selected_file_size"
+            android:layout_width="80dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="sans-serif-condensed"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/white" />
+
+        <ImageButton
+            android:id="@+id/upload_file_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:background="@android:color/transparent"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_baseline_cloud_upload_32"
+            android:tooltipText="Tap to Upload file"
+            android:contentDescription="@string/image" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/file_chooser_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_design"
+        android:fontFamily="sans-serif-condensed-light"
+        android:letterSpacing="0.2"
+        android:text="Choose File from phone"
+        android:textColor="@color/white" />
+
+    <!-- <View
+         android:layout_width="match_parent"
+         android:layout_height="20dp" />-->
+
+    <!-- <Button
+         android:id="@+id/upload_file_btn"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:background="@drawable/btn_design"
+         android:fontFamily="monospace"
+         android:letterSpacing="0.2"
+         android:text="Upload File"
+         android:textColor="@color/white"
+         android:textStyle="bold" />-->
+</LinearLayout>

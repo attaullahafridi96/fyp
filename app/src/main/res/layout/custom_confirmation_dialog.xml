@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/custom_confirm_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:fontFamily="sans-serif-condensed-light"
+        android:padding="10dp"
+        android:text="Confirmation"
+        android:textColor="#000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/custom_confirm_msg_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed-light"
+        android:padding="20dp"
+        android:text="Are you sure?"
+        android:textColor="@android:color/secondary_text_light"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:weightSum="2.1">
+
+        <Button
+            android:id="@+id/btnNeg"
+            style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="No" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.1" />
+
+        <Button
+            android:id="@+id/btnPos"
+            style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Yes"
+            />
+    </LinearLayout>
+</LinearLayout>

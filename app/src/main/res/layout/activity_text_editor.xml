@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fp"
+    android:orientation="vertical"
+    tools:context=".main.TextEditorActivity">
+
+    <LinearLayout
+        android:id="@+id/top_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1.3">
+
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-condensed-light"
+            android:padding="10dp"
+            android:text="New Notes"
+            android:textColor="#FFFFFF"
+            android:textSize="24dp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/editor_activity_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/MyToolbarTheme"
+            app:title=" "
+            app:titleTextColor="@color/white" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/noteTitle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:autofillHints=""
+        android:background="@drawable/text_editor_design"
+        android:ems="10"
+        android:fontFamily="sans-serif-condensed-light"
+        android:hint="Title"
+        android:inputType="textPersonName"
+        android:maxLength="50"
+        android:padding="10dp"
+        android:textColor="#000" />
+
+    <EditText
+        android:id="@+id/noteDetails"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:autofillHints=""
+        android:background="@drawable/text_editor_design"
+        android:ems="10"
+        android:fontFamily="sans-serif-condensed-light"
+        android:gravity="start|top"
+        android:hint="Write Notes..."
+        android:inputType="textMultiLine"
+        android:overScrollMode="ifContentScrolls"
+        android:padding="10dp"
+        android:textColor="#000"
+        android:textSize="18sp" />
+
+    <!--  <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+          android:orientation="horizontal">
+
+          <Button
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Button" />
+
+          <Button
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Button" />
+
+          <Button
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Button" />
+      </LinearLayout>-->
+</LinearLayout>

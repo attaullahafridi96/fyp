@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.android.documentationrecordviafingerprint" >
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
+    <uses-feature
+        android:name="android.hardware.fingerprint"
+        android:required="true" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme" >
+        <activity android:name=".main.AppSettings" >
+        </activity>
+        <activity
+            android:name=".main.OfflineFileViewer"
+            android:theme="@style/ActionBarTheme" />
+        <activity android:name=".main.UploadActivity" />
+        <activity
+            android:name=".main.SearchActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".main.TextEditorActivity" />
+        <activity android:name=".internetchecking.NoInternetScreen" />
+        <activity
+            android:name=".userlogin.RegistrationForm"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".userlogin.Login"
+            android:windowSoftInputMode="stateHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".fingerprint.FingerprintAuthentication" />
+        <activity android:name=".main.DashboardActivity" />
+        <activity
+            android:name=".main.OnlineFileViewer"
+            android:theme="@style/ActionBarTheme" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.android.documentationrecordviafingerprint.provider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+
+</manifest>

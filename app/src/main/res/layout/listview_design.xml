@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/selected_file"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/list_view_bg_design"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/file_type_icon"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:contentDescription="image"
+        android:src="@drawable/pdf_96px" />
+
+    <TextView
+        android:id="@+id/selected_filename"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:fontFamily="sans-serif-condensed"
+        android:paddingLeft="10dp"
+        android:text="File Name"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/selected_file_size"
+        android:layout_width="80dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center_vertical"
+        android:fontFamily="sans-serif-condensed"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/white" />
+
+    <ImageButton
+        android:id="@+id/download_file_btn"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.3"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/image"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_baseline_cloud_download_32"
+        android:tooltipText="Tap to Download file" />
+
+</LinearLayout>

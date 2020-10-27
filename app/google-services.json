@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "980251543121",
+    "firebase_url": "https://notesviafingerprint.firebaseio.com",
+    "project_id": "notesviafingerprint",
+    "storage_bucket": "notesviafingerprint.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:980251543121:android:631ee893fe96bf1c955a70",
+        "android_client_info": {
+          "package_name": "com.android.documentationrecordviafingerprint"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "980251543121-vcut0749v168obglh432975j7ofnk0bh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmUZs9jMIm5tY3TC8yjMcvYSN6Zw3VOFU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "980251543121-vcut0749v168obglh432975j7ofnk0bh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

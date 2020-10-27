@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Notes via Fingerprint</string>
+    <string name="image">image icon</string>
+    <string name="nav_header_title">First Name + Last Name</string>
+    <string name="nav_header_subtitle">email@gmail.com</string>
+
+    <string-array name="list_view">
+        <item>File.doc</item>
+        <item>File Name 2.txt</item>
+        <item>File Name 3.docx</item>
+        <item>File Name 4.doc</item>
+        <item>File Name 5.txt</item>
+        <item>File Name 6.txt</item>
+        <item>File Name 7.docx</item>
+        <item>File Name 8.txt</item>
+        <item>File Name 9.docx</item>
+        <item>File .txt</item>
+    </string-array>
+
+    <string name="pdf_icon">https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fpdf_96px.png?alt=media&amp;token=33ae2d52-7b4d-40b3-983f-00ebfd7410b3</string>
+    <string name="word_icon">https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fword_96px.png?alt=media&amp;token=bca25a91-c60d-461f-ba2e-1d526baa3c5a</string>
+    <string name="rtf_icon">https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Frtf_96px.png?alt=media&amp;token=2fa49bbb-d4a8-4d4b-9aba-5d31d53e4082</string>
+    <string name="notes_icon">https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fnote_96px.png?alt=media&amp;token=e5fe1995-eeb6-4ee9-b5ad-b0855a142a18</string>
+    <string name="jgep_icon">https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fjpg_96px.png?alt=media&amp;token=0a1c3294-36d4-4ed5-9c13-2aa153bc370e</string>
+    <string name="png_icon">https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fpng_96px.png?alt=media&amp;token=6c9b7dba-afb6-477d-9c2b-83e54bc903e9</string>
+    <string name="gif_icon">https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fgif_96px.png?alt=media&amp;token=50709bc9-6ad1-4d6a-9ad3-7f7449715c3e</string>
+    <string name="image_icon">https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fimage_96px.png?alt=media&amp;token=93251f1b-73eb-4047-8f41-70050c80cbc6</string>
+</resources>

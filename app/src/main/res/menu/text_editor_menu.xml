@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".TextEditorActivity">
+    <item
+        android:title="Menu"
+        android:icon="@drawable/ic_baseline_more_vert_24"
+        app:showAsAction="always">
+        <menu>
+            <group android:id="@+id/grp1">
+                <item
+                    android:id="@+id/editor_save_item"
+                    android:title="Save"
+                    android:icon="@drawable/ic_baseline_cloud_upload_24"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/editor_cancel_item"
+                    android:title="Cancel"
+                    android:icon="@drawable/ic_baseline_cancel_24"
+                    app:showAsAction="never" />
+            </group>
+        </menu>
+    </item>
+</menu>

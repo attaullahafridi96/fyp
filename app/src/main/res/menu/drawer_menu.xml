@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group
+        android:id="@+id/menu1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_settings_item"
+            android:icon="@drawable/ic_round_settings_24"
+            android:title="Settings" />
+        <item
+            android:id="@+id/drawer_logout_item"
+            android:icon="@drawable/ic_baseline_power_settings_new_24"
+            android:title="Logout" />
+    </group>
+    <group android:id="@+id/menu2">
+        <item
+            android:id="@+id/app_version_item"
+            android:title="App Version"
+            android:enabled="false"/>
+    </group>
+</menu>
