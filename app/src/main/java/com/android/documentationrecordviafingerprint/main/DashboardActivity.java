@@ -36,7 +36,7 @@ public class DashboardActivity extends AppCompatActivity {
     private DatabaseReference parent_node;
     private String email_identifier = "";
     private MyFilesAdapter myAdapter;
-    FirebaseRecyclerOptions<UserFile> options;
+    FirebaseRecyclerOptions<UserFile> optionsaaadd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
