@@ -32,19 +32,15 @@ import com.google.firebase.database.DatabaseReference;
 public class DashboardActivity extends AppCompatActivity {
     private Context context;
     private DrawerLayout drawerLayout;
-    private RecyclerView recyclerView;
-    private DatabaseReference parent_node;
-    private String email_identifier = "";
     private MyFilesAdapter myAdapter;
     FirebaseRecyclerOptions<UserFile> options;
-    UserFile j;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
         context = DashboardActivity.this;
-        parent_node = DB.getFirstNodeReference();
+        DatabaseReference parent_node = DB.getFirstNodeReference();
 
         drawerLayout = findViewById(R.id.drawer_layout);
         /*Set App Version*/
@@ -101,10 +97,10 @@ public class DashboardActivity extends AppCompatActivity {
         new FirebaseController(context).getFullName(fullname);
         email.setText(new SessionManagement(context).getSession());
 
-        recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        email_identifier = new SessionManagement(context).getEmailIdentifier();
+        String email_identifier = new SessionManagement(context).getEmailIdentifier();
 
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
