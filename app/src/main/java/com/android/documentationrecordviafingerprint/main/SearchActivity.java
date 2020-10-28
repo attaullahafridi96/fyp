@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -18,18 +19,22 @@ import com.android.documentationrecordviafingerprint.controller.SessionManagemen
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.DB;
 import com.android.documentationrecordviafingerprint.model.UserDocument;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+
+import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity {
     private ImageButton voice_search;
     private EditText text_search;
     private RecyclerView recyclerView;
-    private DatabaseReference parent_node;
-    private String email_identifier = "";
-    private MyFilesAdapter myAdapter;
-    FirebaseRecyclerOptions<UserDocument> options;
+    private MyDocumentsAdapter myAdapter;
+    private FirebaseRecyclerOptions<UserDocument> options;
     private Context context;
+    private DatabaseReference parent_node;
+    private String email_identifier;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,11 @@ public class SearchActivity extends AppCompatActivity {
         TextWatcher textWatcherListener = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
+                if (filterLongEnough()) {
+                    searchDocument(s.toString());
+                }else{
+                    myAdapter.updateOptions(options);
+                }
             }
 
             @Override
@@ -50,9 +60,6 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (filterLongEnough()) {
-                    //searchFileName(s.toString());
-                }
             }
 
             private boolean filterLongEnough() {
@@ -69,9 +76,8 @@ public class SearchActivity extends AppCompatActivity {
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
             options = new FirebaseRecyclerOptions.Builder<UserDocument>()
-                    .setQuery(childReference.child("files"), UserDocument.class)
-                    .build();
-            myAdapter = new MyFilesAdapter(context, options);
+                    .setQuery(childReference.child("files"), UserDocument.class).build();
+            myAdapter = new MyDocumentsAdapter(context, options);
             recyclerView.setAdapter(myAdapter);
         }
 
@@ -83,11 +89,21 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
     }
+    private void searchDocument(String toSearch) {
+        if (CheckInternetConnectivity.isInternetConnected(context)) {
+            DatabaseReference childReference = parent_node.child(email_identifier);
+            Query query = childReference.child("files").orderByChild("file_name")
+                    .startAt(toSearch).endAt(toSearch + "\uf8ff");
+            FirebaseRecyclerOptions<UserDocument> op = new FirebaseRecyclerOptions.Builder<UserDocument>()
+                    .setQuery(query, UserDocument.class).build();
+            myAdapter.updateOptions(op);
+        }
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if(CheckInternetConnectivity.isInternetConnected(context)){
+        if (CheckInternetConnectivity.isInternetConnected(context)) {
             myAdapter.startListening();
         }
     }
@@ -95,29 +111,8 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(CheckInternetConnectivity.isInternetConnected(context)){
+        if (CheckInternetConnectivity.isInternetConnected(context)) {
             myAdapter.stopListening();
         }
     }
-
-    /*private void searchFileName(String key) {
-        boolean isfound = false;
-        ArrayList<String> foundItemList = new ArrayList<>();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.listview_design);
-        for (int i = 0; i < search_file_list.getCount(); i++) {
-            String item = search_file_list.getItemAtPosition(i).toString();
-            String[] filename = item.split("\\.");  //it separates filename and file extension
-            if (filename[0].trim().equalsIgnoreCase(key)) {
-                foundItemList.add(item);
-                isfound = true;
-            }
-        }
-        if (isfound) {
-            adapter.addAll(foundItemList);
-            search_file_list.setAdapter(adapter);
-        } else {
-            adapter.addAll(dummyfilenames);
-            search_file_list.setAdapter(adapter);
-        }
-    }*/
 }

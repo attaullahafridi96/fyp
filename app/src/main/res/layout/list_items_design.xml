@@ -3,7 +3,7 @@
     android:id="@+id/selected_file"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@drawable/list_view_bg_design"
+    android:background="@drawable/list_items_bg"
     android:orientation="horizontal">
 
     <ImageView

@@ -32,8 +32,8 @@ import com.google.firebase.database.DatabaseReference;
 public class DashboardActivity extends AppCompatActivity {
     private Context context;
     private DrawerLayout drawerLayout;
-    private MyFilesAdapter myAdapter;
-    FirebaseRecyclerOptions<UserDocument> options;
+    private MyDocumentsAdapter myAdapter;
+    private FirebaseRecyclerOptions<UserDocument> options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +107,7 @@ public class DashboardActivity extends AppCompatActivity {
             options = new FirebaseRecyclerOptions.Builder<UserDocument>()
                     .setQuery(childReference.child("files"), UserDocument.class)
                     .build();
-            myAdapter = new MyFilesAdapter(context, options);
+            myAdapter = new MyDocumentsAdapter(context, options);
             recyclerView.setAdapter(myAdapter);
         }
 

@@ -29,10 +29,10 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 import java.io.File;
 
-public class MyFilesAdapter extends FirebaseRecyclerAdapter<UserDocument, MyFilesAdapter.ViewHolder> {
+public class MyDocumentsAdapter extends FirebaseRecyclerAdapter<UserDocument, MyDocumentsAdapter.ViewHolder> {
     private final Context context;
 
-    public MyFilesAdapter(Context context, @NonNull FirebaseRecyclerOptions<UserDocument> options) {
+    public MyDocumentsAdapter(Context context, @NonNull FirebaseRecyclerOptions<UserDocument> options) {
         super(options);
         this.context = context;
     }
@@ -40,7 +40,7 @@ public class MyFilesAdapter extends FirebaseRecyclerAdapter<UserDocument, MyFile
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listview_design, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_items_design, parent, false);
         return new ViewHolder(view);
     }
 
@@ -48,18 +48,18 @@ public class MyFilesAdapter extends FirebaseRecyclerAdapter<UserDocument, MyFile
     @Override
     protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull final UserDocument model) {
         Glide.with(holder.file_type_icon.getContext()).load(model.getImage_uri()).into(holder.file_type_icon);
-        holder.selected_filename.setText(model.getFile_name());
-        holder.selected_file_size.setText(model.getFile_size());
+        holder.filename.setText(model.getFile_name());
+        holder.file_size.setText(model.getFile_size());
         holder.selected_file.setTooltipText(model.getFile_name());
         holder.download_file_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(CheckInternetConnectivity.isInternetConnected(context)){
+                if (CheckInternetConnectivity.isInternetConnected(context)) {
                     Intent it = new Intent();
                     it.setAction(Intent.ACTION_VIEW);
                     it.setData(Uri.parse(model.getFile_uri()));
                     context.startActivity(it);
-                }else {
+                } else {
                     Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -96,19 +96,19 @@ public class MyFilesAdapter extends FirebaseRecyclerAdapter<UserDocument, MyFile
         });
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ImageView file_type_icon;
-        private final TextView selected_filename;
-        private final TextView selected_file_size;
+        private final TextView filename;
+        private final TextView file_size;
         private final LinearLayout selected_file;
-        private ImageButton download_file_btn;
+        private final ImageButton download_file_btn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             selected_file = itemView.findViewById(R.id.selected_file);
             file_type_icon = itemView.findViewById(R.id.file_type_icon);
-            selected_filename = itemView.findViewById(R.id.selected_filename);
-            selected_file_size = itemView.findViewById(R.id.selected_file_size);
+            filename = itemView.findViewById(R.id.selected_filename);
+            file_size = itemView.findViewById(R.id.selected_file_size);
             download_file_btn = itemView.findViewById(R.id.download_file_btn);
         }
     }
