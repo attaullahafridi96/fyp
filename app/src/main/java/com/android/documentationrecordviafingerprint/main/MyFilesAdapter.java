@@ -22,17 +22,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.model.UserFile;
+import com.android.documentationrecordviafingerprint.model.UserDocument;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 import java.io.File;
 
-public class MyFilesAdapter extends FirebaseRecyclerAdapter<UserFile, MyFilesAdapter.ViewHolder> {
+public class MyFilesAdapter extends FirebaseRecyclerAdapter<UserDocument, MyFilesAdapter.ViewHolder> {
     private final Context context;
 
-    public MyFilesAdapter(Context context, @NonNull FirebaseRecyclerOptions<UserFile> options) {
+    public MyFilesAdapter(Context context, @NonNull FirebaseRecyclerOptions<UserDocument> options) {
         super(options);
         this.context = context;
     }
@@ -46,7 +46,7 @@ public class MyFilesAdapter extends FirebaseRecyclerAdapter<UserFile, MyFilesAda
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull final UserFile model) {
+    protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull final UserDocument model) {
         Glide.with(holder.file_type_icon.getContext()).load(model.getImage_uri()).into(holder.file_type_icon);
         holder.selected_filename.setText(model.getFile_name());
         holder.selected_file_size.setText(model.getFile_size());

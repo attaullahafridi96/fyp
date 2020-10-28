@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import com.android.documentationrecordviafingerprint.main.DashboardActivity;
 import com.android.documentationrecordviafingerprint.model.DB;
 import com.android.documentationrecordviafingerprint.model.User;
-import com.android.documentationrecordviafingerprint.model.UserFile;
+import com.android.documentationrecordviafingerprint.model.UserDocument;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -172,8 +172,8 @@ public final class FirebaseController {
                             task.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(final Uri uri) {
-                                    final UserFile userFile = new UserFile(file_icon_uri, file_name, file_type, uri.toString(), file_size);
-                                    parent_node.child(email_identifier).child("files").child(file_identifier).setValue(userFile);
+                                    final UserDocument userDocument = new UserDocument(file_icon_uri, file_name, file_type, uri.toString(), file_size);
+                                    parent_node.child(email_identifier).child("files").child(file_identifier).setValue(userDocument);
                                 }
                             });
                         }

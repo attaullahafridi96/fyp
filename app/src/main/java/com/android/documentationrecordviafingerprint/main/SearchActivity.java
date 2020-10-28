@@ -17,7 +17,7 @@ import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.SessionManagement;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.DB;
-import com.android.documentationrecordviafingerprint.model.UserFile;
+import com.android.documentationrecordviafingerprint.model.UserDocument;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 
@@ -28,7 +28,7 @@ public class SearchActivity extends AppCompatActivity {
     private DatabaseReference parent_node;
     private String email_identifier = "";
     private MyFilesAdapter myAdapter;
-    FirebaseRecyclerOptions<UserFile> options;
+    FirebaseRecyclerOptions<UserDocument> options;
     private Context context;
 
     @Override
@@ -68,8 +68,8 @@ public class SearchActivity extends AppCompatActivity {
 
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
-            options = new FirebaseRecyclerOptions.Builder<UserFile>()
-                    .setQuery(childReference.child("files"), UserFile.class)
+            options = new FirebaseRecyclerOptions.Builder<UserDocument>()
+                    .setQuery(childReference.child("files"), UserDocument.class)
                     .build();
             myAdapter = new MyFilesAdapter(context, options);
             recyclerView.setAdapter(myAdapter);

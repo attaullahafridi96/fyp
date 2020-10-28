@@ -1,9 +1,9 @@
 package com.android.documentationrecordviafingerprint.model;
 
-public class UserFile {
+public class UserDocument {
     private String image_uri,file_name, file_type, file_uri,file_size;
 
-    public UserFile(String image_uri, String file_name, String file_type, String file_uri, String file_size) {
+    public UserDocument(String image_uri, String file_name, String file_type, String file_uri, String file_size) {
         this.image_uri = image_uri;
         this.file_name = file_name;
         this.file_type = file_type;
@@ -11,7 +11,7 @@ public class UserFile {
         this.file_size = file_size;
     }
 
-    public UserFile() {
+    public UserDocument() {
         //required constructor for firebase
     }
 

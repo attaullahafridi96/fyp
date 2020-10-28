@@ -3,17 +3,8 @@ package com.android.documentationrecordviafingerprint.model;
 public class User {
     private byte[] user_image;
     private String first_name, last_name, email, password;
-    private UserFile files;
 
     public User() {
-    }
-
-    public User(String first_name, String last_name, String email, String password, UserFile files) {
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.email = email;
-        this.password = password;
-        this.files = files;
     }
 
     public User(String first_name, String last_name, String email, String password) {
@@ -31,7 +22,6 @@ public class User {
         return last_name;
     }
 
-
     public void setFirst_name(String first_name) {
         this.first_name = first_name;
     }
@@ -48,20 +38,11 @@ public class User {
         this.email = email;
     }
 
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public UserFile getFiles() {
-        return files;
-    }
-
-    public void setFiles(UserFile file) {
-        this.files = file;
     }
 }
