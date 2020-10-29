@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -19,12 +18,9 @@ import com.android.documentationrecordviafingerprint.controller.SessionManagemen
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.DB;
 import com.android.documentationrecordviafingerprint.model.UserDocument;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
-
-import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity {
     private ImageButton voice_search;
@@ -49,7 +45,7 @@ public class SearchActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 if (filterLongEnough()) {
                     searchDocument(s.toString());
-                }else{
+                } else {
                     myAdapter.updateOptions(options);
                 }
             }
@@ -89,6 +85,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
     }
+
     private void searchDocument(String toSearch) {
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
