@@ -13,18 +13,13 @@
         android:orientation="horizontal"
         android:padding="5dp">
 
-        <EditText
+        <SearchView
             android:id="@+id/text_search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/edittext_shape"
-            android:drawableStart="@drawable/ic_baseline_search_24"
-            android:drawablePadding="10dp"
-            android:fontFamily="sans-serif-condensed"
-            android:hint="Search"
-            android:inputType="text"
-            android:padding="10dp" />
+            android:fontFamily="sans-serif-condensed" />
 
         <ImageButton
             android:id="@+id/voice_search"
@@ -32,7 +27,8 @@
             android:layout_height="match_parent"
             android:layout_weight="0.1"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_baseline_mic_none_28" />
+            android:src="@drawable/ic_baseline_mic_none_28"
+            android:contentDescription="mic" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

@@ -130,7 +130,9 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (CheckInternetConnectivity.isInternetConnected(context)) {
-            myAdapter.startListening();
+            if (myAdapter != null) {
+                myAdapter.startListening();
+            }
         }
     }
 
@@ -138,7 +140,9 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         if (CheckInternetConnectivity.isInternetConnected(context)) {
-            myAdapter.stopListening();
+            if (myAdapter != null) {
+                myAdapter.stopListening();
+            }
         }
     }
 }

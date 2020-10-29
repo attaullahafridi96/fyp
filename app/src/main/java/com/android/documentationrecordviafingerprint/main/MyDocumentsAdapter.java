@@ -9,6 +9,8 @@ import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,8 +31,10 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 import java.io.File;
 
-public class MyDocumentsAdapter extends FirebaseRecyclerAdapter<UserDocument, MyDocumentsAdapter.ViewHolder> {
+public class MyDocumentsAdapter
+        extends FirebaseRecyclerAdapter<UserDocument, MyDocumentsAdapter.ViewHolder> implements Filterable {
     private final Context context;
+    private UserDocument filtermodel;
 
     public MyDocumentsAdapter(Context context, @NonNull FirebaseRecyclerOptions<UserDocument> options) {
         super(options);
@@ -94,6 +98,22 @@ public class MyDocumentsAdapter extends FirebaseRecyclerAdapter<UserDocument, My
                 }
             }
         });
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                return null;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            }
+        };
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

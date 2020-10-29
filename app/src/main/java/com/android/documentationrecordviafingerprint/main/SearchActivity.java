@@ -2,11 +2,9 @@ package com.android.documentationrecordviafingerprint.main;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,14 +22,13 @@ import com.google.firebase.database.Query;
 
 public class SearchActivity extends AppCompatActivity {
     private ImageButton voice_search;
-    private EditText text_search;
+    private SearchView text_search;
     private RecyclerView recyclerView;
     private MyDocumentsAdapter myAdapter;
     private FirebaseRecyclerOptions<UserDocument> options;
     private Context context;
     private DatabaseReference parent_node;
     private String email_identifier;
-    String hh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,29 +38,20 @@ public class SearchActivity extends AppCompatActivity {
         parent_node = DB.getFirstNodeReference();
 
         text_search = findViewById(R.id.text_search);
-        TextWatcher textWatcherListener = new TextWatcher() {
+
+        text_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void afterTextChanged(Editable s) {
-                if (filterLongEnough()) {
-                    searchDocument(s.toString());
-                } else {
-                    myAdapter.updateOptions(options);
-                }
+            public boolean onQueryTextSubmit(String query) {
+                searchDocument(query);
+                return false;
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public boolean onQueryTextChange(String newText) {
+                searchDocument(newText);
+                return false;
             }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            private boolean filterLongEnough() {
-                return text_search.getText().toString().trim().length() > 0;
-            }
-        };
-        text_search.addTextChangedListener(textWatcherListener);
+        });
 
         recyclerView = findViewById(R.id.search_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -102,7 +90,9 @@ public class SearchActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (CheckInternetConnectivity.isInternetConnected(context)) {
-            myAdapter.startListening();
+            if (myAdapter != null) {
+                myAdapter.startListening();
+            }
         }
     }
 
@@ -110,7 +100,9 @@ public class SearchActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         if (CheckInternetConnectivity.isInternetConnected(context)) {
-            myAdapter.stopListening();
+            if (myAdapter != null) {
+                myAdapter.stopListening();
+            }
         }
     }
 }
