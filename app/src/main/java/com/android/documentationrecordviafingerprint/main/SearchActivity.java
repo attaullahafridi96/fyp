@@ -31,6 +31,7 @@ public class SearchActivity extends AppCompatActivity {
     private Context context;
     private DatabaseReference parent_node;
     private String email_identifier;
+    String hh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
