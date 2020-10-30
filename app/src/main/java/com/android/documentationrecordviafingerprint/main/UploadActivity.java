@@ -3,6 +3,7 @@ package com.android.documentationrecordviafingerprint.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.OpenableColumns;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +28,7 @@ import androidx.core.content.FileProvider;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.FirebaseController;
+import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.uihelper.ConfirmationDialog;
 import com.google.android.material.snackbar.Snackbar;
@@ -39,6 +42,10 @@ public class UploadActivity extends AppCompatActivity {
     private Uri file_uri;
     private String file_extension;
     private String file_name;
+    private LinearLayout selected_file;
+    private String formatted_file_size;
+    private String file_icon_uri;
+    private String file_path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +76,7 @@ public class UploadActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {
-                                new FirebaseController(context).uploadFile(file_icon_uri, file_name, file_extension, file_uri, file_identifier, formatted_file_size);
+                                new FirebaseController(context).uploadFile(file_icon_uri, file_name.toLowerCase(), file_extension, file_uri, file_identifier, formatted_file_size);
                                 confirmationDialog.dismissAlertDialog();
                             } else {
                                 Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
@@ -104,25 +111,26 @@ public class UploadActivity extends AppCompatActivity {
         startActivityForResult(intent, 89);
     }
 
-    private String file_path;
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 89 && resultCode == RESULT_OK && data != null) {
+        if (requestCode == 89 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             file_uri = data.getData();
             file_path = data.getData().getPath();
+            ContentResolver cr = getContentResolver();
+            MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+            file_extension = mimeTypeMap.getExtensionFromMimeType(cr.getType(file_uri));
             @SuppressLint("Recycle")
             Cursor cursor =
-                    getContentResolver().query(file_uri, null, null, null, null);
+                    cr.query(file_uri, null, null, null, null);
             int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
             cursor.moveToFirst();
             file_name = cursor.getString(nameIndex);
             long filesize = cursor.getLong(sizeIndex);
             formatted_file_size = android.text.format.Formatter.formatShortFileSize(context, filesize);
-            createFilename_TypeAndIndentifier(file_name);
+            createFileIdentifier(file_name);
             drawSelectedFileInfo(file_extension);
         } else {
             clearData();
@@ -130,20 +138,11 @@ public class UploadActivity extends AppCompatActivity {
         }
     }
 
-    private void createFilename_TypeAndIndentifier(String file_name) {
+    private void createFileIdentifier(String file_name) {
         String[] file_name_type = file_name.split("\\.");
-        file_extension = file_name_type[1];
-        file_identifier = "";
-        String[] splitfilename = file_name_type[0].split("");
-        for (String ch : splitfilename) {
-            if (!ch.equals(" "))
-                file_identifier += ch;
-        }
+        String tmp_file_id = file_name_type[0].replace(" ", "");
+        file_identifier = StringOperations.removeInvalidCharsFromIdentifier(tmp_file_id);
     }
-
-    private LinearLayout selected_file;
-    private String formatted_file_size;
-    private String file_icon_uri;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("UseCompatLoadingForDrawables")

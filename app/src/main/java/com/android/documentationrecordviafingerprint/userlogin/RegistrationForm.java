@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.FirebaseController;
-import com.android.documentationrecordviafingerprint.controller.LoginController;
+import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.User;
 
@@ -43,7 +43,7 @@ public class RegistrationForm extends AppCompatActivity {
                 enteredPassword = pass.getText().toString();
                 enteredConfirmPassword = confirmpass.getText().toString();
 
-                if (LoginController.isAnyEditTextEmpty(enteredFirstName, enteredEmailAddress, enteredPassword, enteredConfirmPassword)) {
+                if (StringOperations.isAnyEditTextEmpty(enteredFirstName, enteredEmailAddress, enteredPassword, enteredConfirmPassword)) {
                     Toast.makeText(context, "Required fields Empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -52,7 +52,7 @@ public class RegistrationForm extends AppCompatActivity {
                     firstname.requestFocus();
                     return;
                 }
-                if (!LoginController.isValidEmail(enteredEmailAddress)) {
+                if (!StringOperations.isValidEmail(enteredEmailAddress)) {
                     email.setError("Invalid Email");
                     email.requestFocus();
                     Toast.makeText(context, "Invalid Email", Toast.LENGTH_SHORT).show();

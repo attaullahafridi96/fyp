@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.FirebaseController;
-import com.android.documentationrecordviafingerprint.controller.LoginController;
 import com.android.documentationrecordviafingerprint.controller.SessionManagement;
+import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.internetchecking.NoInternetScreen;
 import com.android.documentationrecordviafingerprint.main.DashboardActivity;
@@ -40,19 +40,19 @@ public class Login extends AppCompatActivity {
                 FirebaseController firebase_controller = new FirebaseController(context);
                 String getEnteredEmail = email.getText().toString().trim();
                 String getEnteredPassword = password.getText().toString();
-                if (LoginController.isEmpty(getEnteredEmail)) {
+                if (StringOperations.isEmpty(getEnteredEmail)) {
                     email.setError("Email is required field");
                     email.requestFocus();
                     Toast.makeText(context, "Email is required field", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!LoginController.isValidEmail(getEnteredEmail)) {
+                if (!StringOperations.isValidEmail(getEnteredEmail)) {
                     email.setError("Invalid Email");
                     email.requestFocus();
                     Toast.makeText(context, "Enter a Valid Email", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (LoginController.isEmpty(getEnteredPassword)) {
+                if (StringOperations.isEmpty(getEnteredPassword)) {
                     password.setError("Password is required field");
                     password.requestFocus();
                     Toast.makeText(context, "Password is required field", Toast.LENGTH_SHORT).show();

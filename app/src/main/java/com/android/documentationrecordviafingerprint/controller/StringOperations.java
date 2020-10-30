@@ -3,7 +3,7 @@ package com.android.documentationrecordviafingerprint.controller;
 import android.text.TextUtils;
 import android.util.Patterns;
 
-public final class LoginController {
+public final class StringOperations {
     public static boolean isEmpty(String str) {
         return TextUtils.isEmpty(str);
     }
@@ -19,5 +19,18 @@ public final class LoginController {
 
     public static boolean isValidEmail(CharSequence target) {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    }
+
+    public static String toOriginalChars() {
+        return null;
+    }
+
+    public static String removeInvalidCharsFromIdentifier(String str) {
+        String validString = "";
+        char[] type = {'-', '#', '$', '[', ']', '@', '.'};
+        for (char c : type) {
+            validString = str.replace(c, '_');
+        }
+        return validString;
     }
 }

@@ -80,9 +80,9 @@ public class SearchActivity extends AppCompatActivity {
             DatabaseReference childReference = parent_node.child(email_identifier);
             Query query = childReference.child("files").orderByChild("file_name")
                     .startAt(toSearch).endAt(toSearch + "\uf8ff");
-            FirebaseRecyclerOptions<UserDocument> op = new FirebaseRecyclerOptions.Builder<UserDocument>()
+            FirebaseRecyclerOptions<UserDocument> filter_options = new FirebaseRecyclerOptions.Builder<UserDocument>()
                     .setQuery(query, UserDocument.class).build();
-            myAdapter.updateOptions(op);
+            myAdapter.updateOptions(filter_options);
         }
     }
 
