@@ -42,13 +42,13 @@ public class SearchActivity extends AppCompatActivity {
         text_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchDocument(query);
+                searchDocument(query.toLowerCase());
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                searchDocument(newText);
+                searchDocument(newText.toLowerCase());
                 return false;
             }
         });

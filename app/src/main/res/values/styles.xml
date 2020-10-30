@@ -15,6 +15,6 @@
     </style>
 
     <style name="MyToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
-        <item name="colorControlHighlight">#0091EA</item>
+        <item name="colorControlHighlight">#00B8D4</item>
     </style>
 </resources>

@@ -4,13 +4,17 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.bumptech.glide.Glide;
@@ -18,6 +22,7 @@ import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnRenderListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +30,7 @@ import java.net.URL;
 
 public class OnlineFileViewer extends AppCompatActivity {
     private PDFView pdfView;
-    private ImageView imageView;
+    private PhotoView photoView;
     private ProgressBar progressBar;
 
     @SuppressLint({"SetJavaScriptEnabled", "StaticFieldLeak"})
@@ -33,16 +38,26 @@ public class OnlineFileViewer extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_files_viewer);
+        //////////////ToolBar code/////////////
+        Toolbar myToolbar = findViewById(R.id.viewer_toolbar);
+        setSupportActionBar(myToolbar);
+        /////////////ToolBar code/////////////
         Intent it = getIntent();
         String file_name = it.getStringExtra("FILE_NAME");
         final String file_uri = it.getStringExtra("URI");
         String file_extension = it.getStringExtra("FILE_EXTENSION");
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(file_name);
-
+        TextView document_title = findViewById(R.id.document_title);
+        document_title.setText(file_name);
+        ImageButton back_btn = findViewById(R.id.back_btn);
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         pdfView = findViewById(R.id.pdf_view);
         progressBar = findViewById(R.id.pbar);
-        imageView = findViewById(R.id.imageview_viewer);
+        photoView = findViewById(R.id.imageview_viewer);
 
         switch (file_extension) {
             case "pdf":
@@ -84,8 +99,8 @@ public class OnlineFileViewer extends AppCompatActivity {
             case "jpg":
             case "png":
             case "bmp":
-                Glide.with(imageView.getContext()).load(file_uri).into(imageView);
-                imageView.setVisibility(View.VISIBLE);
+                Glide.with(photoView.getContext()).load(file_uri).into(photoView);
+                photoView.setVisibility(View.VISIBLE);
                 break;
             /*case "rtf":
             case "doc":
@@ -108,6 +123,28 @@ public class OnlineFileViewer extends AppCompatActivity {
                 webView.loadUrl(file_uri);*/
                 break;
         }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.file_viewer_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            switch (item.getItemId()) {
+                case R.id.rename_item:
+
+                    break;
+                case R.id.delete_file_item:
+
+                    break;
+            }
+        } catch (Exception e) {
+            Toast.makeText(OnlineFileViewer.this, "Error", Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 }

@@ -16,24 +16,26 @@
     <TextView
         android:id="@+id/selected_filename"
         android:layout_width="0dp"
-        android:layout_height="20dp"
+        android:layout_height="30dp"
         android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
         android:layout_weight="1"
         android:fontFamily="sans-serif-condensed"
-        android:paddingLeft="10dp"
+        android:maxLines="1"
         android:text="File Name"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/selected_file_size"
         android:layout_width="80dp"
-        android:layout_height="20dp"
+        android:layout_height="30dp"
         android:layout_gravity="center_vertical"
         android:fontFamily="sans-serif-condensed"
-        android:text=""
+        android:maxLines="1"
+        android:text="1 MB"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <View
         android:layout_width="1dp"
@@ -49,6 +51,6 @@
         android:contentDescription="@string/image"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_baseline_cloud_download_32"
-        android:tooltipText="Tap to Download file" />
+        android:tooltipText="Tap to Download" />
 
 </LinearLayout>

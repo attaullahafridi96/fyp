@@ -139,9 +139,7 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     private void createFileIdentifier(String file_name) {
-        String[] file_name_type = file_name.split("\\.");
-        String tmp_file_id = file_name_type[0].replace(" ", "");
-        file_identifier = StringOperations.removeInvalidCharsFromIdentifier(tmp_file_id);
+        file_identifier = StringOperations.createIdentifier(file_name);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.2"
+            android:contentDescription="icon"
             android:src="@drawable/ic_baseline_menu_32" />
 
         <TextView
