@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.controller.SessionManagement;
+import com.android.documentationrecordviafingerprint.controller.SessionController;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.DB;
 import com.android.documentationrecordviafingerprint.model.UserDocument;
@@ -35,7 +35,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         context = SearchActivity.this;
-        parent_node = DB.getFirstNodeReference();
+        parent_node = DB.getDbFirstNodeReference();
 
         text_search = findViewById(R.id.text_search);
 
@@ -56,7 +56,7 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.search_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        email_identifier = new SessionManagement(context).getEmailIdentifier();
+        email_identifier = new SessionController(context).getEmailIdentifier();
 
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);

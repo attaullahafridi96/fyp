@@ -17,7 +17,7 @@ import com.android.documentationrecordviafingerprint.internetchecking.CheckInter
 import com.android.documentationrecordviafingerprint.model.User;
 
 public class RegistrationForm extends AppCompatActivity {
-    private String enteredFirstName, enteredLastName, enteredEmailAddress, enteredPassword, enteredConfirmPassword;
+    private static String enteredFirstName, enteredLastName, enteredEmailAddress, enteredPassword, enteredConfirmPassword;
     private Context context;
 
     @Override
@@ -68,7 +68,7 @@ public class RegistrationForm extends AppCompatActivity {
                 } else {
                     if (CheckInternetConnectivity.isInternetConnected(RegistrationForm.this)) {
                         User user = new User(enteredFirstName, enteredLastName, enteredEmailAddress, enteredPassword);
-                        new FirebaseController(RegistrationForm.this).createNewUserAccount(user, RegistrationForm.this);
+                        FirebaseController.createNewUserAccount(context, user, RegistrationForm.this);
                     } else {
                         Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
                     }

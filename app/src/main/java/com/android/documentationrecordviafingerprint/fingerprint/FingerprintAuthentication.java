@@ -22,9 +22,7 @@ import com.android.documentationrecordviafingerprint.userlogin.Login;
 import java.util.concurrent.Executor;
 
 public class FingerprintAuthentication extends AppCompatActivity {
-    private Executor executor;
-    private BiometricPrompt biometricPrompt;
-    private BiometricPrompt.PromptInfo promptInfo;
+    private static final Intent activity_opener = new Intent();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +38,8 @@ public class FingerprintAuthentication extends AppCompatActivity {
     }
 
     private void checkBiometricAuthentication() {
-        executor = ContextCompat.getMainExecutor(this);
-        biometricPrompt = new BiometricPrompt(FingerprintAuthentication.this,
+        Executor executor = ContextCompat.getMainExecutor(this);
+        BiometricPrompt biometricPrompt = new BiometricPrompt(FingerprintAuthentication.this,
                 executor, new BiometricPrompt.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
@@ -61,7 +59,7 @@ public class FingerprintAuthentication extends AppCompatActivity {
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
                 finish();
-                startActivity(new Intent(FingerprintAuthentication.this, Login.class));
+                startActivity(activity_opener.setClass(FingerprintAuthentication.this, Login.class));
             }
 
             @Override
@@ -70,7 +68,7 @@ public class FingerprintAuthentication extends AppCompatActivity {
             }
         });
 
-        promptInfo = new BiometricPrompt.PromptInfo.Builder()
+        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
                 .setTitle("Fingerprint Authentication")
                 .setSubtitle("Verify your Biometric Credential")
                 .setNegativeButtonText("Exit")
@@ -118,13 +116,14 @@ public class FingerprintAuthentication extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
                 finish();
+                android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(0);
             }
         });
         builder.setPositiveButton("Goto ENROLLMENT", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(Settings.ACTION_SECURITY_SETTINGS));
+                startActivity(activity_opener.setAction(Settings.ACTION_SECURITY_SETTINGS));
             }
         });
         builder.setCancelable(false);

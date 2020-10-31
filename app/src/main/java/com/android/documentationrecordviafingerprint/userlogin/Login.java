@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.FirebaseController;
-import com.android.documentationrecordviafingerprint.controller.SessionManagement;
+import com.android.documentationrecordviafingerprint.controller.SessionController;
 import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.internetchecking.NoInternetScreen;
@@ -25,7 +25,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = Login.this;
-        if (new SessionManagement(context).isSessionActive()) {
+        if (new SessionController(context).isSessionActive()) {
             startActivity(new Intent(context, DashboardActivity.class));
             finish();
             return;
@@ -37,7 +37,6 @@ public class Login extends AppCompatActivity {
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseController firebase_controller = new FirebaseController(context);
                 String getEnteredEmail = email.getText().toString().trim();
                 String getEnteredPassword = password.getText().toString();
                 if (StringOperations.isEmpty(getEnteredEmail)) {
@@ -59,7 +58,7 @@ public class Login extends AppCompatActivity {
                     return;
                 }
                 if (CheckInternetConnectivity.isInternetConnected(context)) {
-                    firebase_controller.verifyLoginCredentials(getEnteredEmail, getEnteredPassword, Login.this);
+                    FirebaseController.verifyLoginCredentials(context,getEnteredEmail, getEnteredPassword, Login.this);
                 } else {
                     startActivity(new Intent(context, NoInternetScreen.class));
                     finish();

@@ -4,17 +4,16 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class SessionManagement {
+public class SessionController {
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
-    private final String shared_pref_name;
+    private static final String SHARED_PREF_NAME = "session";
     private final String session_key;
 
     @SuppressLint("CommitPrefEdits")
-    public SessionManagement(Context context) {
-        shared_pref_name = "session";
+    public SessionController(Context context) {
         session_key = "session_user";
-        sharedPreferences = context.getSharedPreferences(shared_pref_name, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
 
@@ -27,12 +26,7 @@ public class SessionManagement {
     }
 
     public String getEmailIdentifier() {
-        String email_identifier = "";
-        char[] type = {'-', '#', '$', '[', ']', '@', '.'};
-        for (char c : type) {
-            email_identifier = getSession().replace(c, '_');
-        }
-        return email_identifier;
+        return StringOperations.removeInvalidCharsFromIdentifier(getSession());
     }
 
     public void destroySession() {

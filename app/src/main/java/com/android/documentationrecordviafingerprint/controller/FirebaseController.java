@@ -24,31 +24,28 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public final class FirebaseController {
-    private final DatabaseReference parent_node;
-    private final FirebaseStorage storage;
-    private String email_identifier;
-    private final Context context;
-    private final ProgressDialog progressDialog;
+    private static final DatabaseReference databaseReference;
+    private static final StorageReference storageReference;
+    private static String email_identifier;
+    private static ProgressDialog progressDialog;
+    private static final String FILES_ID = "files";
 
-    public FirebaseController(Context context) {
-        parent_node = DB.getFirstNodeReference();
-        storage = FirebaseStorage.getInstance();
-        this.context = context;
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setCancelable(false);
+    static {
+        databaseReference = DB.getDbFirstNodeReference();
+        storageReference = DB.getStorageReference();
     }
 
-    public void createNewUserAccount(final User user, final Activity activity) {
+    public static void createNewUserAccount(final Context context, final User user, final Activity activity) {
+        progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Processing...");
         progressDialog.show();
 
-        Query checkDuplicateAcc = parent_node.orderByChild("email").equalTo(user.getEmail());
+        Query checkDuplicateAcc = databaseReference.orderByChild("email").equalTo(user.getEmail());
 
         char[] type = {'-', '#', '$', '[', ']', '@', '.'};
         for (char c : type) {
@@ -65,10 +62,10 @@ public final class FirebaseController {
                 } else {
                     try {
                         //Account Created
-                        parent_node.child(email_identifier).setValue(user);
+                        databaseReference.child(email_identifier).setValue(user);
                         progressDialog.dismiss();
                         Toast.makeText(context, "New Account Created Successfully", Toast.LENGTH_SHORT).show();
-                        SessionManagement user_session = new SessionManagement(context);
+                        SessionController user_session = new SessionController(context);
                         user_session.setSession(user.getEmail());
                         context.startActivity(new Intent(context, DashboardActivity.class));
                         activity.finish();
@@ -85,9 +82,9 @@ public final class FirebaseController {
         });
     }
 
-    public void getFullName(final TextView textView) {
-        email_identifier = new SessionManagement(context).getEmailIdentifier();
-        Query checkAccount = parent_node.child(email_identifier);
+    public static void getFullName(final Context context, final TextView textView) {
+        email_identifier = new SessionController(context).getEmailIdentifier();
+        Query checkAccount = databaseReference.child(email_identifier);
         checkAccount.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -98,17 +95,19 @@ public final class FirebaseController {
                     textView.setText(first_name + " " + last_name);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
     }
 
-    public void verifyLoginCredentials(final String email, final String password, final Activity activity) {
+    public static void verifyLoginCredentials(final Context context, final String email, final String password, final Activity activity) {
+        progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Processing...");
         progressDialog.show();
 
-        Query checkAccount = parent_node.orderByChild("email").equalTo(email);
+        Query checkAccount = databaseReference.orderByChild("email").equalTo(email);
 
         char[] type = {'-', '#', '$', '[', ']', '@', '.'};
         for (char c : type) {
@@ -121,7 +120,7 @@ public final class FirebaseController {
                 if (dataSnapshot.exists()) {
                     String passFromDB = dataSnapshot.child(email_identifier).child("password").getValue(String.class);
                     if (password.equals(passFromDB)) {
-                        new SessionManagement(context).setSession(email);
+                        new SessionController(context).setSession(email);
                         progressDialog.dismiss();
                         context.startActivity(new Intent(context, DashboardActivity.class));
                         activity.finish();
@@ -141,13 +140,36 @@ public final class FirebaseController {
         });
     }
 
-    public void uploadFile(final String file_icon_uri, final String file_name, final String file_type, final Uri file_uri, final String file_identifier, final String file_size) {
+    public static void deleteFile(final Activity context, final String file_key, final String file_identifier) {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle("Deleting File...");
+        progressDialog.show();
+        email_identifier = new SessionController(context).getEmailIdentifier();
+        Task<Void> task = storageReference.child(file_key).delete();
+        task.addOnSuccessListener(context, new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                databaseReference.child(email_identifier).child(FILES_ID).child(file_identifier)
+                        .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(context, "File Successfully Deleted", Toast.LENGTH_LONG).show();
+                        progressDialog.dismiss();
+                        context.finish();
+                    }
+                });
+            }
+        });
+    }
+
+    public static void uploadFile(final Context context, final String file_icon_uri, final String file_name, final String file_extension, final String file_type, final Uri file_uri, final String file_identifier, final String file_size) {
+        progressDialog = new ProgressDialog(context);
         progressDialog.setTitle("Checking Database...");
         progressDialog.show();
 
-        email_identifier = new SessionManagement(context).getEmailIdentifier();
+        email_identifier = new SessionController(context).getEmailIdentifier();
 
-        DatabaseReference childReference = parent_node.child(email_identifier).child("files").child(file_identifier);
+        DatabaseReference childReference = databaseReference.child(email_identifier).child(FILES_ID).child(file_identifier);
         Query checkuser = childReference.orderByChild("file_name");
         checkuser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -159,12 +181,12 @@ public final class FirebaseController {
                     progressDialog.dismiss();
                     final ProgressDialog prodialog = new ProgressDialog(context);
                     prodialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    prodialog.setCanceledOnTouchOutside(false);
                     prodialog.setTitle("Uploading File...");
                     prodialog.setProgress(0);
                     prodialog.show();
-                    String random_file_name = System.currentTimeMillis() + "";
-                    StorageReference storageReference = storage.getReference();
-                    UploadTask uploadTask = storageReference.child("Uploads").child(random_file_name).putFile(file_uri);
+                    final String storage_file_name = System.currentTimeMillis() + "";
+                    UploadTask uploadTask = storageReference.child(storage_file_name).putFile(file_uri);
                     uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -172,8 +194,8 @@ public final class FirebaseController {
                             task.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(final Uri uri) {
-                                    final UserDocument userDocument = new UserDocument(file_icon_uri, file_name, file_type, uri.toString(), file_size);
-                                    parent_node.child(email_identifier).child("files").child(file_identifier).setValue(userDocument);
+                                    final UserDocument userDocument = new UserDocument(file_icon_uri, file_name, file_extension, file_type, uri.toString(), file_size, storage_file_name);
+                                    databaseReference.child(email_identifier).child(FILES_ID).child(file_identifier).setValue(userDocument);
                                 }
                             });
                         }

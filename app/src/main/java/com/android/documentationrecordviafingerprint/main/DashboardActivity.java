@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.FirebaseController;
-import com.android.documentationrecordviafingerprint.controller.SessionManagement;
+import com.android.documentationrecordviafingerprint.controller.SessionController;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.DB;
 import com.android.documentationrecordviafingerprint.model.UserDocument;
@@ -31,16 +31,19 @@ import com.google.firebase.database.DatabaseReference;
 
 public class DashboardActivity extends AppCompatActivity {
     private Context context;
-    private DrawerLayout drawerLayout;
+    private static DrawerLayout drawerLayout;
     private MyDocumentsAdapter myAdapter;
-    private FirebaseRecyclerOptions<UserDocument> options;
+    private static FirebaseRecyclerOptions<UserDocument> options;
+    private static final Intent activity_opener = new Intent();
+    private static SessionController session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
         context = DashboardActivity.this;
-        DatabaseReference parent_node = DB.getFirstNodeReference();
+        session = new SessionController(context);
+        DatabaseReference parent_node = DB.getDbFirstNodeReference();
 
         drawerLayout = findViewById(R.id.drawer_layout);
         /*Set App Version*/
@@ -65,12 +68,12 @@ public class DashboardActivity extends AppCompatActivity {
                 try {
                     switch (item.getItemId()) {
                         case R.id.drawer_settings_item:
-                            startActivity(new Intent(context, AppSettings.class));
+                            startActivity(activity_opener.setClass(context, AppSettings.class));
                             break;
                         case R.id.drawer_logout_item:
-                            new SessionManagement(context).destroySession();
+                            session.destroySession();
                             finish();
-                            startActivity(new Intent(context, Login.class));
+                            startActivity(activity_opener.setClass(context, Login.class));
                             break;
                     }
                 } catch (Exception e) {
@@ -90,17 +93,17 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.home_new_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DashboardActivity.this, TextEditorActivity.class));
+                startActivity(activity_opener.setClass(DashboardActivity.this, TextEditorActivity.class));
             }
         });
 
-        new FirebaseController(context).getFullName(fullname);
-        email.setText(new SessionManagement(context).getSession());
+        FirebaseController.getFullName(context, fullname);
+        email.setText(session.getSession());
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        String email_identifier = new SessionManagement(context).getEmailIdentifier();
+        String email_identifier = session.getEmailIdentifier();
 
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
@@ -114,14 +117,14 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.home_search_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DashboardActivity.this, SearchActivity.class));
+                startActivity(activity_opener.setClass(DashboardActivity.this, SearchActivity.class));
             }
         });
 
         findViewById(R.id.home_upload_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DashboardActivity.this, UploadActivity.class));
+                startActivity(activity_opener.setClass(DashboardActivity.this, UploadActivity.class));
             }
         });
     }

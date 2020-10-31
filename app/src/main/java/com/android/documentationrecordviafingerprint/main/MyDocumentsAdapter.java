@@ -29,9 +29,10 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 import java.io.File;
 
-public class MyDocumentsAdapter
+public final class MyDocumentsAdapter
         extends FirebaseRecyclerAdapter<UserDocument, MyDocumentsAdapter.ViewHolder> {
     private final Context context;
+    private static final Intent activity_opener = new Intent();
 
     public MyDocumentsAdapter(Context context, @NonNull FirebaseRecyclerOptions<UserDocument> options) {
         super(options);
@@ -69,7 +70,7 @@ public class MyDocumentsAdapter
             @Override
             public void onClick(View v) {
                 if (model.getFile_uri() != null) {
-                    if (model.getFile_type().equals("doc") || model.getFile_type().equals("docx") || model.getFile_type().equals("rtf")) {
+                    if (model.getFile_extension().equals("doc") || model.getFile_extension().equals("docx") || model.getFile_extension().equals("rtf")) {
                         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                         StrictMode.setVmPolicy(builder.build());
                         builder.detectFileUriExposure();
@@ -79,18 +80,17 @@ public class MyDocumentsAdapter
                         intent.setDataAndType(docUri, "application/msword");
                         try {
                             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                            Intent chooser = Intent.createChooser(intent, "Open With..");
-                            context.startActivity(chooser);
+                            context.startActivity(Intent.createChooser(intent, "Open With.."));
                         } catch (ActivityNotFoundException e) {
                             Toast.makeText(context, "No application to open file", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Intent it = new Intent();
-                        it.setClass(context, OnlineFileViewer.class);
-                        it.putExtra("FILE_NAME", model.getFile_name());
-                        it.putExtra("URI", model.getFile_uri());
-                        it.putExtra("FILE_EXTENSION", model.getFile_type());
-                        context.startActivity(it);
+                        activity_opener.setClass(context, OnlineFileViewer.class);
+                        activity_opener.putExtra("FILE_NAME", model.getFile_name());
+                        activity_opener.putExtra("FILE_KEY", model.getFile_key());
+                        activity_opener.putExtra("URI", model.getFile_uri());
+                        activity_opener.putExtra("FILE_EXTENSION", model.getFile_extension());
+                        context.startActivity(activity_opener);
                     }
                 }
             }

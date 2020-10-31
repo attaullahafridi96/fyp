@@ -38,14 +38,10 @@ import java.io.File;
 public class UploadActivity extends AppCompatActivity {
 
     private Context context;
-    private String file_identifier;
-    private Uri file_uri;
-    private String file_extension;
-    private String file_name;
+    private static Uri file_uri;
     private LinearLayout selected_file;
-    private String formatted_file_size;
-    private String file_icon_uri;
-    private String file_path;
+    private static String file_type, file_identifier, file_extension, file_name, formatted_file_size, file_icon_uri, file_path;
+    private static final Intent activity_opener = new Intent();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +72,7 @@ public class UploadActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {
-                                new FirebaseController(context).uploadFile(file_icon_uri, file_name.toLowerCase(), file_extension, file_uri, file_identifier, formatted_file_size);
+                                FirebaseController.uploadFile(context, file_icon_uri, file_name.toLowerCase(), file_extension, file_type, file_uri, file_identifier.toLowerCase(), formatted_file_size);
                                 confirmationDialog.dismissAlertDialog();
                             } else {
                                 Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
@@ -118,19 +114,17 @@ public class UploadActivity extends AppCompatActivity {
         if (requestCode == 89 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             file_uri = data.getData();
             file_path = data.getData().getPath();
-            ContentResolver cr = getContentResolver();
-            MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-            file_extension = mimeTypeMap.getExtensionFromMimeType(cr.getType(file_uri));
+            createFileExtension(file_uri);
             @SuppressLint("Recycle")
             Cursor cursor =
-                    cr.query(file_uri, null, null, null, null);
+                    getContentResolver().query(file_uri, null, null, null, null);
             int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
             cursor.moveToFirst();
             file_name = cursor.getString(nameIndex);
             long filesize = cursor.getLong(sizeIndex);
             formatted_file_size = android.text.format.Formatter.formatShortFileSize(context, filesize);
-            createFileIdentifier(file_name);
+            file_identifier = StringOperations.createIdentifier(file_name);
             drawSelectedFileInfo(file_extension);
         } else {
             clearData();
@@ -138,42 +132,51 @@ public class UploadActivity extends AppCompatActivity {
         }
     }
 
-    private void createFileIdentifier(String file_name) {
-        file_identifier = StringOperations.createIdentifier(file_name);
+    private void createFileExtension(Uri file_uri) {
+        ContentResolver cr = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        file_extension = mimeTypeMap.getExtensionFromMimeType(cr.getType(file_uri));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("UseCompatLoadingForDrawables")
-    private void drawSelectedFileInfo(final String file_type) {
+    private void drawSelectedFileInfo(final String file_extn) {
         int imageNo;
-        switch (file_type) {
+        switch (file_extn) {
             case "pdf":
                 imageNo = R.drawable.pdf_96px;
+                file_type = "doc";
                 file_icon_uri = getResources().getString(R.string.pdf_icon);
                 break;
             case "rtf":
+                file_type = "doc";
                 imageNo = R.drawable.microsoft_word_2019_96px;
                 file_icon_uri = getResources().getString(R.string.rtf_icon);
                 break;
             case "doc":
             case "docx":
+                file_type = "doc";
                 imageNo = R.drawable.microsoft_word_96px;
                 file_icon_uri = getResources().getString(R.string.word_icon);
                 break;
             case "jpeg":
             case "jpg":
+                file_type = "image";
                 imageNo = R.drawable.jpg_96px;
                 file_icon_uri = getResources().getString(R.string.jgep_icon);
                 break;
             case "png":
+                file_type = "image";
                 imageNo = R.drawable.png_96px;
                 file_icon_uri = getResources().getString(R.string.png_icon);
                 break;
             case "bmp":
+                file_type = "image";
                 imageNo = R.drawable.image_96px;
                 file_icon_uri = getResources().getString(R.string.image_icon);
                 break;
             default:
+                file_type = "doc";
                 imageNo = R.drawable.note_96px;
                 file_icon_uri = getResources().getString(R.string.notes_icon);
                 break;
@@ -206,13 +209,12 @@ public class UploadActivity extends AppCompatActivity {
                             Toast.makeText(UploadActivity.this, "No application to open file", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Intent it = new Intent();
-                        it.setClass(context, OfflineFileViewer.class);
-                        it.putExtra("FILE_NAME", file_name);
-                        it.putExtra("URI", file_uri.toString());
-                        it.putExtra("FILE_EXTENSION", file_extension);
-                        it.putExtra("FILE_PATH", file_path);
-                        startActivity(it);
+                        activity_opener.setClass(context, OfflineFileViewer.class);
+                        activity_opener.putExtra("FILE_NAME", file_name);
+                        activity_opener.putExtra("URI", file_uri.toString());
+                        activity_opener.putExtra("FILE_EXTENSION", file_extension);
+                        activity_opener.putExtra("FILE_PATH", file_path);
+                        startActivity(activity_opener);
                     }
                 }
             }
