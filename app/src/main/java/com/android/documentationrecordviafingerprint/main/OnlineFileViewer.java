@@ -149,7 +149,6 @@ public class OnlineFileViewer extends AppCompatActivity {
 
                     break;
                 case R.id.delete_file_item:
-                    System.out.println(StringOperations.createFileIdentifier(file_name));
                     final ConfirmationDialog confirmationDialog = new ConfirmationDialog(context, "Are you Sure to Delete this File from Cloud?");
                     confirmationDialog.setPositiveBtn(new View.OnClickListener() {
                         @Override

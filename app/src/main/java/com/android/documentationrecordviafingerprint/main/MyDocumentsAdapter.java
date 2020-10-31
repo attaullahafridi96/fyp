@@ -9,6 +9,7 @@ import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,8 +22,11 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
+import com.android.documentationrecordviafingerprint.controller.FirebaseController;
+import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.UserDocument;
+import com.android.documentationrecordviafingerprint.uihelper.ConfirmationDialog;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -60,10 +64,29 @@ public final class MyDocumentsAdapter
                     Intent it = new Intent();
                     it.setAction(Intent.ACTION_VIEW);
                     it.setData(Uri.parse(model.getFile_uri()));
-                    context.startActivity(it);
+                    context.startActivity(Intent.createChooser(it,"Select App to Download File"));
                 } else {
                     Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        holder.delete_file_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final ConfirmationDialog confirmationDialog = new ConfirmationDialog(context, "Are you Sure to Delete this File from Cloud?");
+                confirmationDialog.setPositiveBtn(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (CheckInternetConnectivity.isInternetConnected(context)) {
+                            String file_id = StringOperations.createFileIdentifier(model.getFile_name());
+                            FirebaseController.deleteFile(context, model.getFile_key(), file_id);
+                            confirmationDialog.dismissAlertDialog();
+                        } else {
+                            Toast.makeText(context, "No internet connection", Toast.LENGTH_LONG).show();
+                            confirmationDialog.dismissAlertDialog();
+                        }
+                    }
+                });
             }
         });
         holder.selected_file.setOnClickListener(new View.OnClickListener() {
@@ -95,20 +118,6 @@ public final class MyDocumentsAdapter
                 }
             }
         });
-        /*holder.selected_file.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                holder.selected_file.setBackgroundColor(ContextCompat.getColor(context, R.color.special));
-                return false;
-            }
-        });
-        holder.selected_file.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @SuppressLint("UseCompatLoadingForDrawables")
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-             //   holder.selected_file.setBackground(context.getResources().getDrawable(R.drawable.list_items_bg,null));
-            }
-        });*/
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -117,6 +126,7 @@ public final class MyDocumentsAdapter
         private final TextView file_size;
         private final LinearLayout selected_file;
         private final ImageButton download_file_btn;
+        private final Button delete_file_btn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -125,6 +135,7 @@ public final class MyDocumentsAdapter
             filename = itemView.findViewById(R.id.selected_filename);
             file_size = itemView.findViewById(R.id.selected_file_size);
             download_file_btn = itemView.findViewById(R.id.download_file_btn);
+            delete_file_btn = itemView.findViewById(R.id.delete_file_btn);
         }
     }
 }

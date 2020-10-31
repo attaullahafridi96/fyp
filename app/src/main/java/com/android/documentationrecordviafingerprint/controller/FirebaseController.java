@@ -43,6 +43,7 @@ public final class FirebaseController {
     public static void createNewUserAccount(final Context context, final User user, final Activity activity) {
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Processing...");
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
         Query checkDuplicateAcc = databaseReference.orderByChild("email").equalTo(user.getEmail());
@@ -101,6 +102,7 @@ public final class FirebaseController {
     public static void verifyLoginCredentials(final Context context, final String email, final String password, final Activity activity) {
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Processing...");
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
         Query checkAccount = databaseReference.orderByChild("email").equalTo(email);
@@ -133,31 +135,64 @@ public final class FirebaseController {
         });
     }
 
-    public static void deleteFile(final Activity context, final String file_key, final String file_identifier) {
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle("Deleting File...");
+    public static void deleteFile(final Activity activity, final String file_key, final String file_identifier) {
+        progressDialog = new ProgressDialog(activity);
+        progressDialog.setMessage("Deleting File...");
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
-        email_identifier = new SessionController(context).getEmailIdentifier();
+        email_identifier = new SessionController(activity).getEmailIdentifier();
         Task<Void> task = storageReference.child(file_key).delete();
-        task.addOnSuccessListener(context, new OnSuccessListener<Void>() {
+        task.addOnSuccessListener(activity, new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 databaseReference.child(email_identifier).child(FILES_ID).child(file_identifier)
                         .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(context, "File Successfully Deleted", Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity, "File Deleted Successfully", Toast.LENGTH_LONG).show();
                         progressDialog.dismiss();
-                        context.finish();
+                        activity.finish();
                     }
                 });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(activity, "Failed to Delete File", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public static void deleteFile(final Context context, final String file_key, final String file_identifier) {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Deleting File...");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+        email_identifier = new SessionController(context).getEmailIdentifier();
+        Task<Void> task = storageReference.child(file_key).delete();
+        task.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                databaseReference.child(email_identifier).child(FILES_ID).child(file_identifier)
+                        .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(context, "File Deleted Successfully", Toast.LENGTH_LONG).show();
+                        progressDialog.dismiss();
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(context, "Failed to Delete File", Toast.LENGTH_LONG).show();
             }
         });
     }
 
     public static void uploadFile(final Context context, final String file_icon_uri, final String file_name, final String file_extension, final String file_type, final Uri file_uri, final String file_identifier, final String file_size) {
         progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle("Checking Database...");
+        progressDialog.setMessage("Checking Database...");
         progressDialog.show();
 
         email_identifier = new SessionController(context).getEmailIdentifier();
