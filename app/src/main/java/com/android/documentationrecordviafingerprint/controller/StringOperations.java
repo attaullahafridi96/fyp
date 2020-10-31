@@ -33,7 +33,7 @@ public final class StringOperations {
         }
         return validString;
     }
-    public static String createIdentifier(String file_name) {
+    public static String createFileIdentifier(String file_name) {
         String[] file_name_type = file_name.split("\\.");
         String tmp_file_id = file_name_type[0].replace(" ", "");
         return removeInvalidCharsFromIdentifier(tmp_file_id);

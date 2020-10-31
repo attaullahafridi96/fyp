@@ -5,6 +5,7 @@
     <color name="colorAccent">#0091EA</color>
     <!--color name="colorAccent">#03DAC5</color-->
     <color name="white">#fff</color>
+    <color name="selected_file_color">#CCd4d4d4</color>
     <color name="special">#d4d4d4</color>
     <color name="backgroundColor">#0D47A1</color>
 </resources>

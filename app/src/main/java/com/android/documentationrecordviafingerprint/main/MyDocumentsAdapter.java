@@ -48,7 +48,7 @@ public final class MyDocumentsAdapter
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull final UserDocument model) {
+    protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final UserDocument model) {
         Glide.with(holder.file_type_icon.getContext()).load(model.getImage_uri()).into(holder.file_type_icon);
         holder.filename.setText(model.getFile_name());
         holder.file_size.setText(model.getFile_size());
@@ -95,6 +95,20 @@ public final class MyDocumentsAdapter
                 }
             }
         });
+        /*holder.selected_file.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                holder.selected_file.setBackgroundColor(ContextCompat.getColor(context, R.color.special));
+                return false;
+            }
+        });
+        holder.selected_file.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @SuppressLint("UseCompatLoadingForDrawables")
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+             //   holder.selected_file.setBackground(context.getResources().getDrawable(R.drawable.list_items_bg,null));
+            }
+        });*/
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

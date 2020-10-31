@@ -47,10 +47,7 @@ public final class FirebaseController {
 
         Query checkDuplicateAcc = databaseReference.orderByChild("email").equalTo(user.getEmail());
 
-        char[] type = {'-', '#', '$', '[', ']', '@', '.'};
-        for (char c : type) {
-            email_identifier = user.getEmail().replace(c, '_');
-        }
+        email_identifier = StringOperations.removeInvalidCharsFromIdentifier(user.getEmail());
 
         checkDuplicateAcc.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -65,8 +62,7 @@ public final class FirebaseController {
                         databaseReference.child(email_identifier).setValue(user);
                         progressDialog.dismiss();
                         Toast.makeText(context, "New Account Created Successfully", Toast.LENGTH_SHORT).show();
-                        SessionController user_session = new SessionController(context);
-                        user_session.setSession(user.getEmail());
+                        new SessionController(context).setSession(user.getEmail());
                         context.startActivity(new Intent(context, DashboardActivity.class));
                         activity.finish();
                     } catch (Exception e) {
@@ -109,10 +105,7 @@ public final class FirebaseController {
 
         Query checkAccount = databaseReference.orderByChild("email").equalTo(email);
 
-        char[] type = {'-', '#', '$', '[', ']', '@', '.'};
-        for (char c : type) {
-            email_identifier = email.replace(c, '_');
-        }
+        email_identifier = StringOperations.removeInvalidCharsFromIdentifier(email);
 
         checkAccount.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

@@ -33,7 +33,6 @@ public class DashboardActivity extends AppCompatActivity {
     private Context context;
     private static DrawerLayout drawerLayout;
     private MyDocumentsAdapter myAdapter;
-    private static FirebaseRecyclerOptions<UserDocument> options;
     private static final Intent activity_opener = new Intent();
     private static SessionController session;
 
@@ -107,7 +106,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
-            options = new FirebaseRecyclerOptions.Builder<UserDocument>()
+            FirebaseRecyclerOptions<UserDocument> options = new FirebaseRecyclerOptions.Builder<UserDocument>()
                     .setQuery(childReference.child("files"), UserDocument.class)
                     .build();
             myAdapter = new MyDocumentsAdapter(context, options);

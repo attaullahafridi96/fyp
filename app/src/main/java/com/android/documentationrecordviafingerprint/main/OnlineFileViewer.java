@@ -149,13 +149,13 @@ public class OnlineFileViewer extends AppCompatActivity {
 
                     break;
                 case R.id.delete_file_item:
-                    System.out.println(StringOperations.createIdentifier(file_name));
+                    System.out.println(StringOperations.createFileIdentifier(file_name));
                     final ConfirmationDialog confirmationDialog = new ConfirmationDialog(context, "Are you Sure to Delete this File from Cloud?");
                     confirmationDialog.setPositiveBtn(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {
-                                String file_id = StringOperations.createIdentifier(file_name);
+                                String file_id = StringOperations.createFileIdentifier(file_name);
                                 FirebaseController.deleteFile(OnlineFileViewer.this, file_key, file_id);
                                 confirmationDialog.dismissAlertDialog();
                             } else {

@@ -124,7 +124,7 @@ public class UploadActivity extends AppCompatActivity {
             file_name = cursor.getString(nameIndex);
             long filesize = cursor.getLong(sizeIndex);
             formatted_file_size = android.text.format.Formatter.formatShortFileSize(context, filesize);
-            file_identifier = StringOperations.createIdentifier(file_name);
+            file_identifier = StringOperations.createFileIdentifier(file_name);
             drawSelectedFileInfo(file_extension);
         } else {
             clearData();

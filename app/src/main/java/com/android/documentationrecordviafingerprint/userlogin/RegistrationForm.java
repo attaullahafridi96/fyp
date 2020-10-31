@@ -24,7 +24,7 @@ public class RegistrationForm extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_form);
-        context = getApplicationContext();
+        context = RegistrationForm.this;
         final EditText firstname = findViewById(R.id.first_name);
         final EditText lastname = findViewById(R.id.last_name);
         final EditText email = findViewById(R.id.email);
