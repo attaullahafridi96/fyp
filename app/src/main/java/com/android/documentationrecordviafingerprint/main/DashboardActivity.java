@@ -23,7 +23,7 @@ import com.android.documentationrecordviafingerprint.controller.FirebaseControll
 import com.android.documentationrecordviafingerprint.controller.SessionController;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.DB;
-import com.android.documentationrecordviafingerprint.model.UserDocument;
+import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.userlogin.Login;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.navigation.NavigationView;
@@ -106,8 +106,8 @@ public class DashboardActivity extends AppCompatActivity {
 
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
-            FirebaseRecyclerOptions<UserDocument> options = new FirebaseRecyclerOptions.Builder<UserDocument>()
-                    .setQuery(childReference.child("files"), UserDocument.class)
+            FirebaseRecyclerOptions<UserFile> options = new FirebaseRecyclerOptions.Builder<UserFile>()
+                    .setQuery(childReference.child("files"), UserFile.class)
                     .build();
             myAdapter = new MyDocumentsAdapter(context, options);
             recyclerView.setAdapter(myAdapter);

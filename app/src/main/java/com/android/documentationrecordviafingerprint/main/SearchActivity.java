@@ -15,7 +15,7 @@ import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.SessionController;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.DB;
-import com.android.documentationrecordviafingerprint.model.UserDocument;
+import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
@@ -25,7 +25,7 @@ public class SearchActivity extends AppCompatActivity {
     private SearchView text_search;
     private RecyclerView recyclerView;
     private MyDocumentsAdapter myAdapter;
-    private FirebaseRecyclerOptions<UserDocument> options;
+    private FirebaseRecyclerOptions<UserFile> options;
     private Context context;
     private DatabaseReference parent_node;
     private String email_identifier;
@@ -60,8 +60,8 @@ public class SearchActivity extends AppCompatActivity {
 
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
-            options = new FirebaseRecyclerOptions.Builder<UserDocument>()
-                    .setQuery(childReference.child("files"), UserDocument.class).build();
+            options = new FirebaseRecyclerOptions.Builder<UserFile>()
+                    .setQuery(childReference.child("files"), UserFile.class).build();
             myAdapter = new MyDocumentsAdapter(context, options);
             recyclerView.setAdapter(myAdapter);
         }
@@ -80,8 +80,8 @@ public class SearchActivity extends AppCompatActivity {
             DatabaseReference childReference = parent_node.child(email_identifier);
             Query query = childReference.child("files").orderByChild("file_name")
                     .startAt(toSearch).endAt(toSearch + "\uf8ff");
-            FirebaseRecyclerOptions<UserDocument> filter_options = new FirebaseRecyclerOptions.Builder<UserDocument>()
-                    .setQuery(query, UserDocument.class).build();
+            FirebaseRecyclerOptions<UserFile> filter_options = new FirebaseRecyclerOptions.Builder<UserFile>()
+                    .setQuery(query, UserFile.class).build();
             myAdapter.updateOptions(filter_options);
         }
     }

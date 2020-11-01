@@ -1,9 +1,11 @@
 package com.android.documentationrecordviafingerprint.model;
 
-public class UserDocument {
-    private String image_uri, file_name, file_extension, file_type, file_uri, file_size, file_key;
+import java.io.Serializable;
 
-    public UserDocument(String image_uri, String file_name, String file_extension, String file_type, String file_uri, String file_size, String file_key) {
+public class UserFile implements Serializable {
+    private String image_uri, file_name, file_extension, file_type, file_uri, file_size, file_key, file_storage_key;
+
+    public UserFile(String image_uri, String file_name, String file_extension, String file_type, String file_uri, String file_size, String file_key, String file_storage_key) {
         this.image_uri = image_uri;
         this.file_name = file_name;
         this.file_extension = file_extension;
@@ -11,10 +13,23 @@ public class UserDocument {
         this.file_uri = file_uri;
         this.file_size = file_size;
         this.file_key = file_key;
+        this.file_storage_key = file_storage_key;
     }
 
-    public UserDocument() {
+    public void setFile_name(String file_name) {
+        this.file_name = file_name;
+    }
+
+    public void setFile_key(String file_key) {
+        this.file_key = file_key;
+    }
+
+    public UserFile() {
         //required constructor for firebase
+    }
+
+    public String getFile_storage_key() {
+        return file_storage_key;
     }
 
     public String getFile_key() {

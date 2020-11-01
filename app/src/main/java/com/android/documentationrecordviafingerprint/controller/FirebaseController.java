@@ -13,9 +13,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.android.documentationrecordviafingerprint.main.DashboardActivity;
+import com.android.documentationrecordviafingerprint.main.OnlineFileViewer;
 import com.android.documentationrecordviafingerprint.model.DB;
 import com.android.documentationrecordviafingerprint.model.User;
-import com.android.documentationrecordviafingerprint.model.UserDocument;
+import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressbar;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,7 +37,7 @@ public final class FirebaseController {
     private static final StorageReference storageReference;
     private static String email_identifier;
     private static ProgressDialog progressDialog;
-    private static final String FILES_ID = "files";
+    private static final String FILES_KEY = "files";
 
     static {
         databaseReference = DB.getDbFirstNodeReference();
@@ -151,7 +152,7 @@ public final class FirebaseController {
         task.addOnSuccessListener(activity, new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                databaseReference.child(email_identifier).child(FILES_ID).child(file_identifier)
+                databaseReference.child(email_identifier).child(FILES_KEY).child(file_identifier)
                         .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -180,7 +181,7 @@ public final class FirebaseController {
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                databaseReference.child(email_identifier).child(FILES_ID).child(file_identifier)
+                databaseReference.child(email_identifier).child(FILES_KEY).child(file_identifier)
                         .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -204,7 +205,7 @@ public final class FirebaseController {
 
         email_identifier = new SessionController(context).getEmailIdentifier();
 
-        DatabaseReference childReference = databaseReference.child(email_identifier).child(FILES_ID).child(file_identifier);
+        DatabaseReference childReference = databaseReference.child(email_identifier).child(FILES_KEY).child(file_identifier);
         Query checkuser = childReference.orderByChild("file_name");
         checkuser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -215,8 +216,8 @@ public final class FirebaseController {
                 } else {
                     progressDialog.dismiss();
                     final CustomProgressbar pbar = new CustomProgressbar(context);
-                    final String storage_file_name = System.currentTimeMillis() + "";
-                    final UploadTask uploadTask = storageReference.child(storage_file_name).putFile(file_uri);
+                    final String file_storage_key = System.currentTimeMillis() + "";
+                    final UploadTask uploadTask = storageReference.child(file_storage_key).putFile(file_uri);
                     pbar.setCancelBtn(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -240,8 +241,8 @@ public final class FirebaseController {
                             task.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(final Uri uri) {
-                                    final UserDocument userDocument = new UserDocument(file_icon_uri, file_name, file_extension, file_type, uri.toString(), file_size, storage_file_name);
-                                    databaseReference.child(email_identifier).child(FILES_ID).child(file_identifier).setValue(userDocument);
+                                    final UserFile userFile = new UserFile(file_icon_uri, file_name, file_extension, file_type, uri.toString(), file_size, file_identifier, file_storage_key);
+                                    databaseReference.child(email_identifier).child(FILES_KEY).child(file_identifier).setValue(userFile);
                                     Toast.makeText(context, "File Uploaded Successfully", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -280,7 +281,33 @@ public final class FirebaseController {
         });
     }
 
-    public static void renameFile() {
+    public static void renameFile(final Activity activity, final String new_file_name, final String new_file_id, final String old_file_id) {
+        DatabaseReference childReference = databaseReference.child(email_identifier).child(FILES_KEY).child(old_file_id);
+        childReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    final UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                    userFile.setFile_key(new_file_id);
+                    userFile.setFile_name(new_file_name);
+                    Task<Void> task = databaseReference.child(email_identifier).child(FILES_KEY).child(new_file_id).setValue(userFile);
+                    task.addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            databaseReference.child(email_identifier).child(FILES_KEY).child(old_file_id).setValue(null);
+                            Intent it = new Intent(activity, OnlineFileViewer.class);
+                            it.putExtra("USER_FILE", userFile);
+                            activity.finish();
+                            activity.startActivity(it);
+                            Toast.makeText(activity, "File Renamed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 }

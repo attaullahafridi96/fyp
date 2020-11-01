@@ -15,6 +15,11 @@
                     android:title="Rename"
                     app:showAsAction="never" />
                 <item
+                    android:id="@+id/download_file_item"
+                    android:icon="@drawable/ic_baseline_cloud_download_24"
+                    android:title="Download"
+                    app:showAsAction="never" />
+                <item
                     android:id="@+id/delete_file_item"
                     android:icon="@drawable/ic_baseline_delete_forever_24"
                     android:title="Delete"

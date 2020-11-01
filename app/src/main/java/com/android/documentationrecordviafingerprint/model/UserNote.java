@@ -1,6 +1,8 @@
 package com.android.documentationrecordviafingerprint.model;
 
-public class UserNote {
+import java.io.Serializable;
+
+public class UserNote implements Serializable {
     public UserNote() {
     }
 }

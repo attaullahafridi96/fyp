@@ -24,7 +24,7 @@ import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.FirebaseController;
 import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.model.UserDocument;
+import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.ConfirmationDialog;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -33,11 +33,11 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import java.io.File;
 
 public final class MyDocumentsAdapter
-        extends FirebaseRecyclerAdapter<UserDocument, MyDocumentsAdapter.ViewHolder> {
+        extends FirebaseRecyclerAdapter<UserFile, MyDocumentsAdapter.ViewHolder> {
     private final Context context;
     private static final Intent activity_opener = new Intent();
 
-    public MyDocumentsAdapter(Context context, @NonNull FirebaseRecyclerOptions<UserDocument> options) {
+    public MyDocumentsAdapter(Context context, @NonNull FirebaseRecyclerOptions<UserFile> options) {
         super(options);
         this.context = context;
     }
@@ -51,7 +51,7 @@ public final class MyDocumentsAdapter
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final UserDocument model) {
+    protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final UserFile model) {
         Glide.with(holder.file_type_icon.getContext()).load(model.getImage_uri()).into(holder.file_type_icon);
         holder.filename.setText(model.getFile_name());
         holder.file_size.setText(model.getFile_size());
@@ -63,7 +63,7 @@ public final class MyDocumentsAdapter
                     Intent it = new Intent();
                     it.setAction(Intent.ACTION_VIEW);
                     it.setData(Uri.parse(model.getFile_uri()));
-                    context.startActivity(Intent.createChooser(it,"Select App to Download File"));
+                    context.startActivity(Intent.createChooser(it, "Select App to Download File"));
                 } else {
                     Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show();
                 }
@@ -78,7 +78,7 @@ public final class MyDocumentsAdapter
                     public void onClick(View v) {
                         if (CheckInternetConnectivity.isInternetConnected(context)) {
                             String file_id = StringOperations.createFileIdentifier(model.getFile_name());
-                            FirebaseController.deleteFile(context, model.getFile_key(), file_id);
+                            FirebaseController.deleteFile(context, model.getFile_storage_key(), file_id);
                             confirmationDialog.dismissAlertDialog();
                         } else {
                             Toast.makeText(context, "No internet connection", Toast.LENGTH_LONG).show();
@@ -108,10 +108,7 @@ public final class MyDocumentsAdapter
                         }
                     } else {
                         activity_opener.setClass(context, OnlineFileViewer.class);
-                        activity_opener.putExtra("FILE_NAME", model.getFile_name());
-                        activity_opener.putExtra("FILE_KEY", model.getFile_key());
-                        activity_opener.putExtra("URI", model.getFile_uri());
-                        activity_opener.putExtra("FILE_EXTENSION", model.getFile_extension());
+                        activity_opener.putExtra("USER_FILE", model);
                         context.startActivity(activity_opener);
                     }
                 }
