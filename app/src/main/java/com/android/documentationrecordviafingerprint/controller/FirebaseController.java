@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import com.android.documentationrecordviafingerprint.main.DashboardActivity;
 import com.android.documentationrecordviafingerprint.model.DB;
 import com.android.documentationrecordviafingerprint.model.User;
 import com.android.documentationrecordviafingerprint.model.UserDocument;
+import com.android.documentationrecordviafingerprint.uihelper.CustomProgressbar;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -212,15 +214,25 @@ public final class FirebaseController {
                     progressDialog.dismiss();
                 } else {
                     progressDialog.dismiss();
-                    final ProgressDialog prodialog = new ProgressDialog(context);
-                    prodialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    prodialog.setCancelable(false);
-                    prodialog.setCanceledOnTouchOutside(false);
-                    prodialog.setTitle("Uploading File...");
-                    prodialog.setProgress(0);
-                    prodialog.show();
+                    final CustomProgressbar pbar = new CustomProgressbar(context);
                     final String storage_file_name = System.currentTimeMillis() + "";
                     final UploadTask uploadTask = storageReference.child(storage_file_name).putFile(file_uri);
+                    pbar.setCancelBtn(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            uploadTask.cancel();
+                        }
+                    }).setPauseBtn(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!uploadTask.pause()) {
+                                pbar.setPauseText();
+                                uploadTask.resume();
+                            } else {
+                                pbar.setResumeText();
+                            }
+                        }
+                    });
                     uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -230,30 +242,32 @@ public final class FirebaseController {
                                 public void onSuccess(final Uri uri) {
                                     final UserDocument userDocument = new UserDocument(file_icon_uri, file_name, file_extension, file_type, uri.toString(), file_size, storage_file_name);
                                     databaseReference.child(email_identifier).child(FILES_ID).child(file_identifier).setValue(userDocument);
-                                    Toast.makeText(context, "File Uploaded and Successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "File Uploaded Successfully", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context, "Upload Failed", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "File Upload Failed", Toast.LENGTH_LONG).show();
+                            pbar.dismissAlertDialog();
                         }
                     }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                            int currentProgress = (int) (100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            prodialog.setProgress(currentProgress);
+                            double currentProgress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            pbar.setProgress((int) currentProgress);
                         }
                     }).addOnCanceledListener(new OnCanceledListener() {
                         @Override
                         public void onCanceled() {
-                            Toast.makeText(context, "Upload Canceled", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "File Upload Canceled", Toast.LENGTH_LONG).show();
+                            pbar.dismissAlertDialog();
                         }
                     }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            prodialog.dismiss();
+                            pbar.dismissAlertDialog();
                         }
                     });
                 }

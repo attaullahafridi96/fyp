@@ -6,12 +6,12 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/custom_confirm_title"
+        android:id="@+id/custom_upload_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed-light"
         android:padding="10dp"
-        android:text="Confirmation"
+        android:text="File Uploading . . ."
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -21,30 +21,28 @@
         android:layout_height="1dp"
         android:background="@color/special" />
 
-    <TextView
-        android:id="@+id/custom_confirm_msg_tv"
+    <ProgressBar
+        android:id="@+id/horizontal_pbar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed-light"
-        android:padding="20dp"
-        android:text="Are you sure?"
-        android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:layout_margin="20dp"
+        android:progress="0"
+        android:max="100" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="10dp"
-        android:weightSum="2.1">
+        android:padding="10dp">
 
         <Button
-            android:id="@+id/btnNeg"
+            android:id="@+id/btnCancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/dialog_btn_design"
-            android:text="No"
+            android:text="Cancel"
             android:textColor="@color/white" />
 
         <View
@@ -53,12 +51,12 @@
             android:layout_weight="0.1" />
 
         <Button
-            android:id="@+id/btnPos"
+            android:id="@+id/btnPause"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/dialog_btn_design"
-            android:text="Yes"
+            android:text="Pause"
             android:textColor="@color/white" />
     </LinearLayout>
 </LinearLayout>

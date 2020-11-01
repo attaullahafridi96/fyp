@@ -12,8 +12,8 @@ import androidx.appcompat.app.AlertDialog;
 import com.android.documentationrecordviafingerprint.R;
 
 public final class ConfirmationDialog extends AlertDialog {
-    private Button btnPos;
-    private AlertDialog alertDialog;
+    private final Button btnPos;
+    private final AlertDialog alertDialog;
 
     public ConfirmationDialog(@NonNull Context context, String msg) {
         super(context);
