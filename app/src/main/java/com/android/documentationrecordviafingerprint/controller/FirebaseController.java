@@ -15,6 +15,7 @@ import com.android.documentationrecordviafingerprint.main.DashboardActivity;
 import com.android.documentationrecordviafingerprint.model.DB;
 import com.android.documentationrecordviafingerprint.model.User;
 import com.android.documentationrecordviafingerprint.model.UserDocument;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,6 +44,7 @@ public final class FirebaseController {
     public static void createNewUserAccount(final Context context, final User user, final Activity activity) {
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Processing...");
+        progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
@@ -102,6 +104,7 @@ public final class FirebaseController {
     public static void verifyLoginCredentials(final Context context, final String email, final String password, final Activity activity) {
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Processing...");
+        progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
@@ -138,6 +141,7 @@ public final class FirebaseController {
     public static void deleteFile(final Activity activity, final String file_key, final String file_identifier) {
         progressDialog = new ProgressDialog(activity);
         progressDialog.setMessage("Deleting File...");
+        progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
         email_identifier = new SessionController(activity).getEmailIdentifier();
@@ -166,6 +170,7 @@ public final class FirebaseController {
     public static void deleteFile(final Context context, final String file_key, final String file_identifier) {
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Deleting File...");
+        progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
         email_identifier = new SessionController(context).getEmailIdentifier();
@@ -209,12 +214,13 @@ public final class FirebaseController {
                     progressDialog.dismiss();
                     final ProgressDialog prodialog = new ProgressDialog(context);
                     prodialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    prodialog.setCancelable(false);
                     prodialog.setCanceledOnTouchOutside(false);
                     prodialog.setTitle("Uploading File...");
                     prodialog.setProgress(0);
                     prodialog.show();
                     final String storage_file_name = System.currentTimeMillis() + "";
-                    UploadTask uploadTask = storageReference.child(storage_file_name).putFile(file_uri);
+                    final UploadTask uploadTask = storageReference.child(storage_file_name).putFile(file_uri);
                     uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -224,13 +230,14 @@ public final class FirebaseController {
                                 public void onSuccess(final Uri uri) {
                                     final UserDocument userDocument = new UserDocument(file_icon_uri, file_name, file_extension, file_type, uri.toString(), file_size, storage_file_name);
                                     databaseReference.child(email_identifier).child(FILES_ID).child(file_identifier).setValue(userDocument);
+                                    Toast.makeText(context, "File Uploaded and Successfully", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context, "Upload Failed ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Upload Failed", Toast.LENGTH_LONG).show();
                         }
                     }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -238,11 +245,15 @@ public final class FirebaseController {
                             int currentProgress = (int) (100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
                             prodialog.setProgress(currentProgress);
                         }
+                    }).addOnCanceledListener(new OnCanceledListener() {
+                        @Override
+                        public void onCanceled() {
+                            Toast.makeText(context, "Upload Canceled", Toast.LENGTH_SHORT).show();
+                        }
                     }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                             prodialog.dismiss();
-                            Toast.makeText(context, "File Uploaded and Successfully", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -255,4 +266,7 @@ public final class FirebaseController {
         });
     }
 
+    public static void renameFile() {
+
+    }
 }

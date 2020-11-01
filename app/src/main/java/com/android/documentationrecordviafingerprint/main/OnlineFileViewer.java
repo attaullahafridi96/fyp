@@ -146,7 +146,7 @@ public class OnlineFileViewer extends AppCompatActivity {
         try {
             switch (item.getItemId()) {
                 case R.id.rename_item:
-
+                    FirebaseController.renameFile();
                     break;
                 case R.id.delete_file_item:
                     final ConfirmationDialog confirmationDialog = new ConfirmationDialog(context, "Are you Sure to Delete this File from Cloud?");

@@ -9,7 +9,6 @@ import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -126,7 +125,7 @@ public final class MyDocumentsAdapter
         private final TextView file_size;
         private final LinearLayout selected_file;
         private final ImageButton download_file_btn;
-        private final Button delete_file_btn;
+        private final ImageButton delete_file_btn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

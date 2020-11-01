@@ -16,7 +16,7 @@
             android:id="@+id/file_type_icon"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:contentDescription="image"
+            android:contentDescription="@string/image"
             android:src="@drawable/pdf_96px" />
 
         <TextView
@@ -34,12 +34,12 @@
 
         <TextView
             android:id="@+id/selected_file_size"
-            android:layout_width="80dp"
+            android:layout_width="60dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:fontFamily="sans-serif-condensed"
             android:maxLines="1"
-            android:text="1 MB"
+            android:text="999 KB"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
@@ -49,25 +49,25 @@
             android:background="@color/white" />
 
         <ImageButton
-            android:id="@+id/download_file_btn"
+            android:id="@+id/delete_file_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
             android:background="@android:color/transparent"
             android:contentDescription="@string/image"
             android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_baseline_cloud_download_32"
-            android:tooltipText="Tap to Download" />
+            android:src="@drawable/ic_baseline_delete_32"
+            android:tooltipText="Tap to Delete" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/delete_file_btn"
+    <ImageButton
+        android:id="@+id/download_file_btn"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:background="@drawable/list_item_delete_btn_design"
         android:text="Delete"
-        android:textColor="@color/white"
-        android:fontFamily="sans-serif-condensed"
-        android:tooltipText="Tap to Delete"/>
+        android:src="@drawable/ic_baseline_cloud_download_32"
+        android:tooltipText="Tap to Download"
+        android:contentDescription="@string/image" />
 
 </LinearLayout>
