@@ -24,7 +24,7 @@ public class SearchActivity extends AppCompatActivity {
     private ImageButton voice_search;
     private SearchView text_search;
     private RecyclerView recyclerView;
-    private MyDocumentsAdapter myAdapter;
+    private MyFilesAdapter myAdapter;
     private FirebaseRecyclerOptions<UserFile> options;
     private Context context;
     private DatabaseReference parent_node;
@@ -62,7 +62,7 @@ public class SearchActivity extends AppCompatActivity {
             DatabaseReference childReference = parent_node.child(email_identifier);
             options = new FirebaseRecyclerOptions.Builder<UserFile>()
                     .setQuery(childReference.child("files"), UserFile.class).build();
-            myAdapter = new MyDocumentsAdapter(context, options);
+            myAdapter = new MyFilesAdapter(context, options);
             recyclerView.setAdapter(myAdapter);
         }
 

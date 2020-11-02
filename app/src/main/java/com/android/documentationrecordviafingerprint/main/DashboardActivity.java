@@ -32,7 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 public class DashboardActivity extends AppCompatActivity {
     private Context context;
     private static DrawerLayout drawerLayout;
-    private MyDocumentsAdapter myAdapter;
+    private MyFilesAdapter myAdapter;
     private static final Intent activity_opener = new Intent();
     private static SessionController session;
 
@@ -100,6 +100,7 @@ public class DashboardActivity extends AppCompatActivity {
         email.setText(session.getSession());
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         String email_identifier = session.getEmailIdentifier();
@@ -109,7 +110,7 @@ public class DashboardActivity extends AppCompatActivity {
             FirebaseRecyclerOptions<UserFile> options = new FirebaseRecyclerOptions.Builder<UserFile>()
                     .setQuery(childReference.child("files"), UserFile.class)
                     .build();
-            myAdapter = new MyDocumentsAdapter(context, options);
+            myAdapter = new MyFilesAdapter(context, options);
             recyclerView.setAdapter(myAdapter);
         }
 

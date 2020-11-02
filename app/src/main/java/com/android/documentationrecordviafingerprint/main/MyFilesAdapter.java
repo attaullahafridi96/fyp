@@ -9,6 +9,8 @@ import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,12 +34,13 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 import java.io.File;
 
-public final class MyDocumentsAdapter
-        extends FirebaseRecyclerAdapter<UserFile, MyDocumentsAdapter.ViewHolder> {
+public final class MyFilesAdapter
+        extends FirebaseRecyclerAdapter<UserFile, MyFilesAdapter.ViewHolder> {
     private final Context context;
     private static final Intent activity_opener = new Intent();
+    private int lastPosition = -1;
 
-    public MyDocumentsAdapter(Context context, @NonNull FirebaseRecyclerOptions<UserFile> options) {
+    public MyFilesAdapter(Context context, @NonNull FirebaseRecyclerOptions<UserFile> options) {
         super(options);
         this.context = context;
     }
@@ -114,6 +117,15 @@ public final class MyDocumentsAdapter
                 }
             }
         });
+        setAnimation(holder.itemView, position);
+    }
+
+    private void setAnimation(View viewToAnimate, int position) {
+        if (position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

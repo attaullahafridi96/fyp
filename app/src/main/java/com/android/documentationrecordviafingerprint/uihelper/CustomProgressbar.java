@@ -26,7 +26,6 @@ public class CustomProgressbar extends AlertDialog {
         builder.setView(view);
         progressBar = view.findViewById(R.id.horizontal_pbar);
         pauseBtn = view.findViewById(R.id.btnPause);
-        //resumeBtn = view.findViewById(R.id.btnResume);
         cancelBtn = view.findViewById(R.id.btnCancel);
         alertDialog = builder.create();
         alertDialog.setCancelable(false);

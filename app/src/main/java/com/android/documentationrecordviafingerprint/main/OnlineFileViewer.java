@@ -156,7 +156,6 @@ public class OnlineFileViewer extends AppCompatActivity {
         try {
             switch (item.getItemId()) {
                 case R.id.rename_item:
-
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Rename");
                     final EditText input = new EditText(this);

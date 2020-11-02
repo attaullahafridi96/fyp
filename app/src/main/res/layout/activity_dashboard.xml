@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.2"
-            android:contentDescription="icon"
+            android:contentDescription="@string/image"
             android:src="@drawable/ic_baseline_menu_32" />
 
         <TextView
@@ -78,7 +78,7 @@
                     android:background="@drawable/btn_design"
                     android:fontFamily="monospace"
                     android:letterSpacing="0.2"
-                    android:text="Search"
+                    android:text="Files"
                     android:textColor="@color/white" />
 
                 <View
