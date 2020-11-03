@@ -24,10 +24,8 @@ public final class StringOperations {
     }
 
     public static CharSequence toAlphaNumeric(CharSequence source) {
-        int start = 0;
-        int end = source.length();
         StringBuilder builder = new StringBuilder();
-        for (int i = start; i < end; i++) {
+        for (int i = 0; i < source.length(); i++) {
             char c = source.charAt(i);
             if (Character.isLetterOrDigit(c)) {
                 builder.append(c);

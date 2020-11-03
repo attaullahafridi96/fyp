@@ -344,4 +344,36 @@ public final class FirebaseController {
             Toast.makeText(activity, "Error: " + e, Toast.LENGTH_LONG).show();
         }
     }
+
+    public static void createNotes(final Context context) {
+        try {
+
+        } catch (Exception e) {
+            Toast.makeText(context, "Error: " + e, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public static void editNotes(final Context context) {
+        try {
+
+        } catch (Exception e) {
+            Toast.makeText(context, "Error: " + e, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public static void renameNotes(final Context context) {
+        try {
+
+        } catch (Exception e) {
+            Toast.makeText(context, "Error: " + e, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public static void deleteNotes(final Context context) {
+        try {
+
+        } catch (Exception e) {
+            Toast.makeText(context, "Error: " + e, Toast.LENGTH_LONG).show();
+        }
+    }
 }

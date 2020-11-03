@@ -15,8 +15,13 @@
                     android:icon="@drawable/ic_baseline_cloud_upload_24"
                     app:showAsAction="never" />
                 <item
-                    android:id="@+id/editor_cancel_item"
-                    android:title="Cancel"
+                    android:id="@+id/editor_rename_item"
+                    android:title="Rename Notes"
+                    android:icon="@drawable/ic_baseline_edit_24"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/editor_delete_item"
+                    android:title="Delete"
                     android:icon="@drawable/ic_baseline_cancel_24"
                     app:showAsAction="never" />
             </group>
