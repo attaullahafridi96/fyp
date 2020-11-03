@@ -23,8 +23,17 @@ public final class StringOperations {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
-    public static String toOriginalChars() {
-        return null;
+    public static CharSequence toAlphaNumeric(CharSequence source) {
+        int start = 0;
+        int end = source.length();
+        StringBuilder builder = new StringBuilder();
+        for (int i = start; i < end; i++) {
+            char c = source.charAt(i);
+            if (Character.isLetterOrDigit(c)) {
+                builder.append(c);
+            }
+        }
+        return builder.toString();
     }
 
     public static String removeInvalidCharsFromIdentifier(@NonNull String str) {

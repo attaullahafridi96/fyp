@@ -156,6 +156,7 @@ public class OnlineFileViewer extends AppCompatActivity {
                     customInputDialog.setOkBtn(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            customInputDialog.dismissDialog();
                             new_file_name = customInputDialog.getInputText();
                             if (StringOperations.isEmpty(new_file_name)) {
                                 Toast.makeText(context, "Can't Set Empty File Name", Toast.LENGTH_LONG).show();

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -114,6 +113,8 @@ public class DashboardActivity extends AppCompatActivity {
                     .build();
             myAdapter = new MyFilesAdapter(context, options);
             recyclerView.setAdapter(myAdapter);
+        }else{
+            Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
         }
 
         findViewById(R.id.home_search_btn).setOnClickListener(new View.OnClickListener() {

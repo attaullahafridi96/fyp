@@ -29,7 +29,7 @@ public final class ConfirmationDialog extends AlertDialog {
         btnNeg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismissAlertDialog();
+                dismissDialog();
             }
         });
         alertDialog.show();
@@ -39,7 +39,7 @@ public final class ConfirmationDialog extends AlertDialog {
         btnPos.setOnClickListener(listener);
     }
 
-    public void dismissAlertDialog() {
+    public void dismissDialog() {
         alertDialog.dismiss();
     }
 }
