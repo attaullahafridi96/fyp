@@ -2,23 +2,19 @@ package com.android.documentationrecordviafingerprint.main;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -28,6 +24,7 @@ import com.android.documentationrecordviafingerprint.controller.StringOperations
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.ConfirmationDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomInputDialog;
 import com.bumptech.glide.Glide;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
@@ -43,7 +40,7 @@ import java.net.URL;
 public class OnlineFileViewer extends AppCompatActivity {
     private static PDFView pdfView;
     private ProgressBar progressBar;
-    private static String file_name, file_storage_key, file_key;
+    private static String file_name, file_storage_key;
     private Context context;
     private String file_uri;
     private static String new_file_name;
@@ -61,7 +58,6 @@ public class OnlineFileViewer extends AppCompatActivity {
         Intent it = getIntent();
         UserFile model = (UserFile) it.getSerializableExtra("USER_FILE");
         file_name = model.getFile_name();
-        file_key = model.getFile_key();
         file_storage_key = model.getFile_storage_key();
         file_uri = model.getFile_uri();
         String file_extension = model.getFile_extension();
@@ -156,16 +152,15 @@ public class OnlineFileViewer extends AppCompatActivity {
         try {
             switch (item.getItemId()) {
                 case R.id.rename_item:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Rename");
-                    final EditText input = new EditText(this);
-                    input.setHint("Enter new file name");
-                    input.setInputType(InputType.TYPE_CLASS_TEXT);
-                    builder.setView(input);
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    final CustomInputDialog customInputDialog = new CustomInputDialog(context, "Rename");
+                    customInputDialog.setOkBtn(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            new_file_name = input.getText().toString().trim();
+                        public void onClick(View v) {
+                            new_file_name = customInputDialog.getInputText();
+                            if (StringOperations.isEmpty(new_file_name)) {
+                                Toast.makeText(context, "Can't Set Empty File Name", Toast.LENGTH_LONG).show();
+                                return;
+                            }
                             String old_file_id = StringOperations.createFileIdentifier(file_name);
                             String new_file_id = StringOperations.createFileIdentifier(new_file_name);
                             if (old_file_id.equalsIgnoreCase(new_file_id)) {
@@ -175,13 +170,6 @@ public class OnlineFileViewer extends AppCompatActivity {
                             }
                         }
                     });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-                    builder.show();
                     break;
                 case R.id.download_file_item:
                     if (CheckInternetConnectivity.isInternetConnected(context)) {
@@ -201,10 +189,10 @@ public class OnlineFileViewer extends AppCompatActivity {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {
                                 String file_id = StringOperations.createFileIdentifier(file_name);
                                 FirebaseController.deleteFile(OnlineFileViewer.this, file_storage_key, file_id);
-                                confirmationDialog.dismissAlertDialog();
+                                confirmationDialog.dismissDialog();
                             } else {
                                 Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
-                                confirmationDialog.dismissAlertDialog();
+                                confirmationDialog.dismissDialog();
                             }
                         }
                     });

@@ -73,10 +73,10 @@ public class UploadActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {
                                 FirebaseController.uploadFile(context, file_icon_uri, file_name.toLowerCase(), file_extension, file_type, file_uri, file_identifier.toLowerCase(), formatted_file_size);
-                                confirmationDialog.dismissAlertDialog();
+                                confirmationDialog.dismissDialog();
                             } else {
                                 Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
-                                confirmationDialog.dismissAlertDialog();
+                                confirmationDialog.dismissDialog();
                             }
                         }
                     });

@@ -3,6 +3,8 @@ package com.android.documentationrecordviafingerprint.controller;
 import android.text.TextUtils;
 import android.util.Patterns;
 
+import androidx.annotation.NonNull;
+
 public final class StringOperations {
     public static boolean isEmpty(String str) {
         return TextUtils.isEmpty(str);
@@ -25,7 +27,10 @@ public final class StringOperations {
         return null;
     }
 
-    public static String removeInvalidCharsFromIdentifier(String str) {
+    public static String removeInvalidCharsFromIdentifier(@NonNull String str) {
+        if (isEmpty(str)) {
+            return null;
+        }
         String validString = "";
         char[] type = {'-', '#', '$', '[', ']', '@', '.'};
         for (char c : type) {
@@ -33,7 +38,11 @@ public final class StringOperations {
         }
         return validString;
     }
-    public static String createFileIdentifier(String file_name) {
+
+    public static String createFileIdentifier(@NonNull String file_name) {
+        if (isEmpty(file_name)) {
+            return null;
+        }
         String tmp_file_id = file_name.replace(" ", "");
         return removeInvalidCharsFromIdentifier(tmp_file_id);
     }

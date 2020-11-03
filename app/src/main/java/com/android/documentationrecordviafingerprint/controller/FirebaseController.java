@@ -251,7 +251,7 @@ public final class FirebaseController {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(context, "File Upload Failed", Toast.LENGTH_LONG).show();
-                            pbar.dismissAlertDialog();
+                            pbar.dismissDialog();
                         }
                     }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -263,12 +263,12 @@ public final class FirebaseController {
                         @Override
                         public void onCanceled() {
                             Toast.makeText(context, "File Upload Canceled", Toast.LENGTH_LONG).show();
-                            pbar.dismissAlertDialog();
+                            pbar.dismissDialog();
                         }
                     }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            pbar.dismissAlertDialog();
+                            pbar.dismissDialog();
                         }
                     });
                 }

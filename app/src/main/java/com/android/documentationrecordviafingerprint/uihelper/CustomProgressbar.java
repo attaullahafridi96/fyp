@@ -57,7 +57,7 @@ public class CustomProgressbar extends AlertDialog {
         return this;
     }
 
-    public void dismissAlertDialog() {
+    public void dismissDialog() {
         alertDialog.dismiss();
     }
 }

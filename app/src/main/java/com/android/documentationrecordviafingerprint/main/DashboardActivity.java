@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.userlogin.Login;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -148,4 +150,27 @@ public class DashboardActivity extends AppCompatActivity {
             }
         }
     }
+
+    /*private static boolean doubleBackToExitPressedOnce = false;
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isOpen()) {
+            drawerLayout.close();
+        } else {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(0);
+            }
+            doubleBackToExitPressedOnce = true;
+            Snackbar.make(findViewById(android.R.id.content), "Press back again to exit", Snackbar.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 1500);
+        }
+    }*/
 }

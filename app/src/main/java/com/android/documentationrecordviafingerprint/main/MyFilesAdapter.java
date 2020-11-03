@@ -82,10 +82,10 @@ public final class MyFilesAdapter
                         if (CheckInternetConnectivity.isInternetConnected(context)) {
                             String file_id = StringOperations.createFileIdentifier(model.getFile_name());
                             FirebaseController.deleteFile(context, model.getFile_storage_key(), file_id);
-                            confirmationDialog.dismissAlertDialog();
+                            confirmationDialog.dismissDialog();
                         } else {
                             Toast.makeText(context, "No internet connection", Toast.LENGTH_LONG).show();
-                            confirmationDialog.dismissAlertDialog();
+                            confirmationDialog.dismissDialog();
                         }
                     }
                 });
