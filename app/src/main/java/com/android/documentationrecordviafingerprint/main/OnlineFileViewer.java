@@ -23,7 +23,7 @@ import com.android.documentationrecordviafingerprint.controller.FirebaseControll
 import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.UserFile;
-import com.android.documentationrecordviafingerprint.uihelper.ConfirmationDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomInputDialog;
 import com.bumptech.glide.Glide;
 import com.github.barteksc.pdfviewer.PDFView;
@@ -183,17 +183,17 @@ public class OnlineFileViewer extends AppCompatActivity {
                     }
                     break;
                 case R.id.delete_file_item:
-                    final ConfirmationDialog confirmationDialog = new ConfirmationDialog(context, "Are you Sure to Delete this File from Cloud?");
-                    confirmationDialog.setPositiveBtn(new View.OnClickListener() {
+                    final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, "Are you Sure to Delete this File from Cloud?");
+                    customConfirmDialog.setPositiveBtn(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {
                                 String file_id = StringOperations.createFileIdentifier(file_name);
                                 FirebaseController.deleteFile(OnlineFileViewer.this, file_storage_key, file_id);
-                                confirmationDialog.dismissDialog();
+                                customConfirmDialog.dismissDialog();
                             } else {
                                 Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
-                                confirmationDialog.dismissDialog();
+                                customConfirmDialog.dismissDialog();
                             }
                         }
                     });

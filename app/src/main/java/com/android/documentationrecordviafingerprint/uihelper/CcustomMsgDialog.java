@@ -9,9 +9,9 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.android.documentationrecordviafingerprint.R;
 
-public final class MsgDialog extends AlertDialog {
+public final class CcustomMsgDialog extends AlertDialog {
 
-    public MsgDialog(final Context context, String title, int msg_id) {
+    public CcustomMsgDialog(final Context context, String title, int msg_id) {
         super(context);
         Builder builder = new Builder(context);
         LayoutInflater inflater = getLayoutInflater();
@@ -24,7 +24,7 @@ public final class MsgDialog extends AlertDialog {
         builder.create().show();
     }
 
-    public MsgDialog(final Context context, String title, String msg) {
+    public CcustomMsgDialog(final Context context, String title, String msg) {
         super(context);
         Builder builder = new Builder(context);
         LayoutInflater inflater = getLayoutInflater();

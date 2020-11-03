@@ -11,11 +11,11 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.android.documentationrecordviafingerprint.R;
 
-public final class ConfirmationDialog extends AlertDialog {
+public final class CustomConfirmDialog extends AlertDialog {
     private final Button btnPos;
     private final AlertDialog alertDialog;
 
-    public ConfirmationDialog(@NonNull Context context, String msg) {
+    public CustomConfirmDialog(@NonNull Context context, String msg) {
         super(context);
         Builder builder = new Builder(context);
         LayoutInflater inflater = getLayoutInflater();

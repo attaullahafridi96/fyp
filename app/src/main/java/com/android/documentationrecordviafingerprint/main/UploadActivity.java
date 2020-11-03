@@ -30,7 +30,7 @@ import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.FirebaseController;
 import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.uihelper.ConfirmationDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
@@ -67,16 +67,16 @@ public class UploadActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (file_uri != null) {
-                    final ConfirmationDialog confirmationDialog = new ConfirmationDialog(context, "Do you want to Upload this File to Cloud?");
-                    confirmationDialog.setPositiveBtn(new View.OnClickListener() {
+                    final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, "Do you want to Upload this File to Cloud?");
+                    customConfirmDialog.setPositiveBtn(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {
                                 FirebaseController.uploadFile(context, file_icon_uri, file_name.toLowerCase(), file_extension, file_type, file_uri, file_identifier.toLowerCase(), formatted_file_size);
-                                confirmationDialog.dismissDialog();
+                                customConfirmDialog.dismissDialog();
                             } else {
                                 Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
-                                confirmationDialog.dismissDialog();
+                                customConfirmDialog.dismissDialog();
                             }
                         }
                     });
