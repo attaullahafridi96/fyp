@@ -31,7 +31,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-public final class FirebaseModel {
+public final class MyFirebaseDatabase {
     private static final DatabaseReference databaseReference;
     private static final StorageReference storageReference;
     private static String email_identifier;

@@ -16,7 +16,7 @@ import com.android.documentationrecordviafingerprint.controller.SessionManagemen
 import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.internetchecking.NoInternetScreen;
-import com.android.documentationrecordviafingerprint.model.FirebaseModel;
+import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 
 public class Login extends AppCompatActivity {
     private Context context;
@@ -58,7 +58,7 @@ public class Login extends AppCompatActivity {
                     return;
                 }
                 if (CheckInternetConnectivity.isInternetConnected(context)) {
-                    FirebaseModel.verifyLoginCredentials(context, getEnteredEmail, StringOperations.toMD5String(getEnteredPassword), Login.this);
+                    MyFirebaseDatabase.verifyLoginCredentials(context, getEnteredEmail, StringOperations.toMD5String(getEnteredPassword), Login.this);
                 } else {
                     startActivity(new Intent(context, NoInternetScreen.class));
                     finish();

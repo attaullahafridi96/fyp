@@ -25,7 +25,7 @@ import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.internetchecking.ConnectivityReceiver;
 import com.android.documentationrecordviafingerprint.model.DB;
-import com.android.documentationrecordviafingerprint.model.FirebaseModel;
+import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.userlogin.Login;
@@ -118,7 +118,7 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
             }
         });
 
-        FirebaseModel.getFullName(context, fullname);
+        MyFirebaseDatabase.getFullName(context, fullname);
         email.setText(session.getSession());
 
         recyclerView = findViewById(R.id.recyclerView);

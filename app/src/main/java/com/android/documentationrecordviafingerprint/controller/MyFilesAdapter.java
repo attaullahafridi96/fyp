@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.model.FirebaseModel;
+import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.bumptech.glide.Glide;
@@ -99,7 +99,7 @@ public final class MyFilesAdapter
                     public void onClick(View v) {
                         if (CheckInternetConnectivity.isInternetConnected(activity)) {
                             String file_id = StringOperations.createFileIdentifier(model.getFile_name());
-                            FirebaseModel.deleteFile((Context) activity, model.getFile_storage_key(), file_id);
+                            MyFirebaseDatabase.deleteFile((Context) activity, model.getFile_storage_key(), file_id);
                         } else {
                             Toast.makeText(activity, "No internet connection", Toast.LENGTH_LONG).show();
                         }

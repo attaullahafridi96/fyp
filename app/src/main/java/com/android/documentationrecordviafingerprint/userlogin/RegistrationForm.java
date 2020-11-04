@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.model.FirebaseModel;
+import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.model.User;
 
 public class RegistrationForm extends AppCompatActivity {
@@ -68,7 +68,7 @@ public class RegistrationForm extends AppCompatActivity {
                 } else {
                     if (CheckInternetConnectivity.isInternetConnected(RegistrationForm.this)) {
                         User user = new User(enteredFirstName, enteredLastName, enteredEmailAddress, StringOperations.toMD5String(enteredPassword));
-                        FirebaseModel.createNewUserAccount(context, user, RegistrationForm.this);
+                        MyFirebaseDatabase.createNewUserAccount(context, user, RegistrationForm.this);
                     } else {
                         Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
                     }
