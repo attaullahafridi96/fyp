@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.main;
+package com.android.documentationrecordviafingerprint.controller;
 
 import android.Manifest;
 import android.app.Activity;
@@ -28,9 +28,8 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.controller.FirebaseController;
-import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
+import com.android.documentationrecordviafingerprint.model.FirebaseModel;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.bumptech.glide.Glide;
@@ -100,7 +99,7 @@ public final class MyFilesAdapter
                     public void onClick(View v) {
                         if (CheckInternetConnectivity.isInternetConnected(activity)) {
                             String file_id = StringOperations.createFileIdentifier(model.getFile_name());
-                            FirebaseController.deleteFile((Context) activity, model.getFile_storage_key(), file_id);
+                            FirebaseModel.deleteFile((Context) activity, model.getFile_storage_key(), file_id);
                         } else {
                             Toast.makeText(activity, "No internet connection", Toast.LENGTH_LONG).show();
                         }

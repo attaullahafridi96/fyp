@@ -20,13 +20,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".main.AppSettings"></activity>
-        <activity android:name=".main.UploadActivity" />
+        <activity android:name=".controller.AppSettings"></activity>
+        <activity android:name=".controller.UploadActivity" />
         <activity
-            android:name=".main.SearchActivity"
+            android:name=".controller.SearchActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".main.TextEditorActivity"
+            android:name=".controller.TextEditorActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".internetchecking.NoInternetScreen" />
         <activity
@@ -44,11 +44,11 @@
         <activity android:name=".fingerprint.FingerprintAuthentication">
 
         </activity>
-        <activity android:name=".main.DashboardActivity">
+        <activity android:name=".controller.DashboardActivity">
 
         </activity>
-        <activity android:name=".main.OfflineFileViewer" />
-        <activity android:name=".main.OnlineFileViewer" />
+        <activity android:name=".controller.OfflineFileViewer" />
+        <activity android:name=".controller.OnlineFileViewer" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

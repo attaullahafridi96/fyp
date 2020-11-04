@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.main;
+package com.android.documentationrecordviafingerprint.controller;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -22,11 +22,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.controller.FirebaseController;
-import com.android.documentationrecordviafingerprint.controller.SessionController;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.internetchecking.ConnectivityReceiver;
 import com.android.documentationrecordviafingerprint.model.DB;
+import com.android.documentationrecordviafingerprint.model.FirebaseModel;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.userlogin.Login;
@@ -40,7 +39,7 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
     private static DrawerLayout drawerLayout;
     private MyFilesAdapter myAdapter;
     private static final Intent activity_opener = new Intent();
-    private static SessionController session;
+    private static SessionManagement session;
     private static DatabaseReference parent_node;
     private static RecyclerView recyclerView;
     private static BroadcastReceiver internet_broadcast;
@@ -50,7 +49,7 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
         context = DashboardActivity.this;
-        session = new SessionController(context);
+        session = new SessionManagement(context);
         parent_node = DB.getDbFirstNodeReference();
 
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -119,7 +118,7 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
             }
         });
 
-        FirebaseController.getFullName(context, fullname);
+        FirebaseModel.getFullName(context, fullname);
         email.setText(session.getSession());
 
         recyclerView = findViewById(R.id.recyclerView);

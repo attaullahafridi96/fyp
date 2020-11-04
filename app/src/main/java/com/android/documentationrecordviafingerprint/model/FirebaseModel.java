@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.controller;
+package com.android.documentationrecordviafingerprint.model;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -12,11 +12,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.android.documentationrecordviafingerprint.main.DashboardActivity;
-import com.android.documentationrecordviafingerprint.main.OnlineFileViewer;
-import com.android.documentationrecordviafingerprint.model.DB;
-import com.android.documentationrecordviafingerprint.model.User;
-import com.android.documentationrecordviafingerprint.model.UserFile;
+import com.android.documentationrecordviafingerprint.controller.DashboardActivity;
+import com.android.documentationrecordviafingerprint.controller.OnlineFileViewer;
+import com.android.documentationrecordviafingerprint.controller.SessionManagement;
+import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressbar;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,7 +31,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-public final class FirebaseController {
+public final class FirebaseModel {
     private static final DatabaseReference databaseReference;
     private static final StorageReference storageReference;
     private static String email_identifier;
@@ -67,7 +66,7 @@ public final class FirebaseController {
                             //Account Created
                             databaseReference.child(email_identifier).setValue(user);
                             Toast.makeText(context, "New Account Created Successfully", Toast.LENGTH_SHORT).show();
-                            new SessionController(context).setSession(user.getEmail());
+                            new SessionManagement(context).setSession(user.getEmail());
                             context.startActivity(new Intent(context, DashboardActivity.class));
                             progressDialog.dismiss();
                             activity.finish();
@@ -101,7 +100,7 @@ public final class FirebaseController {
 
     public static void getFullName(final Context context, final TextView textView) {
         try {
-            email_identifier = new SessionController(context).getEmailIdentifier();
+            email_identifier = new SessionManagement(context).getEmailIdentifier();
             Query checkAccount = databaseReference.child(email_identifier);
             checkAccount.addListenerForSingleValueEvent(new ValueEventListener() {
                 @SuppressLint("SetTextI18n")
@@ -142,7 +141,7 @@ public final class FirebaseController {
                     if (dataSnapshot.exists()) {
                         String passFromDB = dataSnapshot.child(email_identifier).child("password").getValue(String.class);
                         if (password.equals(passFromDB)) {
-                            new SessionController(context).setSession(email);
+                            new SessionManagement(context).setSession(email);
                             progressDialog.dismiss();
                             context.startActivity(new Intent(context, DashboardActivity.class));
                             activity.finish();
@@ -172,7 +171,7 @@ public final class FirebaseController {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
         try {
-            email_identifier = new SessionController(activity).getEmailIdentifier();
+            email_identifier = new SessionManagement(activity).getEmailIdentifier();
             Task<Void> task = storageReference.child(file_key).delete();
             task.addOnSuccessListener(activity, new OnSuccessListener<Void>() {
                 @Override
@@ -205,7 +204,7 @@ public final class FirebaseController {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
         try {
-            email_identifier = new SessionController(context).getEmailIdentifier();
+            email_identifier = new SessionManagement(context).getEmailIdentifier();
             Task<Void> task = storageReference.child(file_key).delete();
             task.addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -236,7 +235,7 @@ public final class FirebaseController {
         progressDialog.show();
 
         try {
-            email_identifier = new SessionController(context).getEmailIdentifier();
+            email_identifier = new SessionManagement(context).getEmailIdentifier();
 
             DatabaseReference childReference = databaseReference.child(email_identifier).child(FILES_KEY).child(file_identifier);
             Query checkuser = childReference.orderByChild("file_name");

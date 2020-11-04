@@ -2,7 +2,7 @@ package com.android.documentationrecordviafingerprint.model;
 
 import java.io.Serializable;
 
-public class UserFile implements Serializable {
+public final class UserFile implements Serializable {
     private String image_uri, file_name, file_extension, file_type, file_uri, file_size, file_key, file_storage_key;
 
     public UserFile(String image_uri, String file_name, String file_extension, String file_type, String file_uri, String file_size, String file_key, String file_storage_key) {

@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.main;
+package com.android.documentationrecordviafingerprint.controller;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.controller.SessionController;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.internetchecking.ConnectivityReceiver;
 import com.android.documentationrecordviafingerprint.model.DB;
@@ -135,7 +134,7 @@ public class SearchActivity extends AppCompatActivity implements ConnectivityRec
     @Override
     protected void onStart() {
         super.onStart();
-        email_identifier = new SessionController(context).getEmailIdentifier();
+        email_identifier = new SessionManagement(context).getEmailIdentifier();
 
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);

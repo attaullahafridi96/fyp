@@ -11,12 +11,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.controller.FirebaseController;
-import com.android.documentationrecordviafingerprint.controller.SessionController;
+import com.android.documentationrecordviafingerprint.controller.DashboardActivity;
+import com.android.documentationrecordviafingerprint.controller.SessionManagement;
 import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.internetchecking.NoInternetScreen;
-import com.android.documentationrecordviafingerprint.main.DashboardActivity;
+import com.android.documentationrecordviafingerprint.model.FirebaseModel;
 
 public class Login extends AppCompatActivity {
     private Context context;
@@ -25,7 +25,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = Login.this;
-        if (new SessionController(context).isSessionActive()) {
+        if (new SessionManagement(context).isSessionActive()) {
             startActivity(new Intent(context, DashboardActivity.class));
             finish();
             return;
@@ -58,7 +58,7 @@ public class Login extends AppCompatActivity {
                     return;
                 }
                 if (CheckInternetConnectivity.isInternetConnected(context)) {
-                    FirebaseController.verifyLoginCredentials(context, getEnteredEmail, StringOperations.toMD5String(getEnteredPassword), Login.this);
+                    FirebaseModel.verifyLoginCredentials(context, getEnteredEmail, StringOperations.toMD5String(getEnteredPassword), Login.this);
                 } else {
                     startActivity(new Intent(context, NoInternetScreen.class));
                     finish();

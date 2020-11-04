@@ -6,7 +6,7 @@
     android:background="@drawable/fp"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context=".main.UploadActivity">
+    tools:context=".controller.UploadActivity">
 
     <LinearLayout
         android:id="@+id/selected_file"

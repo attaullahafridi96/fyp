@@ -4,14 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class SessionController {
+public final class SessionManagement {
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
     private static final String SHARED_PREF_NAME = "session";
     private final String session_key;
 
     @SuppressLint("CommitPrefEdits")
-    public SessionController(Context context) {
+    public SessionManagement(Context context) {
         session_key = "session_user";
         sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();

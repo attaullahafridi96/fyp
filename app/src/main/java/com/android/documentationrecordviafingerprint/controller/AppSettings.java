@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.main;
+package com.android.documentationrecordviafingerprint.controller;
 
 import android.os.Bundle;
 

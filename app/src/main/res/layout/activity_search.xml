@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/fp"
     android:orientation="vertical"
-    tools:context=".main.SearchActivity">
+    tools:context=".controller.SearchActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

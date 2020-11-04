@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.main;
+package com.android.documentationrecordviafingerprint.controller;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -27,9 +27,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.controller.FirebaseController;
-import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
+import com.android.documentationrecordviafingerprint.model.FirebaseModel;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -72,7 +71,7 @@ public class UploadActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {
-                                FirebaseController.uploadFile(context, file_icon_uri, file_name.toLowerCase(), file_extension, file_type, file_uri, file_identifier.toLowerCase(), formatted_file_size);
+                                FirebaseModel.uploadFile(context, file_icon_uri, file_name.toLowerCase(), file_extension, file_type, file_uri, file_identifier.toLowerCase(), formatted_file_size);
                                 customConfirmDialog.dismissDialog();
                             } else {
                                 Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();

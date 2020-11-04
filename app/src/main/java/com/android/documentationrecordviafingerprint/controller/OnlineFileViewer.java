@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.main;
+package com.android.documentationrecordviafingerprint.controller;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -24,9 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.controller.FirebaseController;
-import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
+import com.android.documentationrecordviafingerprint.model.FirebaseModel;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomInputDialog;
@@ -202,7 +201,7 @@ public class OnlineFileViewer extends AppCompatActivity {
                     Toast.makeText(context, "Please enter different file name", Toast.LENGTH_LONG).show();
                 } else {
                     if (CheckInternetConnectivity.isInternetConnected(context)) {
-                        FirebaseController.renameFile(OnlineFileViewer.this, new_file_name, new_file_id, old_file_id);
+                        FirebaseModel.renameFile(OnlineFileViewer.this, new_file_name, new_file_id, old_file_id);
                     } else {
                         Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
                     }
@@ -238,7 +237,7 @@ public class OnlineFileViewer extends AppCompatActivity {
             public void onClick(View v) {
                 if (CheckInternetConnectivity.isInternetConnected(context)) {
                     String file_id = StringOperations.createFileIdentifier(file_name);
-                    FirebaseController.deleteFile(OnlineFileViewer.this, file_storage_key, file_id);
+                    FirebaseModel.deleteFile(OnlineFileViewer.this, file_storage_key, file_id);
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
                 }
