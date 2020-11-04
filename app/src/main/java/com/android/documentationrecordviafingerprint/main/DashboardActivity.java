@@ -1,10 +1,13 @@
 package com.android.documentationrecordviafingerprint.main;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,20 +25,25 @@ import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.FirebaseController;
 import com.android.documentationrecordviafingerprint.controller.SessionController;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
+import com.android.documentationrecordviafingerprint.internetchecking.ConnectivityReceiver;
 import com.android.documentationrecordviafingerprint.model.DB;
 import com.android.documentationrecordviafingerprint.model.UserFile;
+import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.userlogin.Login;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
     private Context context;
     private static DrawerLayout drawerLayout;
     private MyFilesAdapter myAdapter;
     private static final Intent activity_opener = new Intent();
     private static SessionController session;
+    private static DatabaseReference parent_node;
+    private static RecyclerView recyclerView;
+    private static BroadcastReceiver internet_broadcast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +51,7 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigation_drawer);
         context = DashboardActivity.this;
         session = new SessionController(context);
-        DatabaseReference parent_node = DB.getDbFirstNodeReference();
+        parent_node = DB.getDbFirstNodeReference();
 
         drawerLayout = findViewById(R.id.drawer_layout);
         /*Set App Version*/
@@ -97,26 +105,6 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-        FirebaseController.getFullName(context, fullname);
-        email.setText(session.getSession());
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
-        String email_identifier = session.getEmailIdentifier();
-
-        if (CheckInternetConnectivity.isInternetConnected(context)) {
-            DatabaseReference childReference = parent_node.child(email_identifier);
-            FirebaseRecyclerOptions<UserFile> options = new FirebaseRecyclerOptions.Builder<UserFile>()
-                    .setQuery(childReference.child("files"), UserFile.class)
-                    .build();
-            myAdapter = new MyFilesAdapter(context, options);
-            recyclerView.setAdapter(myAdapter);
-        }else{
-            Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
-        }
-
         findViewById(R.id.home_search_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,12 +118,53 @@ public class DashboardActivity extends AppCompatActivity {
                 startActivity(activity_opener.setClass(DashboardActivity.this, UploadActivity.class));
             }
         });
+
+        FirebaseController.getFullName(context, fullname);
+        email.setText(session.getSession());
+
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    new CustomMsgDialog(context, "Permissions Granted", "Now you can Download File");
+                } else {
+                    new CustomMsgDialog(context, "Permissions Denied", "Please Grant Permissions to Download File");
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if (isConnected) {
+            if (myAdapter == null) {
+                Snackbar.make(findViewById(android.R.id.content), "Internet Connected", Snackbar.LENGTH_LONG).show();
+                onStart();
+            }
+        } else {
+            Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        String email_identifier = session.getEmailIdentifier();
+
         if (CheckInternetConnectivity.isInternetConnected(context)) {
+            DatabaseReference childReference = parent_node.child(email_identifier);
+            FirebaseRecyclerOptions<UserFile> options = new FirebaseRecyclerOptions.Builder<UserFile>()
+                    .setQuery(childReference.child("files"), UserFile.class)
+                    .build();
+            myAdapter = new MyFilesAdapter(DashboardActivity.this, options);
+            recyclerView.setAdapter(myAdapter);
             if (myAdapter != null) {
                 myAdapter.startListening();
             }
@@ -143,16 +172,19 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        if (CheckInternetConnectivity.isInternetConnected(context)) {
-            if (myAdapter != null) {
-                myAdapter.stopListening();
-            }
-        }
+    protected void onResume() {
+        super.onResume();
+        internet_broadcast = new ConnectivityReceiver();
+        registerReceiver(internet_broadcast, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        ConnectivityReceiver.connectivityReceiverListener = this;
     }
 
-    /*private static boolean doubleBackToExitPressedOnce = false;
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(internet_broadcast);
+    }
+/*private static boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onBackPressed() {

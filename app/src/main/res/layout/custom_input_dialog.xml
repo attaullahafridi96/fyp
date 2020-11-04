@@ -28,7 +28,7 @@
         android:autofillHints=""
         android:fontFamily="sans-serif-condensed-light"
         android:hint="Enter new file name"
-        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-.()%*!~`{}?+;: "
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-()%*!~`{}?+;: "
         android:inputType="textCapWords"
         android:padding="20dp"
         android:singleLine="true"

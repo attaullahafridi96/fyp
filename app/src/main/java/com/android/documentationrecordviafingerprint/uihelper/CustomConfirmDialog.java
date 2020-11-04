@@ -35,6 +35,10 @@ public final class CustomConfirmDialog extends AlertDialog {
         alertDialog.show();
     }
 
+    public void setPosBtnText(String text) {
+        btnPos.setText(text);
+    }
+
     public void setPositiveBtn(View.OnClickListener listener) {
         btnPos.setOnClickListener(listener);
     }

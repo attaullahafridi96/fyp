@@ -1,30 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#22313F"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/custom_title"
+        android:id="@+id/custom_msg_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed-light"
         android:padding="10dp"
-        android:text="@string/app_name"
+        android:text="Permissions Denied!"
+        android:background="@drawable/title_design"
+        android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <ScrollView
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="1dp"
+        android:background="@color/special" />
 
-        <TextView
-            android:id="@+id/custom_msg_tv"
-            android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/custom_msg_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed-light"
+        android:padding="20dp"
+
+        android:text="Please Grant Permissions to Download File"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/msgbtnOK"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed-light"
-            android:padding="10dp"
-            android:textColor="@android:color/secondary_text_light"
-            android:textSize="16sp" />
-    </ScrollView>
+            android:layout_weight="1"
+            android:background="@drawable/dialog_btn_design"
+            android:text="OK"
+            android:textColor="@color/white" />
+    </LinearLayout>
 </LinearLayout>

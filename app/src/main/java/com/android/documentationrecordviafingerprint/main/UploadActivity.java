@@ -67,7 +67,7 @@ public class UploadActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (file_uri != null) {
-                    final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, "Do you want to Upload this File to Cloud?");
+                    final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.upload_msg));
                     customConfirmDialog.setPositiveBtn(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

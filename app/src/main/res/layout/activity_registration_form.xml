@@ -47,7 +47,7 @@
                 android:background="@drawable/edittext_shape"
                 android:fontFamily="sans-serif-condensed"
                 android:hint="First Name"
-                android:inputType="textPersonName"
+                android:inputType="textPersonName|textCapWords"
                 android:padding="10dp" />
 
             <View
@@ -62,7 +62,7 @@
                 android:background="@drawable/edittext_shape"
                 android:fontFamily="sans-serif-condensed"
                 android:hint="Last Name (Optional)"
-                android:inputType="textPersonName"
+                android:inputType="textPersonName|textCapWords"
                 android:padding="10dp" />
 
             <View

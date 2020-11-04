@@ -58,7 +58,7 @@ public class Login extends AppCompatActivity {
                     return;
                 }
                 if (CheckInternetConnectivity.isInternetConnected(context)) {
-                    FirebaseController.verifyLoginCredentials(context,getEnteredEmail, getEnteredPassword, Login.this);
+                    FirebaseController.verifyLoginCredentials(context, getEnteredEmail, StringOperations.toMD5String(getEnteredPassword), Login.this);
                 } else {
                     startActivity(new Intent(context, NoInternetScreen.class));
                     finish();

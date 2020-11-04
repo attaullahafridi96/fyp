@@ -27,8 +27,8 @@
             android:layout_height="match_parent"
             android:layout_weight="0.1"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_baseline_mic_none_28"
-            android:contentDescription="mic" />
+            android:contentDescription="@string/image"
+            android:src="@drawable/ic_baseline_mic_none_34" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

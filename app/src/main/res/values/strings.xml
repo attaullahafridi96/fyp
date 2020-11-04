@@ -4,6 +4,10 @@
     <string name="nav_header_title">First Name + Last Name</string>
     <string name="nav_header_subtitle">email@gmail.com</string>
 
+    <string name="download_msg">Are you sure to Download this file?</string>
+    <string name="delete_msg">Are you sure to Delete this file from cloud?</string>
+    <string name="upload_msg">Do you want to Upload this file to cloud?</string>
+
     <string name="pdf_icon">https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fpdf_96px.png?alt=media&amp;token=33ae2d52-7b4d-40b3-983f-00ebfd7410b3</string>
     <string name="word_icon">https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fword_96px.png?alt=media&amp;token=bca25a91-c60d-461f-ba2e-1d526baa3c5a</string>
     <string name="rtf_icon">https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Frtf_96px.png?alt=media&amp;token=2fa49bbb-d4a8-4d4b-9aba-5d31d53e4082</string>

@@ -39,7 +39,7 @@ public class CustomInputDialog extends androidx.appcompat.app.AlertDialog {
     }
 
     public String getInputText() {
-        return custom_input.getText().toString().trim();
+        return custom_input.getText().toString().trim().toLowerCase();
     }
 
     public CustomInputDialog setOkBtn(View.OnClickListener listener) {

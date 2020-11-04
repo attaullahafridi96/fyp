@@ -67,7 +67,7 @@ public class RegistrationForm extends AppCompatActivity {
                     Toast.makeText(context, "Password not Matched", Toast.LENGTH_SHORT).show();
                 } else {
                     if (CheckInternetConnectivity.isInternetConnected(RegistrationForm.this)) {
-                        User user = new User(enteredFirstName, enteredLastName, enteredEmailAddress, enteredPassword);
+                        User user = new User(enteredFirstName, enteredLastName, enteredEmailAddress, StringOperations.toMD5String(enteredPassword));
                         FirebaseController.createNewUserAccount(context, user, RegistrationForm.this);
                     } else {
                         Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();

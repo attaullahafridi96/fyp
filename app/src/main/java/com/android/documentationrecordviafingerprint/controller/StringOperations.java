@@ -5,6 +5,12 @@ import android.util.Patterns;
 
 import androidx.annotation.NonNull;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public final class StringOperations {
     public static boolean isEmpty(String str) {
         return TextUtils.isEmpty(str);
@@ -34,6 +40,15 @@ public final class StringOperations {
         return builder.toString();
     }
 
+    public static String capitalizeString(String capString) {
+        StringBuffer capBuffer = new StringBuffer();
+        Matcher capMatcher = Pattern.compile("([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(capString);
+        while (capMatcher.find()) {
+            capMatcher.appendReplacement(capBuffer, capMatcher.group(1).toUpperCase() + capMatcher.group(2).toLowerCase());
+        }
+        return capMatcher.appendTail(capBuffer).toString();
+    }
+
     public static String removeInvalidCharsFromIdentifier(@NonNull String str) {
         if (isEmpty(str)) {
             return null;
@@ -52,5 +67,15 @@ public final class StringOperations {
         }
         String tmp_file_id = file_name.replace(" ", "");
         return removeInvalidCharsFromIdentifier(tmp_file_id);
+    }
+
+    public static String toMD5String(String string) {
+        MessageDigest md5;
+        try {
+            md5 = MessageDigest.getInstance("MD5");
+            md5.update(StandardCharsets.UTF_8.encode(string));
+            return String.format("%032x", new BigInteger(1, md5.digest()));
+        } catch (Exception ignored) { }
+        return null;
     }
 }

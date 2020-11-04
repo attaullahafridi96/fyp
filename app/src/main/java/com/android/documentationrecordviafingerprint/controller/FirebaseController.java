@@ -87,6 +87,18 @@ public final class FirebaseController {
         }
     }
 
+    public static void changeFirstName() {
+
+    }
+
+    public static void changeLastName() {
+
+    }
+
+    public static void changePassword() {
+
+    }
+
     public static void getFullName(final Context context, final TextView textView) {
         try {
             email_identifier = new SessionController(context).getEmailIdentifier();
@@ -98,7 +110,8 @@ public final class FirebaseController {
                     if (dataSnapshot.exists()) {
                         String first_name = dataSnapshot.child("first_name").getValue(String.class);
                         String last_name = dataSnapshot.child("last_name").getValue(String.class);
-                        textView.setText(first_name + " " + last_name);
+                        String full_name = first_name + " " + last_name;
+                        textView.setText(StringOperations.capitalizeString(full_name));
                     }
                 }
 
