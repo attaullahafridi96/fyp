@@ -2,7 +2,6 @@ package com.android.documentationrecordviafingerprint.controller;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.provider.OpenableColumns;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -24,15 +22,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.io.File;
 
 public class UploadActivity extends AppCompatActivity {
 
@@ -71,7 +67,7 @@ public class UploadActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {
-                                MyFirebaseDatabase.uploadFile(context, file_icon_uri, file_name.toLowerCase(), file_extension, file_type, file_uri, file_identifier.toLowerCase(), formatted_file_size);
+                                MyFirebaseDatabase.requestFileUpload(context, file_icon_uri, file_name.toLowerCase(), file_extension, file_type, file_uri, file_identifier.toLowerCase(), formatted_file_size);
                                 customConfirmDialog.dismissDialog();
                             } else {
                                 Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
@@ -191,7 +187,7 @@ public class UploadActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (file_uri != null) {
                     if (file_extension.equals("doc") || file_extension.equals("docx") || file_extension.equals("rtf")) {
-                        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                        /*StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                         StrictMode.setVmPolicy(builder.build());
                         builder.detectFileUriExposure();
 
@@ -206,7 +202,8 @@ public class UploadActivity extends AppCompatActivity {
                             startActivity(chooser);
                         } catch (ActivityNotFoundException e) {
                             Toast.makeText(UploadActivity.this, "No application to open file", Toast.LENGTH_SHORT).show();
-                        }
+                        }*/
+                        new CustomMsgDialog(context, "Can't open this type of file", getResources().getString(R.string.canNotOpenMsg));
                     } else {
                         activity_opener.setClass(context, OfflineFileViewer.class);
                         activity_opener.putExtra("FILE_NAME", file_name);

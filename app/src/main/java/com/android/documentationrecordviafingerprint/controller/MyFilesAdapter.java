@@ -3,14 +3,12 @@ package com.android.documentationrecordviafingerprint.controller;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DownloadManager;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +22,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
@@ -32,12 +29,11 @@ import com.android.documentationrecordviafingerprint.internetchecking.CheckInter
 import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.io.File;
 
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 
@@ -63,7 +59,7 @@ public final class MyFilesAdapter
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final UserFile model) {
-        String capitalizeFileName = StringOperations.capitalizeString(model.getFile_name());
+        String capitalizeFileName = model.getFile_name().toUpperCase();
         Glide.with(holder.file_type_icon.getContext()).load(model.getImage_uri()).into(holder.file_type_icon);
         holder.filename.setText(capitalizeFileName);
         holder.file_size.setText(model.getFile_size());
@@ -113,7 +109,7 @@ public final class MyFilesAdapter
             public void onClick(View v) {
                 if (model.getFile_uri() != null) {
                     if (model.getFile_extension().equals("doc") || model.getFile_extension().equals("docx") || model.getFile_extension().equals("rtf")) {
-                        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                        /*StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                         StrictMode.setVmPolicy(builder.build());
                         builder.detectFileUriExposure();
                         Uri docUri = FileProvider.getUriForFile(activity, "com.android.documentationrecordviafingerprint.provider",
@@ -125,7 +121,8 @@ public final class MyFilesAdapter
                             activity.startActivity(Intent.createChooser(intent, "Open With.."));
                         } catch (ActivityNotFoundException e) {
                             Toast.makeText(activity, "No application to open file", Toast.LENGTH_SHORT).show();
-                        }
+                        }*/
+                        new CustomMsgDialog(activity, "Can't open this type of file", activity.getResources().getString(R.string.canNotOpenMsg));
                     } else {
                         activity_opener.setClass(activity, OnlineFileViewer.class);
                         activity_opener.putExtra("USER_FILE", model);

@@ -16,6 +16,7 @@ import com.android.documentationrecordviafingerprint.controller.DashboardActivit
 import com.android.documentationrecordviafingerprint.controller.OnlineFileViewer;
 import com.android.documentationrecordviafingerprint.controller.SessionManagement;
 import com.android.documentationrecordviafingerprint.controller.StringOperations;
+import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressbar;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -98,6 +99,10 @@ public final class MyFirebaseDatabase {
 
     }
 
+    public static void removeAccountFromDatabase() {
+
+    }
+
     public static void getFullName(final Context context, final TextView textView) {
         try {
             email_identifier = new SessionManagement(context).getEmailIdentifier();
@@ -166,7 +171,7 @@ public final class MyFirebaseDatabase {
 
     public static void deleteFile(final Activity activity, final String file_key, final String file_identifier) {
         progressDialog = new ProgressDialog(activity);
-        progressDialog.setMessage("Deleting File...");
+        progressDialog.setMessage("Deleting Existing File...");
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
@@ -197,15 +202,15 @@ public final class MyFirebaseDatabase {
         }
     }
 
-    public static void deleteFile(final Context context, final String file_key, final String file_identifier) {
+    public static void deleteFile(final Context context, final String storage_file_key, final String file_identifier) {
         progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Deleting File...");
+        progressDialog.setMessage("Deleting Existing File...");
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
         try {
             email_identifier = new SessionManagement(context).getEmailIdentifier();
-            Task<Void> task = storageReference.child(file_key).delete();
+            Task<Void> task = storageReference.child(storage_file_key).delete();
             task.addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -214,7 +219,7 @@ public final class MyFirebaseDatabase {
                         @Override
                         public void onSuccess(Void aVoid) {
                             progressDialog.dismiss();
-                            Toast.makeText(context, "File Deleted Successfully", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "File Deleted Successfully", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -229,11 +234,10 @@ public final class MyFirebaseDatabase {
         }
     }
 
-    public static void uploadFile(final Context context, final String file_icon_uri, final String file_name, final String file_extension, final String file_type, final Uri file_uri, final String file_identifier, final String file_size) {
+    public static void requestFileUpload(final Context context, final String file_icon_uri, final String file_name, final String file_extension, final String file_type, final Uri file_uri, final String file_identifier, final String file_size) {
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Checking Database...");
         progressDialog.show();
-
         try {
             email_identifier = new SessionManagement(context).getEmailIdentifier();
 
@@ -241,68 +245,24 @@ public final class MyFirebaseDatabase {
             Query checkuser = childReference.orderByChild("file_name");
             checkuser.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        Toast.makeText(context, "File Already Exists", Toast.LENGTH_LONG).show();
                         progressDialog.dismiss();
+                        //Toast.makeText(context, "File Already Exists", Toast.LENGTH_LONG).show();
+                        final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, "File already exists do you want to Update file?");
+                        customConfirmDialog.setPosBtnText("Update");
+                        customConfirmDialog.setPositiveBtn(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                customConfirmDialog.dismissDialog();
+                                String old_file_storage_key = dataSnapshot.child("file_storage_key").getValue(String.class);
+                                deleteFile(context, old_file_storage_key, file_identifier);
+                                uploadFile(context, file_icon_uri, file_name, file_extension, file_type, file_uri, file_identifier, file_size);
+                            }
+                        });
                     } else {
                         progressDialog.dismiss();
-                        final CustomProgressbar pbar = new CustomProgressbar(context);
-                        final String file_storage_key = System.currentTimeMillis() + "";
-                        final UploadTask uploadTask = storageReference.child(file_storage_key).putFile(file_uri);
-                        pbar.setCancelBtn(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                uploadTask.cancel();
-                            }
-                        }).setPauseBtn(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (!uploadTask.pause()) {
-                                    pbar.setPauseText();
-                                    uploadTask.resume();
-                                } else {
-                                    pbar.setResumeText();
-                                }
-                            }
-                        });
-                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Task<Uri> task = taskSnapshot.getStorage().getDownloadUrl();
-                                task.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(final Uri uri) {
-                                        final UserFile userFile = new UserFile(file_icon_uri, file_name, file_extension, file_type, uri.toString(), file_size, file_identifier, file_storage_key);
-                                        databaseReference.child(email_identifier).child(FILES_KEY).child(file_identifier).setValue(userFile);
-                                        Toast.makeText(context, "File Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(context, "File Upload Failed", Toast.LENGTH_LONG).show();
-                                pbar.dismissDialog();
-                            }
-                        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                                double currentProgress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                                pbar.setProgress((int) currentProgress);
-                            }
-                        }).addOnCanceledListener(new OnCanceledListener() {
-                            @Override
-                            public void onCanceled() {
-                                Toast.makeText(context, "File Upload Canceled", Toast.LENGTH_LONG).show();
-                                pbar.dismissDialog();
-                            }
-                        }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                pbar.dismissDialog();
-                            }
-                        });
+                        uploadFile(context, file_icon_uri, file_name, file_extension, file_type, file_uri, file_identifier, file_size);
                     }
                 }
 
@@ -314,6 +274,65 @@ public final class MyFirebaseDatabase {
         } catch (Exception e) {
             Toast.makeText(context, "Error: " + e, Toast.LENGTH_LONG).show();
         }
+    }
+
+    private static void uploadFile(final Context context, final String file_icon_uri, final String file_name, final String file_extension, final String file_type, final Uri file_uri, final String file_identifier, final String file_size) {
+        final CustomProgressbar pbar = new CustomProgressbar(context);
+        final String file_storage_key = System.currentTimeMillis() + "";
+        final UploadTask uploadTask = storageReference.child(file_storage_key).putFile(file_uri);
+        pbar.setCancelBtn(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadTask.cancel();
+            }
+        }).setPauseBtn(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!uploadTask.pause()) {
+                    pbar.setPauseText();
+                    uploadTask.resume();
+                } else {
+                    pbar.setResumeText();
+                }
+            }
+        });
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> task = taskSnapshot.getStorage().getDownloadUrl();
+                task.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(final Uri uri) {
+                        final UserFile userFile = new UserFile(file_icon_uri, file_name, file_extension, file_type, uri.toString(), file_size, file_identifier, file_storage_key);
+                        databaseReference.child(email_identifier).child(FILES_KEY).child(file_identifier).setValue(userFile);
+                        Toast.makeText(context, "File Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, "File Upload Failed", Toast.LENGTH_LONG).show();
+                pbar.dismissDialog();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                double currentProgress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                pbar.setProgress((int) currentProgress);
+            }
+        }).addOnCanceledListener(new OnCanceledListener() {
+            @Override
+            public void onCanceled() {
+                Toast.makeText(context, "File Upload Canceled", Toast.LENGTH_LONG).show();
+                pbar.dismissDialog();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                pbar.dismissDialog();
+            }
+        });
     }
 
     public static void renameFile(final Activity activity, final String new_file_name, final String new_file_id, final String old_file_id) {

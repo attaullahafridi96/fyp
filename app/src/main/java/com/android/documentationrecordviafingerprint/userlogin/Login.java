@@ -15,8 +15,8 @@ import com.android.documentationrecordviafingerprint.controller.DashboardActivit
 import com.android.documentationrecordviafingerprint.controller.SessionManagement;
 import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.internetchecking.NoInternetScreen;
 import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
+import com.google.android.material.snackbar.Snackbar;
 
 public class Login extends AppCompatActivity {
     private Context context;
@@ -60,8 +60,7 @@ public class Login extends AppCompatActivity {
                 if (CheckInternetConnectivity.isInternetConnected(context)) {
                     MyFirebaseDatabase.verifyLoginCredentials(context, getEnteredEmail, StringOperations.toMD5String(getEnteredPassword), Login.this);
                 } else {
-                    startActivity(new Intent(context, NoInternetScreen.class));
-                    finish();
+                    Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
                 }
             }
         });

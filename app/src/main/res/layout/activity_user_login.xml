@@ -50,7 +50,7 @@
                 android:drawableStart="@drawable/ic_outline_email_24"
                 android:drawablePadding="10dp"
                 android:fontFamily="sans-serif-condensed"
-                android:hint="Email"
+                android:hint="Email e.g zahid@gmail.com"
                 android:inputType="textEmailAddress"
                 android:padding="10dp" />
 

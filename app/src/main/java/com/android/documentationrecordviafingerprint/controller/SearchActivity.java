@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class SearchActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
-    private ImageButton voice_search;
     private SearchView text_search;
     private RecyclerView recyclerView;
     private MyFilesAdapter myAdapter;
@@ -70,12 +69,15 @@ public class SearchActivity extends AppCompatActivity implements ConnectivityRec
         recyclerView = findViewById(R.id.search_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        voice_search = findViewById(R.id.voice_search);
+        ImageButton voice_search = findViewById(R.id.voice_search);
         voice_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                voiceSearch();
-                //Toast.makeText(SearchActivity.this, "Functionality not Added Yet", Toast.LENGTH_LONG).show();
+                if (CheckInternetConnectivity.isInternetConnected(context)) {
+                    voiceSearch();
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
     }

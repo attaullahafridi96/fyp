@@ -15,6 +15,7 @@ import com.android.documentationrecordviafingerprint.controller.StringOperations
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.model.User;
+import com.google.android.material.snackbar.Snackbar;
 
 public class RegistrationForm extends AppCompatActivity {
     private static String enteredFirstName, enteredLastName, enteredEmailAddress, enteredPassword, enteredConfirmPassword;
@@ -70,7 +71,7 @@ public class RegistrationForm extends AppCompatActivity {
                         User user = new User(enteredFirstName, enteredLastName, enteredEmailAddress, StringOperations.toMD5String(enteredPassword));
                         MyFirebaseDatabase.createNewUserAccount(context, user, RegistrationForm.this);
                     } else {
-                        Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
                     }
                 }
             }

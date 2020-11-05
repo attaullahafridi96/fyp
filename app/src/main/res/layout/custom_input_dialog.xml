@@ -12,6 +12,7 @@
         android:fontFamily="sans-serif-condensed-light"
         android:padding="10dp"
         android:text="Rename"
+        android:textAllCaps="true"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold" />

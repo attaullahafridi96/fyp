@@ -12,6 +12,7 @@
         android:fontFamily="sans-serif-condensed-light"
         android:padding="10dp"
         android:text="Permissions Denied!"
+        android:textAllCaps="true"
         android:background="@drawable/title_design"
         android:textColor="@color/white"
         android:textSize="18sp"
