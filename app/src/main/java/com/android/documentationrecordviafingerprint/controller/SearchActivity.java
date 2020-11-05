@@ -170,9 +170,10 @@ public class SearchActivity extends AppCompatActivity implements ConnectivityRec
             case 10:
                 if (resultCode == RESULT_OK && data != null) {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    text_search.setQuery(result.get(0), false);
+                    text_search.setQuery(result.get(0), true);
                 }
                 break;
         }
     }
+
 }

@@ -244,5 +244,6 @@ public class OnlineFileViewer extends AppCompatActivity {
                 customConfirmDialog.dismissDialog();
             }
         });
+        customConfirmDialog.setPosBtnText("Delete");
     }
 }

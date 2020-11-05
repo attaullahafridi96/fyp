@@ -102,6 +102,7 @@ public final class MyFilesAdapter
                         customConfirmDialog.dismissDialog();
                     }
                 });
+                customConfirmDialog.setPosBtnText("Delete");
             }
         });
         holder.selected_file.setOnClickListener(new View.OnClickListener() {
