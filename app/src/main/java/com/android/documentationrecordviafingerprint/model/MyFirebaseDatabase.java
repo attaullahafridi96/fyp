@@ -99,7 +99,11 @@ public final class MyFirebaseDatabase {
 
     }
 
-    public static void removeAccountFromDatabase() {
+    public static void deleteAccountFromDatabase() {
+
+    }
+
+    public static void deleteAllDocuments() {
 
     }
 

@@ -1,6 +1,7 @@
 package com.android.documentationrecordviafingerprint.controller;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,9 +30,13 @@ import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.userlogin.Login;
+import com.firebase.ui.common.ChangeEventType;
+import com.firebase.ui.database.ChangeEventListener;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 public class DashboardActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
@@ -43,19 +48,26 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
     private static DatabaseReference parent_node;
     private static RecyclerView recyclerView;
     private static BroadcastReceiver internet_broadcast;
+    private static ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
         context = DashboardActivity.this;
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Loading Content . . .");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+        internet_broadcast = new ConnectivityReceiver();
         session = new SessionManagement(context);
         parent_node = DB.getDbFirstNodeReference();
 
         drawerLayout = findViewById(R.id.drawer_layout);
         /*Set App Version*/
         NavigationView navigationView = findViewById(R.id.drawer_nav_view);
-        navigationView.setItemIconTintList(null);//This is make drawer icons colorful
+        navigationView.setItemIconTintList(null);   //This is make drawer icons colorful
         MenuItem app_version_menu_item = navigationView.getMenu().findItem(R.id.app_version_item);
         View headerView = navigationView.getHeaderView(0);
         TextView fullname = headerView.findViewById(R.id.nav_drawer_fullname);
@@ -156,24 +168,40 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
     protected void onStart() {
         super.onStart();
         String email_identifier = session.getEmailIdentifier();
-
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
             FirebaseRecyclerOptions<UserFile> options = new FirebaseRecyclerOptions.Builder<UserFile>()
                     .setQuery(childReference.child("files"), UserFile.class)
                     .build();
             myAdapter = new MyFilesAdapter(DashboardActivity.this, options);
+            myAdapter.getSnapshots().addChangeEventListener(new ChangeEventListener() {
+                @Override
+                public void onChildChanged(@NonNull ChangeEventType type, @NonNull DataSnapshot snapshot, int newIndex, int oldIndex) {
+                    //progressDialog.dismiss();
+                }
+
+                @Override
+                public void onDataChanged() {
+                    progressDialog.dismiss();
+                    if (myAdapter.getItemCount() == 0)
+                        Snackbar.make(findViewById(android.R.id.content), "No Data Available to Display", Snackbar.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onError(@NonNull DatabaseError databaseError) {
+                     progressDialog.dismiss();
+                }
+            });
             recyclerView.setAdapter(myAdapter);
-            if (myAdapter != null) {
-                myAdapter.startListening();
-            }
+            myAdapter.startListening();
+        }else {
+            progressDialog.dismiss();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        internet_broadcast = new ConnectivityReceiver();
         registerReceiver(internet_broadcast, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         ConnectivityReceiver.connectivityReceiverListener = this;
     }
