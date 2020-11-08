@@ -55,26 +55,42 @@
             app:titleTextColor="@color/white" />
     </LinearLayout>
 
-    <com.github.barteksc.pdfviewer.PDFView
-        android:id="@+id/pdf_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/title_bar"
-        android:visibility="gone" />
-
-    <com.github.chrisbanes.photoview.PhotoView
-        android:id="@+id/imageview_viewer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/title_bar"
-        android:contentDescription="@string/image"
-        android:scaleType="fitCenter"
-        android:visibility="gone" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/title_bar">
+        android:layout_below="@id/title_bar"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id="@+id/nothingShow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="Can't Open this file"
+            android:textColor="@color/white"
+            android:visibility="gone"/>
+
+        <com.github.barteksc.pdfviewer.PDFView
+            android:id="@+id/pdf_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/imageview_viewer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/pdf_view"
+            android:contentDescription="@string/image"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
+
+        <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
 
         <ProgressBar
             android:id="@+id/pbar"
@@ -83,4 +99,5 @@
             android:layout_centerVertical="true"
             android:visibility="gone" />
     </RelativeLayout>
+
 </RelativeLayout>

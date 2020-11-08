@@ -3,9 +3,9 @@
     android:id="@+id/selected_file"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
     android:background="@drawable/list_items_bg"
-    android:orientation="vertical"
-    android:layout_marginBottom="5dp">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,23 +19,53 @@
             android:contentDescription="@string/image"
             android:src="@drawable/pdf_96px" />
 
-        <TextView
-            android:id="@+id/selected_filename"
+        <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:fontFamily="sans-serif-condensed"
-            android:maxLines="1"
-            android:text="File Name"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/selected_filename"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:fontFamily="sans-serif-condensed"
+                android:maxLines="1"
+                android:text="File Name"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/upload_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:fontFamily="sans-serif-condensed"
+                android:maxLines="1"
+                android:text="Date Upload: "
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/upload_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@id/upload_date_text"
+                android:fontFamily="sans-serif-condensed"
+                android:maxLines="1"
+                android:text="12-01-2020"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/selected_file_size"
             android:layout_width="60dp"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:fontFamily="sans-serif-condensed"
             android:maxLines="1"
@@ -65,9 +95,9 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@drawable/list_item_delete_btn_design"
-        android:text="Delete"
+        android:contentDescription="@string/image"
         android:src="@drawable/ic_baseline_cloud_download_32"
-        android:tooltipText="Tap to Download"
-        android:contentDescription="@string/image" />
+        android:text="Delete"
+        android:tooltipText="Tap to Download" />
 
 </LinearLayout>

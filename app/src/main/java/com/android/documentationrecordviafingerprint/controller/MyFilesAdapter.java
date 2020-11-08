@@ -62,6 +62,7 @@ public final class MyFilesAdapter
         String capitalizeFileName = model.getFile_name().toUpperCase();
         Glide.with(holder.file_type_icon.getContext()).load(model.getImage_uri()).into(holder.file_type_icon);
         holder.filename.setText(capitalizeFileName);
+        holder.upload_date.setText(model.getUpload_date());
         holder.file_size.setText(model.getFile_size());
         holder.selected_file.setTooltipText(model.getFile_name());
         holder.download_file_btn.setOnClickListener(new View.OnClickListener() {
@@ -166,6 +167,7 @@ public final class MyFilesAdapter
         private final LinearLayout selected_file;
         private final ImageButton download_file_btn;
         private final ImageButton delete_file_btn;
+        private final TextView upload_date;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -175,6 +177,7 @@ public final class MyFilesAdapter
             file_size = itemView.findViewById(R.id.selected_file_size);
             download_file_btn = itemView.findViewById(R.id.download_file_btn);
             delete_file_btn = itemView.findViewById(R.id.delete_file_btn);
+            upload_date = itemView.findViewById(R.id.upload_date);
         }
     }
 }

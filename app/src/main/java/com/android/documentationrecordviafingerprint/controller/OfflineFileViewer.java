@@ -1,9 +1,12 @@
 package com.android.documentationrecordviafingerprint.controller;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,6 +25,7 @@ public class OfflineFileViewer extends AppCompatActivity {
     private PhotoView photoView;
     private ProgressBar progressBar;
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +34,6 @@ public class OfflineFileViewer extends AppCompatActivity {
         String file_name = it.getStringExtra("FILE_NAME");
         final String file_uri = it.getStringExtra("URI");
         String file_extension = it.getStringExtra("FILE_EXTENSION");
-       /* ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(file_name);*/
         TextView document_title = findViewById(R.id.document_title);
         document_title.setText(file_name);
         ImageButton back_btn = findViewById(R.id.back_btn);
@@ -44,7 +46,8 @@ public class OfflineFileViewer extends AppCompatActivity {
         pdfView = findViewById(R.id.pdf_view);
         progressBar = findViewById(R.id.pbar);
         photoView = findViewById(R.id.imageview_viewer);
-
+        WebView webView = findViewById(R.id.webview);
+        TextView nothingShow = findViewById(R.id.nothingShow);
         switch (file_extension) {
             case "pdf":
                 progressBar.setVisibility(View.VISIBLE);
@@ -70,7 +73,14 @@ public class OfflineFileViewer extends AppCompatActivity {
                 photoView.setImageURI(Uri.parse(file_uri));
                 photoView.setVisibility(View.VISIBLE);
                 break;
+            case "gif":
+                webView.setVisibility(View.VISIBLE);
+                webView.setWebViewClient(new WebViewClient());
+                webView.getSettings().setJavaScriptEnabled(true);
+                webView.loadUrl(file_uri);
+                break;
             default:
+                nothingShow.setVisibility(View.VISIBLE);
                 break;
         }
     }

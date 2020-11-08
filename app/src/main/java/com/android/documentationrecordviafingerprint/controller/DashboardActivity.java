@@ -1,7 +1,6 @@
 package com.android.documentationrecordviafingerprint.controller;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +28,7 @@ import com.android.documentationrecordviafingerprint.model.DB;
 import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
 import com.android.documentationrecordviafingerprint.userlogin.Login;
 import com.firebase.ui.common.ChangeEventType;
 import com.firebase.ui.database.ChangeEventListener;
@@ -48,18 +48,14 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
     private static DatabaseReference parent_node;
     private static RecyclerView recyclerView;
     private static BroadcastReceiver internet_broadcast;
-    private static ProgressDialog progressDialog;
-
+    private static CustomProgressDialog progDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
         context = DashboardActivity.this;
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Loading Content . . .");
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
+        progDialog = new CustomProgressDialog(context,"Loading Content . . .");
+        progDialog.showDialog();
         internet_broadcast = new ConnectivityReceiver();
         session = new SessionManagement(context);
         parent_node = DB.getDbFirstNodeReference();
@@ -177,25 +173,25 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
             myAdapter.getSnapshots().addChangeEventListener(new ChangeEventListener() {
                 @Override
                 public void onChildChanged(@NonNull ChangeEventType type, @NonNull DataSnapshot snapshot, int newIndex, int oldIndex) {
-                    //progressDialog.dismiss();
+                    progDialog.dismissDialog();
                 }
 
                 @Override
                 public void onDataChanged() {
-                    progressDialog.dismiss();
+                    progDialog.dismissDialog();
                     if (myAdapter.getItemCount() == 0)
                         Snackbar.make(findViewById(android.R.id.content), "No Data Available to Display", Snackbar.LENGTH_LONG).show();
                 }
 
                 @Override
                 public void onError(@NonNull DatabaseError databaseError) {
-                     progressDialog.dismiss();
+                    progDialog.dismissDialog();
                 }
             });
             recyclerView.setAdapter(myAdapter);
             myAdapter.startListening();
         }else {
-            progressDialog.dismiss();
+            progDialog.dismissDialog();
         }
     }
 

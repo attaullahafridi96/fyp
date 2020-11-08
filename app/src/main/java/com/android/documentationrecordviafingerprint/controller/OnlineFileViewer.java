@@ -13,6 +13,8 @@ import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -79,7 +81,8 @@ public class OnlineFileViewer extends AppCompatActivity {
         pdfView = findViewById(R.id.pdf_view);
         progressBar = findViewById(R.id.pbar);
         PhotoView photoView = findViewById(R.id.imageview_viewer);
-
+        WebView webView = findViewById(R.id.webview);
+        TextView nothingShow = findViewById(R.id.nothingShow);
         switch (file_extension) {
             case "pdf":
                 progressBar.setVisibility(View.VISIBLE);
@@ -122,6 +125,23 @@ public class OnlineFileViewer extends AppCompatActivity {
             case "bmp":
                 Glide.with(photoView.getContext()).load(file_uri).into(photoView);
                 photoView.setVisibility(View.VISIBLE);
+                break;
+            case "gif":
+                progressBar.setVisibility(View.VISIBLE);
+                webView.setVisibility(View.VISIBLE);
+                webView.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+                webView.getSettings().setJavaScriptEnabled(true);
+                webView.getSettings().setDisplayZoomControls(false);
+                webView.getSettings().setBuiltInZoomControls(true);
+                webView.loadUrl(file_uri);
+                break;
+            default:
+                nothingShow.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -231,7 +251,7 @@ public class OnlineFileViewer extends AppCompatActivity {
     }
 
     private void deleteFile() {
-        final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context,getResources().getString(R.string.delete_msg));
+        final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.delete_msg));
         customConfirmDialog.setPositiveBtn(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

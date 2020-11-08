@@ -68,11 +68,10 @@ public class UploadActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {
                                 MyFirebaseDatabase.requestFileUpload(context, file_icon_uri, file_name.toLowerCase(), file_extension, file_type, file_uri, file_identifier.toLowerCase(), formatted_file_size);
-                                customConfirmDialog.dismissDialog();
                             } else {
                                 Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
-                                customConfirmDialog.dismissDialog();
                             }
+                            customConfirmDialog.dismissDialog();
                         }
                     });
                 } else {
@@ -164,6 +163,11 @@ public class UploadActivity extends AppCompatActivity {
                 file_type = "image";
                 imageNo = R.drawable.png_96px;
                 file_icon_uri = getResources().getString(R.string.png_icon);
+                break;
+            case "gif":
+                file_type = "image";
+                imageNo = R.drawable.gif_96px;
+                file_icon_uri = getResources().getString(R.string.gif_icon);
                 break;
             case "bmp":
                 file_type = "image";

@@ -2,7 +2,6 @@ package com.android.documentationrecordviafingerprint.model;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +16,7 @@ import com.android.documentationrecordviafingerprint.controller.OnlineFileViewer
 import com.android.documentationrecordviafingerprint.controller.SessionManagement;
 import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressbar;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,12 +32,16 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
+
 public final class MyFirebaseDatabase {
     private static final DatabaseReference databaseReference;
     private static final StorageReference storageReference;
     private static String email_identifier;
-    private static ProgressDialog progressDialog;
+    private static CustomProgressDialog progDialog;
     private static final String FILES_KEY = "files";
+    @SuppressLint("SimpleDateFormat")
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     static {
         databaseReference = DB.getDbFirstNodeReference();
@@ -45,11 +49,8 @@ public final class MyFirebaseDatabase {
     }
 
     public static void createNewUserAccount(final Context context, final User user, final Activity activity) {
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Processing...");
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
+        progDialog = new CustomProgressDialog(context, "Processing . . .");
+        progDialog.showDialog();
         try {
             Query checkDuplicateAcc = databaseReference.orderByChild("email").equalTo(user.getEmail());
 
@@ -60,7 +61,7 @@ public final class MyFirebaseDatabase {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         //Account already exists
-                        progressDialog.dismiss();
+                        progDialog.dismissDialog();
                         Toast.makeText(context, "Account already exists", Toast.LENGTH_SHORT).show();
                     } else {
                         try {
@@ -69,10 +70,10 @@ public final class MyFirebaseDatabase {
                             Toast.makeText(context, "New Account Created Successfully", Toast.LENGTH_SHORT).show();
                             new SessionManagement(context).setSession(user.getEmail());
                             context.startActivity(new Intent(context, DashboardActivity.class));
-                            progressDialog.dismiss();
+                            progDialog.dismissDialog();
                             activity.finish();
                         } catch (Exception e) {
-                            progressDialog.dismiss();
+                            progDialog.dismissDialog();
                             Toast.makeText(context, "Can't create account at this time", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -99,11 +100,11 @@ public final class MyFirebaseDatabase {
 
     }
 
-    public static void deleteAccountFromDatabase() {
+    public static void deleteAllData() {
 
     }
 
-    public static void deleteAllDocuments() {
+    public static void deleteAccountFromDatabase() {
 
     }
 
@@ -133,12 +134,8 @@ public final class MyFirebaseDatabase {
     }
 
     public static void verifyLoginCredentials(final Context context, final String email, final String password, final Activity activity) {
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Processing...");
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
-
+        progDialog = new CustomProgressDialog(context, "Processing . . .");
+        progDialog.showDialog();
         try {
             Query checkAccount = databaseReference.orderByChild("email").equalTo(email);
 
@@ -151,15 +148,15 @@ public final class MyFirebaseDatabase {
                         String passFromDB = dataSnapshot.child(email_identifier).child("password").getValue(String.class);
                         if (password.equals(passFromDB)) {
                             new SessionManagement(context).setSession(email);
-                            progressDialog.dismiss();
+                            progDialog.dismissDialog();
                             context.startActivity(new Intent(context, DashboardActivity.class));
                             activity.finish();
                         } else {
-                            progressDialog.dismiss();
+                            progDialog.dismissDialog();
                             Toast.makeText(context, "Incorrect Password", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        progressDialog.dismiss();
+                        progDialog.dismissDialog();
                         Toast.makeText(context, "Incorrect Email", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -174,11 +171,8 @@ public final class MyFirebaseDatabase {
     }
 
     public static void deleteFile(final Activity activity, final String file_key, final String file_identifier) {
-        progressDialog = new ProgressDialog(activity);
-        progressDialog.setMessage("Deleting Existing File...");
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
+        progDialog = new CustomProgressDialog(activity, "Deleting Existing File...");
+        progDialog.showDialog();
         try {
             email_identifier = new SessionManagement(activity).getEmailIdentifier();
             Task<Void> task = storageReference.child(file_key).delete();
@@ -190,7 +184,7 @@ public final class MyFirebaseDatabase {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(activity, "File Deleted Successfully", Toast.LENGTH_LONG).show();
-                            progressDialog.dismiss();
+                            progDialog.dismissDialog();
                             activity.finish();
                         }
                     });
@@ -207,11 +201,8 @@ public final class MyFirebaseDatabase {
     }
 
     public static void deleteFile(final Context context, final String storage_file_key, final String file_identifier) {
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Deleting Existing File...");
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
+        progDialog = new CustomProgressDialog(context, "Deleting Existing File...");
+        progDialog.showDialog();
         try {
             email_identifier = new SessionManagement(context).getEmailIdentifier();
             Task<Void> task = storageReference.child(storage_file_key).delete();
@@ -222,7 +213,7 @@ public final class MyFirebaseDatabase {
                             .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            progressDialog.dismiss();
+                            progDialog.dismissDialog();
                             Toast.makeText(context, "File Deleted Successfully", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -239,9 +230,8 @@ public final class MyFirebaseDatabase {
     }
 
     public static void requestFileUpload(final Context context, final String file_icon_uri, final String file_name, final String file_extension, final String file_type, final Uri file_uri, final String file_identifier, final String file_size) {
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Checking Database...");
-        progressDialog.show();
+        progDialog = new CustomProgressDialog(context, "Checking Database . . .");
+        progDialog.showDialog();
         try {
             email_identifier = new SessionManagement(context).getEmailIdentifier();
 
@@ -251,8 +241,7 @@ public final class MyFirebaseDatabase {
                 @Override
                 public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        progressDialog.dismiss();
-                        //Toast.makeText(context, "File Already Exists", Toast.LENGTH_LONG).show();
+                        progDialog.dismissDialog();
                         final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, "File already exists do you want to Update file?");
                         customConfirmDialog.setPosBtnText("Update");
                         customConfirmDialog.setPositiveBtn(new View.OnClickListener() {
@@ -265,7 +254,7 @@ public final class MyFirebaseDatabase {
                             }
                         });
                     } else {
-                        progressDialog.dismiss();
+                        progDialog.dismissDialog();
                         uploadFile(context, file_icon_uri, file_name, file_extension, file_type, file_uri, file_identifier, file_size);
                     }
                 }
@@ -307,7 +296,8 @@ public final class MyFirebaseDatabase {
                 task.addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(final Uri uri) {
-                        final UserFile userFile = new UserFile(file_icon_uri, file_name, file_extension, file_type, uri.toString(), file_size, file_identifier, file_storage_key);
+                        String upload_date = simpleDateFormat.format(System.currentTimeMillis());
+                        final UserFile userFile = new UserFile(file_icon_uri, file_name, file_extension, file_type, uri.toString(), file_size, file_identifier, file_storage_key, upload_date);
                         databaseReference.child(email_identifier).child(FILES_KEY).child(file_identifier).setValue(userFile);
                         Toast.makeText(context, "File Uploaded Successfully", Toast.LENGTH_SHORT).show();
                     }
@@ -340,11 +330,8 @@ public final class MyFirebaseDatabase {
     }
 
     public static void renameFile(final Activity activity, final String new_file_name, final String new_file_id, final String old_file_id) {
-        progressDialog = new ProgressDialog(activity);
-        progressDialog.setMessage("Renaming File Name ...");
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
+        progDialog = new CustomProgressDialog(activity, "Renaming File Name . . .");
+        progDialog.showDialog();
         try {
             DatabaseReference childReference = databaseReference.child(email_identifier).child(FILES_KEY).child(old_file_id);
             childReference.addValueEventListener(new ValueEventListener() {
@@ -361,7 +348,7 @@ public final class MyFirebaseDatabase {
                                 databaseReference.child(email_identifier).child(FILES_KEY).child(old_file_id).setValue(null);
                                 Intent it = new Intent(activity, OnlineFileViewer.class);
                                 it.putExtra("USER_FILE", userFile);
-                                progressDialog.dismiss();
+                                progDialog.dismissDialog();
                                 activity.finish();
                                 activity.startActivity(it);
                                 Toast.makeText(activity, "File Renamed", Toast.LENGTH_SHORT).show();
@@ -375,7 +362,7 @@ public final class MyFirebaseDatabase {
                 }
             });
         } catch (Exception e) {
-            progressDialog.dismiss();
+            progDialog.dismissDialog();
             Toast.makeText(activity, "Error: " + e, Toast.LENGTH_LONG).show();
         }
     }
