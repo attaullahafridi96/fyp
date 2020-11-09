@@ -16,6 +16,7 @@ import com.android.documentationrecordviafingerprint.controller.OnlineFileViewer
 import com.android.documentationrecordviafingerprint.controller.SessionManagement;
 import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressbar;
 import com.google.android.gms.tasks.OnCanceledListener;
@@ -44,7 +45,7 @@ public final class MyFirebaseDatabase {
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     static {
-        databaseReference = DB.getDbFirstNodeReference();
+        databaseReference = DB.getDBFirstNodeReference();
         storageReference = DB.getStorageReference();
     }
 
@@ -243,16 +244,16 @@ public final class MyFirebaseDatabase {
                     if (dataSnapshot.exists()) {
                         progDialog.dismissDialog();
                         final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, "File already exists do you want to Update file?");
-                        customConfirmDialog.setPosBtnText("Update");
-                        customConfirmDialog.setPositiveBtn(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                customConfirmDialog.dismissDialog();
-                                String old_file_storage_key = dataSnapshot.child("file_storage_key").getValue(String.class);
-                                deleteFile(context, old_file_storage_key, file_identifier);
-                                uploadFile(context, file_icon_uri, file_name, file_extension, file_type, file_uri, file_identifier, file_size);
-                            }
-                        });
+                        customConfirmDialog.setPosBtnText("Update")
+                                .setPositiveBtn(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        customConfirmDialog.dismissDialog();
+                                        String old_file_storage_key = dataSnapshot.child("file_storage_key").getValue(String.class);
+                                        deleteFile(context, old_file_storage_key, file_identifier);
+                                        uploadFile(context, file_icon_uri, file_name, file_extension, file_type, file_uri, file_identifier, file_size);
+                                    }
+                                });
                     } else {
                         progDialog.dismissDialog();
                         uploadFile(context, file_icon_uri, file_name, file_extension, file_type, file_uri, file_identifier, file_size);
@@ -329,25 +330,29 @@ public final class MyFirebaseDatabase {
         });
     }
 
-    public static void renameFile(final Activity activity, final String new_file_name, final String new_file_id, final String old_file_id) {
+    public static void renameFile(final Activity activity, final String new_file_name, final String new_file_id, final UserFile model) {
+        final String old_file_id = model.getFile_key();
         progDialog = new CustomProgressDialog(activity, "Renaming File Name . . .");
         progDialog.showDialog();
         try {
-            DatabaseReference childReference = databaseReference.child(email_identifier).child(FILES_KEY).child(old_file_id);
-            childReference.addValueEventListener(new ValueEventListener() {
+            email_identifier = new SessionManagement(activity).getEmailIdentifier();
+            DatabaseReference childReference = databaseReference.child(email_identifier).child(FILES_KEY).child(new_file_id);
+            childReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        final UserFile userFile = dataSnapshot.getValue(UserFile.class);
-                        userFile.setFile_key(new_file_id);
-                        userFile.setFile_name(new_file_name);
-                        Task<Void> task = databaseReference.child(email_identifier).child(FILES_KEY).child(new_file_id).setValue(userFile);
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        progDialog.dismissDialog();
+                        new CustomMsgDialog(activity,"File Duplication Not Allowed","File already exists with this name and type, Try different file name.");
+                    } else {
+                        model.setFile_key(new_file_id);
+                        model.setFile_name(new_file_name);
+                        Task<Void> task = databaseReference.child(email_identifier).child(FILES_KEY).child(new_file_id).setValue(model);
                         task.addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 databaseReference.child(email_identifier).child(FILES_KEY).child(old_file_id).setValue(null);
                                 Intent it = new Intent(activity, OnlineFileViewer.class);
-                                it.putExtra("USER_FILE", userFile);
+                                it.putExtra("USER_FILE", model);
                                 progDialog.dismissDialog();
                                 activity.finish();
                                 activity.startActivity(it);
@@ -358,7 +363,7 @@ public final class MyFirebaseDatabase {
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+                public void onCancelled(@NonNull DatabaseError error) {
                 }
             });
         } catch (Exception e) {

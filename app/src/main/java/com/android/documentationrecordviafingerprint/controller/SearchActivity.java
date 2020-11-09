@@ -48,7 +48,7 @@ public class SearchActivity extends AppCompatActivity implements ConnectivityRec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         context = SearchActivity.this;
-        parent_node = DB.getDbFirstNodeReference();
+        parent_node = DB.getDBFirstNodeReference();
 
         text_search = findViewById(R.id.text_search);
 

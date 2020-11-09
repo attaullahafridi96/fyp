@@ -94,8 +94,10 @@ public class UploadActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
-        // intent.addCategory(Intent.CATEGORY_OPENABLE);
-        String[] mimetypes = {"application/pdf", "text/*", "image/*", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"};
+        String[] mimetypes = {"application/pdf", "text/*", "image/*",".csv", "application/msword",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
         //intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(intent, 89);
@@ -152,6 +154,19 @@ public class UploadActivity extends AppCompatActivity {
                 file_type = "doc";
                 imageNo = R.drawable.microsoft_word_96px;
                 file_icon_uri = getResources().getString(R.string.word_icon);
+                break;
+            case "pptx":
+            case "ppt":
+                file_type = "doc";
+                imageNo = R.drawable.powerpoint_96px;
+                file_icon_uri = getResources().getString(R.string.powerpoint_icon);
+                break;
+            case "xls":
+            case "xlsx":
+            case "csv":
+                file_type = "doc";
+                imageNo = R.drawable.excel_96px;
+                file_icon_uri = getResources().getString(R.string.excel_icon);
                 break;
             case "jpeg":
             case "jpg":

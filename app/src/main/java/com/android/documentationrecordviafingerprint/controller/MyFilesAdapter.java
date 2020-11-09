@@ -29,7 +29,6 @@ import com.android.documentationrecordviafingerprint.internetchecking.CheckInter
 import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
-import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -69,48 +68,49 @@ public final class MyFilesAdapter
             @Override
             public void onClick(View v) {
                 final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, activity.getResources().getString(R.string.download_msg));
-                customConfirmDialog.setPositiveBtn(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (CheckInternetConnectivity.isInternetConnected(activity)) {
-                            if (checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                activity.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                            } else {
-                                startDownload(model);
+                customConfirmDialog.setPosBtnText("Download")
+                        .setPositiveBtn(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (CheckInternetConnectivity.isInternetConnected(activity)) {
+                                    if (checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        activity.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                                    } else {
+                                        startDownload(model);
+                                    }
+                                } else {
+                                    Snackbar.make(activity.findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
+                                }
+                                customConfirmDialog.dismissDialog();
                             }
-                        } else {
-                            Snackbar.make(activity.findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
-                        }
-                        customConfirmDialog.dismissDialog();
-                    }
-                });
-                customConfirmDialog.setPosBtnText("Download");
+                        });
             }
         });
         holder.delete_file_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, activity.getResources().getString(R.string.delete_msg));
-                customConfirmDialog.setPositiveBtn(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (CheckInternetConnectivity.isInternetConnected(activity)) {
-                            String file_id = StringOperations.createFileIdentifier(model.getFile_name());
-                            MyFirebaseDatabase.deleteFile((Context) activity, model.getFile_storage_key(), file_id);
-                        } else {
-                            Toast.makeText(activity, "No internet connection", Toast.LENGTH_LONG).show();
-                        }
-                        customConfirmDialog.dismissDialog();
-                    }
-                });
-                customConfirmDialog.setPosBtnText("Delete");
+                customConfirmDialog.setPosBtnText("Delete")
+                        .setPositiveBtn(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (CheckInternetConnectivity.isInternetConnected(activity)) {
+                                    String file_id = StringOperations.createFileIdentifier(model.getFile_name());
+                                    MyFirebaseDatabase.deleteFile((Context) activity, model.getFile_storage_key(), file_id);
+                                } else {
+                                    Toast.makeText(activity, "No internet connection", Toast.LENGTH_LONG).show();
+                                }
+                                customConfirmDialog.dismissDialog();
+                            }
+                        });
             }
         });
         holder.selected_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (model.getFile_uri() != null) {
-                    if (model.getFile_extension().equals("doc") || model.getFile_extension().equals("docx") || model.getFile_extension().equals("rtf")) {
+                    if (false/*model.getFile_extension().equals("doc") || model.getFile_extension().equals("docx")
+                            || model.getFile_extension().equals("rtf") || model.getFile_extension().equals("ppt")*/) {
                         /*StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                         StrictMode.setVmPolicy(builder.build());
                         builder.detectFileUriExposure();
@@ -124,7 +124,7 @@ public final class MyFilesAdapter
                         } catch (ActivityNotFoundException e) {
                             Toast.makeText(activity, "No application to open file", Toast.LENGTH_SHORT).show();
                         }*/
-                        new CustomMsgDialog(activity, "Can't open this type of file", activity.getResources().getString(R.string.canNotOpenMsg));
+                        //new CustomMsgDialog(activity, "Can't open this type of file", activity.getResources().getString(R.string.canNotOpenMsg));
                     } else {
                         activity_opener.setClass(activity, OnlineFileViewer.class);
                         activity_opener.putExtra("USER_FILE", model);

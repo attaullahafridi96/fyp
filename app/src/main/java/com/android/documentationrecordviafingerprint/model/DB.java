@@ -13,7 +13,7 @@ public final class DB {
         //Constructor Locked
     }
 
-    public static DatabaseReference getDbFirstNodeReference() {
+    public static DatabaseReference getDBFirstNodeReference() {
         if (database == null) {
             database = FirebaseDatabase.getInstance();
         }

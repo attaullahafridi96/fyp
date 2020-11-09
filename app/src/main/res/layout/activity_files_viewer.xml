@@ -14,16 +14,23 @@
         android:background="#0D47A1"
         android:orientation="horizontal">
 
+        <View
+            android:layout_width="10dp"
+            android:layout_height="wrap_content" />
+
         <ImageButton
             android:id="@+id/back_btn"
-            android:layout_width="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="icon"
+            android:background="@drawable/ripple_effect"
+            android:contentDescription="@string/image"
             android:src="@drawable/ic_baseline_arrow_back_ios_24"
             android:tooltipText="Go Back" />
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="wrap_content" />
 
         <HorizontalScrollView
             android:layout_width="0dp"
@@ -69,7 +76,7 @@
             android:gravity="center"
             android:text="Can't Open this file"
             android:textColor="@color/white"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <com.github.barteksc.pdfviewer.PDFView
             android:id="@+id/pdf_view"

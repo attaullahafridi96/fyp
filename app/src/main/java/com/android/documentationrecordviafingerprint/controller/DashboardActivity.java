@@ -27,6 +27,7 @@ import com.android.documentationrecordviafingerprint.internetchecking.Connectivi
 import com.android.documentationrecordviafingerprint.model.DB;
 import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.model.UserFile;
+import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
 import com.android.documentationrecordviafingerprint.userlogin.Login;
@@ -49,16 +50,17 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
     private static RecyclerView recyclerView;
     private static BroadcastReceiver internet_broadcast;
     private static CustomProgressDialog progDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
         context = DashboardActivity.this;
-        progDialog = new CustomProgressDialog(context,"Loading Content . . .");
+        progDialog = new CustomProgressDialog(context, "Loading Content . . .");
         progDialog.showDialog();
         internet_broadcast = new ConnectivityReceiver();
         session = new SessionManagement(context);
-        parent_node = DB.getDbFirstNodeReference();
+        parent_node = DB.getDBFirstNodeReference();
 
         drawerLayout = findViewById(R.id.drawer_layout);
         /*Set App Version*/
@@ -86,9 +88,7 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
                             startActivity(activity_opener.setClass(context, AppSettings.class));
                             break;
                         case R.id.drawer_logout_item:
-                            session.destroySession();
-                            finish();
-                            startActivity(activity_opener.setClass(context, Login.class));
+                            logout();
                             break;
                     }
                 } catch (Exception e) {
@@ -132,6 +132,20 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
+    }
+
+    private void logout() {
+        final CustomConfirmDialog confirmDialog = new CustomConfirmDialog(context, "Are you sure to Logout?");
+        confirmDialog.setPosBtnText("Logout")
+                .setPositiveBtn(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        confirmDialog.dismissDialog();
+                        session.destroySession();
+                        finish();
+                        activity_opener.setClass(context, Login.class);
+                    }
+                });
     }
 
     @Override
@@ -190,7 +204,7 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
             });
             recyclerView.setAdapter(myAdapter);
             myAdapter.startListening();
-        }else {
+        } else {
             progDialog.dismissDialog();
         }
     }

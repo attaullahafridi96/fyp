@@ -20,7 +20,9 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0.2"
             android:contentDescription="@string/image"
-            android:src="@drawable/ic_baseline_menu_32" />
+            android:tooltipText="Open drawer menu"
+            android:src="@drawable/ic_baseline_menu_32"
+            android:background="@drawable/ripple_effect"/>
 
         <TextView
             android:id="@+id/dashboard"
@@ -73,7 +75,7 @@
                     android:background="@drawable/btn_design"
                     android:fontFamily="monospace"
                     android:letterSpacing="0.2"
-                    android:text="Files"
+                    android:text="Search"
                     android:textColor="@color/white" />
 
                 <View
