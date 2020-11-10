@@ -136,7 +136,7 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
 
     private void logout() {
         final CustomConfirmDialog confirmDialog = new CustomConfirmDialog(context, "Are you sure to Logout?");
-        confirmDialog.setPosBtnText("Logout")
+        confirmDialog.setBtnText("Logout")
                 .setPositiveBtn(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

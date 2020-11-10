@@ -234,7 +234,7 @@ public class OnlineFileViewer extends AppCompatActivity {
 
     private void downloadFile() {
         final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.download_msg));
-        customConfirmDialog.setPosBtnText("Download")
+        customConfirmDialog.setBtnText("Download")
                 .setPositiveBtn(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -254,7 +254,7 @@ public class OnlineFileViewer extends AppCompatActivity {
 
     private void deleteFile() {
         final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.delete_msg));
-        customConfirmDialog.setPosBtnText("Delete")
+        customConfirmDialog.setBtnText("Delete")
                 .setPositiveBtn(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

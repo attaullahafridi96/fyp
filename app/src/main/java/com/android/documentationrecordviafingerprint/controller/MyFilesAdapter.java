@@ -51,7 +51,7 @@ public final class MyFilesAdapter
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_items_design, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.file_item_design, parent, false);
         return new ViewHolder(view);
     }
 
@@ -68,7 +68,7 @@ public final class MyFilesAdapter
             @Override
             public void onClick(View v) {
                 final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, activity.getResources().getString(R.string.download_msg));
-                customConfirmDialog.setPosBtnText("Download")
+                customConfirmDialog.setBtnText("Download")
                         .setPositiveBtn(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -90,7 +90,7 @@ public final class MyFilesAdapter
             @Override
             public void onClick(View v) {
                 final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, activity.getResources().getString(R.string.delete_msg));
-                customConfirmDialog.setPosBtnText("Delete")
+                customConfirmDialog.setBtnText("Delete")
                         .setPositiveBtn(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

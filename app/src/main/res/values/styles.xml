@@ -6,7 +6,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
-        <item name="colorControlHighlight">#0091EA</item>
+        <item name="colorControlHighlight">@color/special</item>
     </style>
 
     <style name="ActionBarTheme" parent="Theme.AppCompat.Light.DarkActionBar">

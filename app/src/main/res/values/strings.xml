@@ -9,6 +9,14 @@
     <string name="upload_msg">Do you want to Upload this file to cloud?</string>
     <string name="canNotOpenMsg">Download this file and open it with file specific App</string>
 
+    <string-array name="settings_items">
+        <item>Change First Name</item>
+        <item>Change Last Name</item>
+        <item>Change Password</item>
+        <item>Remove All Data</item>
+        <item>Delete Account</item>
+    </string-array>
+
     <string name="pdf_icon">https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fpdf_96px.png?alt=media&amp;token=33ae2d52-7b4d-40b3-983f-00ebfd7410b3</string>
     <string name="word_icon">https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fword_96px.png?alt=media&amp;token=bca25a91-c60d-461f-ba2e-1d526baa3c5a</string>
     <string name="powerpoint_icon">https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fpowerpoint_96px.png?alt=media&amp;token=5ad9745a-120b-47fd-a908-df939bb665ab</string>

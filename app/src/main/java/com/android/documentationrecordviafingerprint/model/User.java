@@ -1,7 +1,6 @@
 package com.android.documentationrecordviafingerprint.model;
 
 public final class User {
-    private byte[] user_image;
     private String first_name, last_name, email, password;
 
     public User() {

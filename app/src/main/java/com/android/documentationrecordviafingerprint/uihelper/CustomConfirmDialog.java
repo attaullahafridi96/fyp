@@ -12,7 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.android.documentationrecordviafingerprint.R;
 
 public final class CustomConfirmDialog extends AlertDialog {
-    private final Button btnPos;
+    private final Button btn;
     private final AlertDialog alertDialog;
 
     public CustomConfirmDialog(@NonNull Context context, String msg) {
@@ -24,7 +24,7 @@ public final class CustomConfirmDialog extends AlertDialog {
         TextView msgTv = view.findViewById(R.id.custom_confirm_msg_tv);
         msgTv.setText(msg);
         Button btnNeg = view.findViewById(R.id.btnNeg);
-        btnPos = view.findViewById(R.id.btnPos);
+        btn = view.findViewById(R.id.btnPos);
         alertDialog = builder.create();
         btnNeg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,13 +35,18 @@ public final class CustomConfirmDialog extends AlertDialog {
         alertDialog.show();
     }
 
-    public CustomConfirmDialog setPosBtnText(String text) {
-        btnPos.setText(text);
+    public CustomConfirmDialog setBtnText(String text) {
+        btn.setText(text);
+        return this;
+    }
+
+    public CustomConfirmDialog dangerBtn() {
+        btn.setBackgroundResource(R.drawable.red_btn_design);
         return this;
     }
 
     public void setPositiveBtn(View.OnClickListener listener) {
-        btnPos.setOnClickListener(listener);
+        btn.setOnClickListener(listener);
     }
 
     public void dismissDialog() {

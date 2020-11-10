@@ -101,12 +101,34 @@ public final class MyFirebaseDatabase {
 
     }
 
-    public static void deleteAllData() {
+    public static void deleteAllUserData(Activity activity) {
+        final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, "WARNING!!!" +
+                "\n\nAll your data will be deleted and can not be recovered!" +
+                "\n\nAre you sure to delete all data?\n\n");
+        customConfirmDialog.setBtnText("Delete Data")
+                .dangerBtn()
+                .setPositiveBtn(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        customConfirmDialog.dismissDialog();
 
+                    }
+                });
     }
 
-    public static void deleteAccountFromDatabase() {
+    public static void deleteUserAccount(Activity activity) {
+        final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, "WARNING!!!" +
+                "\n\nAll your data will be deleted and can not be recovered!" +
+                "\n\nAre you sure to delete your account?\n\n");
+        customConfirmDialog.setBtnText("Delete Account")
+                .dangerBtn()
+                .setPositiveBtn(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        customConfirmDialog.dismissDialog();
 
+                    }
+                });
     }
 
     public static void getFullName(final Context context, final TextView textView) {
@@ -244,7 +266,7 @@ public final class MyFirebaseDatabase {
                     if (dataSnapshot.exists()) {
                         progDialog.dismissDialog();
                         final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, "File already exists do you want to Update file?");
-                        customConfirmDialog.setPosBtnText("Update")
+                        customConfirmDialog.setBtnText("Update")
                                 .setPositiveBtn(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -342,7 +364,7 @@ public final class MyFirebaseDatabase {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
                         progDialog.dismissDialog();
-                        new CustomMsgDialog(activity,"File Duplication Not Allowed","File already exists with this name and type, Try different file name.");
+                        new CustomMsgDialog(activity, "File Duplication Not Allowed", "File already exists with this name and type, Try different file name.");
                     } else {
                         model.setFile_key(new_file_id);
                         model.setFile_name(new_file_name);
