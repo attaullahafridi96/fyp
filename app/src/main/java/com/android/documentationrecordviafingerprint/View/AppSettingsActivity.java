@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.controller;
+package com.android.documentationrecordviafingerprint.View;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,16 +10,16 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
+import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
 
-public class AppSettings extends AppCompatActivity {
+public class AppSettingsActivity extends AppCompatActivity {
     private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_settings);
-        context = AppSettings.this;
+        context = AppSettingsActivity.this;
         ListView listView = findViewById(R.id.settings_list_view);
         final String[] array = getResources().getStringArray(R.array.settings_items);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.settings_item_design, array);
@@ -38,10 +38,10 @@ public class AppSettings extends AppCompatActivity {
 
                         break;
                     case 3:
-                        MyFirebaseDatabase.deleteAllUserData(AppSettings.this);
+                        MyFirebaseDatabase.deleteAllUserData(AppSettingsActivity.this);
                         break;
                     case 4:
-                        MyFirebaseDatabase.deleteUserAccount(AppSettings.this);
+                        MyFirebaseDatabase.deleteUserAccount(AppSettingsActivity.this);
                         break;
                     default:
                         break;

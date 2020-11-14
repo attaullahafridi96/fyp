@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.controller;
+package com.android.documentationrecordviafingerprint.View;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -21,9 +21,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
+import com.android.documentationrecordviafingerprint.controller.DB;
+import com.android.documentationrecordviafingerprint.controller.MyFilesAdapter;
+import com.android.documentationrecordviafingerprint.controller.SessionManagement;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.internetchecking.ConnectivityReceiver;
-import com.android.documentationrecordviafingerprint.model.DB;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -149,6 +151,12 @@ public class SearchActivity extends AppCompatActivity implements ConnectivityRec
                 myAdapter.startListening();
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        myAdapter.stopListening();
     }
 
     @SuppressLint("QueryPermissionsNeeded")

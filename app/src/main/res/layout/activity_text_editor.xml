@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/fp"
     android:orientation="vertical"
-    tools:context=".controller.TextEditorActivity">
+    tools:context=".View.TextEditorActivity">
 
     <LinearLayout
         android:id="@+id/top_container"

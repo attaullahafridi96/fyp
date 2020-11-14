@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.controller;
+package com.android.documentationrecordviafingerprint.View;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -22,15 +22,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
+import com.android.documentationrecordviafingerprint.controller.DB;
+import com.android.documentationrecordviafingerprint.controller.MyFilesAdapter;
+import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
+import com.android.documentationrecordviafingerprint.controller.SessionManagement;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.internetchecking.ConnectivityReceiver;
-import com.android.documentationrecordviafingerprint.model.DB;
-import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
-import com.android.documentationrecordviafingerprint.userlogin.Login;
 import com.firebase.ui.common.ChangeEventType;
 import com.firebase.ui.database.ChangeEventListener;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -85,7 +86,7 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
                 try {
                     switch (item.getItemId()) {
                         case R.id.drawer_settings_item:
-                            startActivity(activity_opener.setClass(context, AppSettings.class));
+                            startActivity(activity_opener.setClass(context, AppSettingsActivity.class));
                             break;
                         case R.id.drawer_logout_item:
                             logout();
@@ -143,7 +144,7 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
                         confirmDialog.dismissDialog();
                         session.destroySession();
                         finish();
-                        activity_opener.setClass(context, Login.class);
+                        activity_opener.setClass(context, LoginActivity.class);
                     }
                 });
     }
@@ -221,7 +222,14 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
         super.onPause();
         unregisterReceiver(internet_broadcast);
     }
-/*private static boolean doubleBackToExitPressedOnce = false;
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        myAdapter.stopListening();
+    }
+
+    /*private static boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onBackPressed() {

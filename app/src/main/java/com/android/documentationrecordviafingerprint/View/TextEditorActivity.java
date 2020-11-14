@@ -1,5 +1,7 @@
-package com.android.documentationrecordviafingerprint.controller;
+package com.android.documentationrecordviafingerprint.View;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -11,10 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.android.documentationrecordviafingerprint.R;
+import com.android.documentationrecordviafingerprint.model.UserNote;
 import com.google.android.material.snackbar.Snackbar;
 
 public class TextEditorActivity extends AppCompatActivity {
-    private EditText text_editor;
+    private EditText note_details;
+    private UserNote model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,27 +28,48 @@ public class TextEditorActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.editor_activity_toolbar);
         setSupportActionBar(myToolbar);
         /////////////ToolBar code/////////////
-        text_editor = findViewById(R.id.noteDetails);
+        Intent it = getIntent();
+        model = (UserNote) it.getSerializableExtra("USER_NOTE");
+        note_details = findViewById(R.id.noteDetails);
     }
+
+    private MenuItem editMenuItem;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.text_editor_menu, menu);
+        editMenuItem = menu.findItem(R.id.editor_rename_item);
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             switch (item.getItemId()) {
                 case R.id.editor_save_item:
-
+                    saveNotes();
+                    break;
+                case R.id.editor_rename_item:
+                    renameNotes();
+                    break;
+                case R.id.editor_delete_item:
+                    deleteNotes();
                     break;
             }
         } catch (Exception e) {
             Toast.makeText(TextEditorActivity.this, "Error", Toast.LENGTH_SHORT).show();
         }
         return true;
+    }
+
+    private void saveNotes() {
+    }
+
+    private void deleteNotes() {
+    }
+
+    private void renameNotes() {
     }
 
     private static boolean doubleBackToExitPressedOnce = false;

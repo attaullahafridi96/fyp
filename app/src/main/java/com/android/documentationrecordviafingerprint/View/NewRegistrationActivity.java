@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.userlogin;
+package com.android.documentationrecordviafingerprint.View;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,13 +11,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
+import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.model.User;
 import com.google.android.material.snackbar.Snackbar;
 
-public class RegistrationForm extends AppCompatActivity {
+public class NewRegistrationActivity extends AppCompatActivity {
     private static String enteredFirstName, enteredLastName, enteredEmailAddress, enteredPassword, enteredConfirmPassword;
     private Context context;
 
@@ -25,7 +25,7 @@ public class RegistrationForm extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_form);
-        context = RegistrationForm.this;
+        context = NewRegistrationActivity.this;
         final EditText firstname = findViewById(R.id.first_name);
         final EditText lastname = findViewById(R.id.last_name);
         final EditText email = findViewById(R.id.email);
@@ -67,9 +67,9 @@ public class RegistrationForm extends AppCompatActivity {
                 if (!enteredPassword.equals(enteredConfirmPassword)) {
                     Toast.makeText(context, "Password not Matched", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (CheckInternetConnectivity.isInternetConnected(RegistrationForm.this)) {
+                    if (CheckInternetConnectivity.isInternetConnected(NewRegistrationActivity.this)) {
                         User user = new User(enteredFirstName, enteredLastName, enteredEmailAddress, StringOperations.toMD5String(enteredPassword));
-                        MyFirebaseDatabase.createNewUserAccount(context, user, RegistrationForm.this);
+                        MyFirebaseDatabase.createNewUserAccount(context, user, NewRegistrationActivity.this);
                     } else {
                         Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
                     }
@@ -80,7 +80,7 @@ public class RegistrationForm extends AppCompatActivity {
         backToLogin_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(RegistrationForm.this, Login.class));
+                startActivity(new Intent(NewRegistrationActivity.this, LoginActivity.class));
                 finish();
             }
         });

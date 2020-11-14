@@ -12,8 +12,9 @@ public class ConnectivityReceiver extends BroadcastReceiver {
     @SuppressLint("UnsafeProtectedBroadcastReceiver")
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (connectivityReceiverListener != null)
+        if (connectivityReceiverListener != null) {
             connectivityReceiverListener.onNetworkConnectionChanged(CheckInternetConnectivity.isInternetConnected(context));
+        }
     }
 
     public interface ConnectivityReceiverListener {

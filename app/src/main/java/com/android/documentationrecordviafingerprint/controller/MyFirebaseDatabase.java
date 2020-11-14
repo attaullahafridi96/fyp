@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.model;
+package com.android.documentationrecordviafingerprint.controller;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -11,10 +11,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.android.documentationrecordviafingerprint.controller.DashboardActivity;
-import com.android.documentationrecordviafingerprint.controller.OnlineFileViewer;
-import com.android.documentationrecordviafingerprint.controller.SessionManagement;
-import com.android.documentationrecordviafingerprint.controller.StringOperations;
+import com.android.documentationrecordviafingerprint.View.DashboardActivity;
+import com.android.documentationrecordviafingerprint.View.OnlineFileViewerActivity;
+import com.android.documentationrecordviafingerprint.model.User;
+import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
@@ -373,7 +373,7 @@ public final class MyFirebaseDatabase {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 databaseReference.child(email_identifier).child(FILES_KEY).child(old_file_id).setValue(null);
-                                Intent it = new Intent(activity, OnlineFileViewer.class);
+                                Intent it = new Intent(activity, OnlineFileViewerActivity.class);
                                 it.putExtra("USER_FILE", model);
                                 progDialog.dismissDialog();
                                 activity.finish();

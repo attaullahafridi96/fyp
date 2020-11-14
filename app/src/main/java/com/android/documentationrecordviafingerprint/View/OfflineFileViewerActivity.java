@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.controller;
+package com.android.documentationrecordviafingerprint.View;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -20,7 +20,7 @@ import com.github.barteksc.pdfviewer.listener.OnRenderListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.github.chrisbanes.photoview.PhotoView;
 
-public class OfflineFileViewer extends AppCompatActivity {
+public class OfflineFileViewerActivity extends AppCompatActivity {
     private PDFView pdfView;
     private PhotoView photoView;
     private ProgressBar progressBar;

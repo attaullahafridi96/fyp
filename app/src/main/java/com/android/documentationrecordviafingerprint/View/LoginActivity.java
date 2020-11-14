@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.userlogin;
+package com.android.documentationrecordviafingerprint.View;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,20 +11,19 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.controller.DashboardActivity;
+import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.controller.SessionManagement;
 import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.google.android.material.snackbar.Snackbar;
 
-public class Login extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.context = Login.this;
+        this.context = LoginActivity.this;
         if (new SessionManagement(context).isSessionActive()) {
             startActivity(new Intent(context, DashboardActivity.class));
             finish();
@@ -58,7 +57,7 @@ public class Login extends AppCompatActivity {
                     return;
                 }
                 if (CheckInternetConnectivity.isInternetConnected(context)) {
-                    MyFirebaseDatabase.verifyLoginCredentials(context, getEnteredEmail, StringOperations.toMD5String(getEnteredPassword), Login.this);
+                    MyFirebaseDatabase.verifyLoginCredentials(context, getEnteredEmail, StringOperations.toMD5String(getEnteredPassword), LoginActivity.this);
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
                 }
@@ -69,7 +68,7 @@ public class Login extends AppCompatActivity {
         new_account_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(context, RegistrationForm.class));
+                startActivity(new Intent(context, NewRegistrationActivity.class));
                 finish();
             }
         });

@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.controller;
+package com.android.documentationrecordviafingerprint.View;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -24,8 +24,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
+import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
+import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.google.android.material.snackbar.Snackbar;
@@ -224,7 +225,7 @@ public class UploadActivity extends AppCompatActivity {
                         }*/
                         new CustomMsgDialog(context, "Can't open this type of file", getResources().getString(R.string.canNotOpenMsg));
                     } else {
-                        activity_opener.setClass(context, OfflineFileViewer.class);
+                        activity_opener.setClass(context, OfflineFileViewerActivity.class);
                         activity_opener.putExtra("FILE_NAME", file_name);
                         activity_opener.putExtra("URI", file_uri.toString());
                         activity_opener.putExtra("FILE_EXTENSION", file_extension);

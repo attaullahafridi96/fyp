@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.controller;
+package com.android.documentationrecordviafingerprint.View;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -26,8 +26,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.android.documentationrecordviafingerprint.R;
+import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
+import com.android.documentationrecordviafingerprint.controller.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomInputDialog;
@@ -44,7 +45,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-public class OnlineFileViewer extends AppCompatActivity {
+public class OnlineFileViewerActivity extends AppCompatActivity {
     private static PDFView pdfView;
     private ProgressBar progressBar;
     private static String file_name, file_storage_key;
@@ -60,7 +61,7 @@ public class OnlineFileViewer extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_files_viewer);
-        context = OnlineFileViewer.this;
+        context = OnlineFileViewerActivity.this;
         //////////////ToolBar code/////////////
         Toolbar myToolbar = findViewById(R.id.viewer_toolbar);
         setSupportActionBar(myToolbar);
@@ -200,7 +201,7 @@ public class OnlineFileViewer extends AppCompatActivity {
                     break;
             }
         } catch (Exception e) {
-            Toast.makeText(OnlineFileViewer.this, "Error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(OnlineFileViewerActivity.this, "Error", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
@@ -213,7 +214,7 @@ public class OnlineFileViewer extends AppCompatActivity {
                 customInputDialog.dismissDialog();
                 new_file_name = customInputDialog.getInputText();
                 if (StringOperations.isEmpty(new_file_name)) {
-                    new CustomMsgDialog(context,"Alert","Can't Set Empty File Name.");
+                    new CustomMsgDialog(context, "Alert", "Can't Set Empty File Name.");
                     return;
                 }
                 new_file_name += "." + file_extension;
@@ -223,7 +224,7 @@ public class OnlineFileViewer extends AppCompatActivity {
                     Toast.makeText(context, "Please enter different file name", Toast.LENGTH_LONG).show();
                 } else {
                     if (CheckInternetConnectivity.isInternetConnected(context)) {
-                        MyFirebaseDatabase.renameFile(OnlineFileViewer.this, new_file_name, new_file_id, model);
+                        MyFirebaseDatabase.renameFile(OnlineFileViewerActivity.this, new_file_name, new_file_id, model);
                     } else {
                         Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
                     }
@@ -254,13 +255,14 @@ public class OnlineFileViewer extends AppCompatActivity {
 
     private void deleteFile() {
         final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.delete_msg));
-        customConfirmDialog.setBtnText("Delete")
+        customConfirmDialog.dangerBtn()
+                .setBtnText("Delete")
                 .setPositiveBtn(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (CheckInternetConnectivity.isInternetConnected(context)) {
                             String file_id = StringOperations.createFileIdentifier(file_name);
-                            MyFirebaseDatabase.deleteFile(OnlineFileViewer.this, file_storage_key, file_id);
+                            MyFirebaseDatabase.deleteFile(OnlineFileViewerActivity.this, file_storage_key, file_id);
                         } else {
                             Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
                         }

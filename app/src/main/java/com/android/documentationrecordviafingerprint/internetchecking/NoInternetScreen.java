@@ -9,7 +9,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.userlogin.Login;
+import com.android.documentationrecordviafingerprint.View.LoginActivity;
 
 public class NoInternetScreen extends AppCompatActivity {
 
@@ -36,7 +36,7 @@ public class NoInternetScreen extends AppCompatActivity {
                 while (true) { //when it true loop will end
                     isInternetConnected = CheckInternetConnectivity.isInternetConnected(NoInternetScreen.this);
                     if (isInternetConnected) {
-                        startActivity(new Intent(NoInternetScreen.this, Login.class));
+                        startActivity(new Intent(NoInternetScreen.this, LoginActivity.class));
                         finish();
                         return;
                     }

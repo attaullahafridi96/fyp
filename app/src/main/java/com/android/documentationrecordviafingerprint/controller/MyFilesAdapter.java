@@ -25,8 +25,8 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
+import com.android.documentationrecordviafingerprint.View.OnlineFileViewerActivity;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.model.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.bumptech.glide.Glide;
@@ -90,7 +90,8 @@ public final class MyFilesAdapter
             @Override
             public void onClick(View v) {
                 final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, activity.getResources().getString(R.string.delete_msg));
-                customConfirmDialog.setBtnText("Delete")
+                customConfirmDialog.dangerBtn()
+                        .setBtnText("Delete")
                         .setPositiveBtn(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -126,7 +127,7 @@ public final class MyFilesAdapter
                         }*/
                         //new CustomMsgDialog(activity, "Can't open this type of file", activity.getResources().getString(R.string.canNotOpenMsg));
                     } else {
-                        activity_opener.setClass(activity, OnlineFileViewer.class);
+                        activity_opener.setClass(activity, OnlineFileViewerActivity.class);
                         activity_opener.putExtra("USER_FILE", model);
                         activity.startActivity(activity_opener);
                     }

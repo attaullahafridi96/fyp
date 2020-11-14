@@ -17,7 +17,7 @@ import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.userlogin.Login;
+import com.android.documentationrecordviafingerprint.View.LoginActivity;
 
 import java.util.concurrent.Executor;
 
@@ -59,7 +59,7 @@ public class FingerprintAuthentication extends AppCompatActivity {
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
                 finish();
-                startActivity(activity_opener.setClass(FingerprintAuthentication.this, Login.class));
+                startActivity(activity_opener.setClass(FingerprintAuthentication.this, LoginActivity.class));
             }
 
             @Override
