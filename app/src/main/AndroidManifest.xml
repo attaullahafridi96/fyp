@@ -21,19 +21,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".View.AppSettingsActivity"></activity>
-        <activity android:name=".View.UploadActivity" />
+        <activity android:name=".view.AppSettingsActivity"></activity>
+        <activity android:name=".view.UploadActivity" />
         <activity
-            android:name=".View.SearchActivity"
+            android:name=".view.SearchActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".View.TextEditorActivity"
+            android:name=".view.TextEditorActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".internetchecking.NoInternetScreen" />
         <activity
-            android:name=".View.NewRegistrationActivity"
+            android:name=".view.NewRegistrationActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".View.LoginActivity" android:windowSoftInputMode="stateHidden">
+        <activity android:name=".view.LoginActivity" android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,11 +43,11 @@
         <activity android:name=".fingerprint.FingerprintAuthentication">
 
         </activity>
-        <activity android:name=".View.DashboardActivity">
+        <activity android:name=".view.DashboardActivity">
 
         </activity>
-        <activity android:name=".View.OfflineFileViewerActivity" />
-        <activity android:name=".View.OnlineFileViewerActivity" />
+        <activity android:name=".view.OfflineFileViewerActivity" />
+        <activity android:name=".view.OnlineFileViewerActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

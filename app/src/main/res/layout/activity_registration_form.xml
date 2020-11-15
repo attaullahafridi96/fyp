@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/fp"
     android:orientation="vertical"
-    tools:context=".View.NewRegistrationActivity">
+    tools:context=".view.NewRegistrationActivity">
 
     <TextView
         android:id="@+id/dashboard"

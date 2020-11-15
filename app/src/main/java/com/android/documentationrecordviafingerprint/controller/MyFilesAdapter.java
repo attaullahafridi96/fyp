@@ -25,10 +25,10 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.View.OnlineFileViewerActivity;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
+import com.android.documentationrecordviafingerprint.view.OnlineFileViewerActivity;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;

@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.View;
+package com.android.documentationrecordviafingerprint.view;
 
 import android.content.Context;
 import android.content.Intent;

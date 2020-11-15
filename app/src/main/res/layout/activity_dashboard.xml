@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/fp"
     android:orientation="vertical"
-    tools:context=".View.DashboardActivity">
+    tools:context=".view.DashboardActivity">
 
     <LinearLayout
         android:id="@+id/top_container"

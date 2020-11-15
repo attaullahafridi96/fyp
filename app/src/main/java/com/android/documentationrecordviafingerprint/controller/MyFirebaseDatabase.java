@@ -11,14 +11,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.android.documentationrecordviafingerprint.View.DashboardActivity;
-import com.android.documentationrecordviafingerprint.View.OnlineFileViewerActivity;
 import com.android.documentationrecordviafingerprint.model.User;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressbar;
+import com.android.documentationrecordviafingerprint.view.DashboardActivity;
+import com.android.documentationrecordviafingerprint.view.OnlineFileViewerActivity;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;

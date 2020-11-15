@@ -17,7 +17,7 @@ import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.View.LoginActivity;
+import com.android.documentationrecordviafingerprint.view.LoginActivity;
 
 import java.util.concurrent.Executor;
 

@@ -9,7 +9,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.View.LoginActivity;
+import com.android.documentationrecordviafingerprint.view.LoginActivity;
 
 public class NoInternetScreen extends AppCompatActivity {
 
