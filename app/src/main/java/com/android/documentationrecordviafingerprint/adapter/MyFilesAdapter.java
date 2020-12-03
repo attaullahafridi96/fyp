@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.controller;
+package com.android.documentationrecordviafingerprint.adapter;
 
 import android.Manifest;
 import android.app.Activity;
@@ -25,7 +25,10 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
+import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
+import com.android.documentationrecordviafingerprint.helper.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
+import com.android.documentationrecordviafingerprint.model.IMyConstants;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.view.OnlineFileViewerActivity;
@@ -37,7 +40,7 @@ import com.google.android.material.snackbar.Snackbar;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 public final class MyFilesAdapter
-        extends FirebaseRecyclerAdapter<UserFile, MyFilesAdapter.ViewHolder> {
+        extends FirebaseRecyclerAdapter<UserFile, MyFilesAdapter.ViewHolder> implements IMyConstants {
     private final Activity activity;
 
     private static final Intent activity_opener = new Intent();
@@ -58,28 +61,28 @@ public final class MyFilesAdapter
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final UserFile model) {
-        String capitalizeFileName = model.getFile_name().toUpperCase();
-        Glide.with(holder.file_type_icon.getContext()).load(model.getImage_uri()).into(holder.file_type_icon);
+        String capitalizeFileName = model.getName().toUpperCase();
+        Glide.with(holder.file_type_icon.getContext()).load(model.getFile_icon_uri()).into(holder.file_type_icon);
         holder.filename.setText(capitalizeFileName);
-        holder.upload_date.setText(model.getUpload_date());
-        holder.file_size.setText(model.getFile_size());
-        holder.selected_file.setTooltipText(model.getFile_name());
+        holder.upload_date.setText(model.getDate_upload());
+        holder.file_size.setText(model.getSize());
+        holder.selected_file.setTooltipText(model.getName());
         holder.download_file_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, activity.getResources().getString(R.string.download_msg));
                 customConfirmDialog.setBtnText("Download")
-                        .setPositiveBtn(new View.OnClickListener() {
+                        .setOkBtn(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 if (CheckInternetConnectivity.isInternetConnected(activity)) {
-                                    if (checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                    if (checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                         activity.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                                     } else {
                                         startDownload(model);
                                     }
                                 } else {
-                                    Snackbar.make(activity.findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(activity.findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
                                 }
                                 customConfirmDialog.dismissDialog();
                             }
@@ -92,14 +95,14 @@ public final class MyFilesAdapter
                 final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, activity.getResources().getString(R.string.delete_msg));
                 customConfirmDialog.dangerBtn()
                         .setBtnText("Delete")
-                        .setPositiveBtn(new View.OnClickListener() {
+                        .setOkBtn(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 if (CheckInternetConnectivity.isInternetConnected(activity)) {
-                                    String file_id = StringOperations.createFileIdentifier(model.getFile_name());
-                                    MyFirebaseDatabase.deleteFile((Context) activity, model.getFile_storage_key(), file_id);
+                                    String file_id = StringOperations.createFileIdentifier(model.getName());
+                                    MyFirebaseDatabase.deleteFile(activity, model.getFile_storage_id(), file_id,false);
                                 } else {
-                                    Toast.makeText(activity, "No internet connection", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(activity, NO_INTERNET_CONNECTION, Toast.LENGTH_LONG).show();
                                 }
                                 customConfirmDialog.dismissDialog();
                             }
@@ -109,28 +112,14 @@ public final class MyFilesAdapter
         holder.selected_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (model.getFile_uri() != null) {
-                    if (false/*model.getFile_extension().equals("doc") || model.getFile_extension().equals("docx")
-                            || model.getFile_extension().equals("rtf") || model.getFile_extension().equals("ppt")*/) {
-                        /*StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                        StrictMode.setVmPolicy(builder.build());
-                        builder.detectFileUriExposure();
-                        Uri docUri = FileProvider.getUriForFile(activity, "com.android.documentationrecordviafingerprint.provider",
-                                new File(model.getFile_uri()));
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(docUri, "application/msword");
-                        try {
-                            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                            activity.startActivity(Intent.createChooser(intent, "Open With.."));
-                        } catch (ActivityNotFoundException e) {
-                            Toast.makeText(activity, "No application to open file", Toast.LENGTH_SHORT).show();
-                        }*/
-                        //new CustomMsgDialog(activity, "Can't open this type of file", activity.getResources().getString(R.string.canNotOpenMsg));
-                    } else {
+                if(CheckInternetConnectivity.isInternetConnected(activity)){
+                    if (model.getFile_uri() != null) {
                         activity_opener.setClass(activity, OnlineFileViewerActivity.class);
-                        activity_opener.putExtra("USER_FILE", model);
+                        activity_opener.putExtra(EXTRA_USER_FILE, model);
                         activity.startActivity(activity_opener);
                     }
+                }else {
+                    Snackbar.make(activity.findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -145,7 +134,7 @@ public final class MyFilesAdapter
             request.setDescription("Downloading file...");
             request.allowScanningByMediaScanner();
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, userFile.getFile_name());
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, userFile.getName());
             DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
             manager.enqueue(request);
         } catch (Exception e) {

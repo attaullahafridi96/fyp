@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppCustomTheme"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/fp"
-    android:orientation="vertical"
-    tools:context=".view.SearchActivity">
+    android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:padding="5dp">
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
 
         <SearchView
             android:id="@+id/text_search"
@@ -34,6 +33,21 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_bar"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/new_notes_floatBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="40dp"
+        android:contentDescription="btn"
+        android:src="@android:drawable/ic_menu_edit"
+        android:tooltipText="New Notes"
+        android:visibility="gone"
+        app:backgroundTint="@color/colorPrimaryDark" />
+</RelativeLayout>

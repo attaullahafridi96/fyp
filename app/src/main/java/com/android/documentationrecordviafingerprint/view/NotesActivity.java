@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -21,36 +20,44 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.adapter.MyFilesAdapter;
+import com.android.documentationrecordviafingerprint.adapter.MyNotesAdapter;
 import com.android.documentationrecordviafingerprint.helper.SessionManagement;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.internetchecking.ConnectivityReceiver;
 import com.android.documentationrecordviafingerprint.model.DB;
 import com.android.documentationrecordviafingerprint.model.IMyConstants;
-import com.android.documentationrecordviafingerprint.model.UserFile;
-import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
+import com.android.documentationrecordviafingerprint.model.UserNotes;
+import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
+import com.firebase.ui.common.ChangeEventType;
+import com.firebase.ui.database.ChangeEventListener;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class SearchActivity extends AppCompatActivity implements IMyConstants, ConnectivityReceiver.ConnectivityReceiverListener {
-    private SearchView text_search;
+public class NotesActivity extends AppCompatActivity implements IMyConstants, ConnectivityReceiver.ConnectivityReceiverListener {
     private RecyclerView recyclerView;
-    private MyFilesAdapter myFilesAdapter;
+    private SearchView text_search;
+    private MyNotesAdapter myNotesAdapter;
     private Context context;
     private DatabaseReference parent_node;
     private static String email_identifier;
     private static BroadcastReceiver internet_broadcast;
+    private FloatingActionButton floatingActionButton;
+    private static CustomProgressDialog progDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        context = SearchActivity.this;
+        context = NotesActivity.this;
+        progDialog = new CustomProgressDialog(context, "Loading Content . . .");
         parent_node = DB.getDBFirstNodeReference();
         email_identifier = new SessionManagement(context).getEmailIdentifier();
 
@@ -71,8 +78,16 @@ public class SearchActivity extends AppCompatActivity implements IMyConstants, C
         });
 
         recyclerView = findViewById(R.id.search_recyclerView);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
+        floatingActionButton = findViewById(R.id.new_notes_floatBtn);
+        floatingActionButton.setVisibility(View.VISIBLE);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(context, NotesEditorActivity.class));
+            }
+        });
         ImageButton voice_search = findViewById(R.id.voice_search);
         voice_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,21 +101,22 @@ public class SearchActivity extends AppCompatActivity implements IMyConstants, C
         });
     }
 
-    private void searchDocument(String toSearch) {
-        if (CheckInternetConnectivity.isInternetConnected(context)) {
-            DatabaseReference childReference = parent_node.child(email_identifier);
-            Query query = childReference.child(ID_FILES_PATH).orderByChild(KEY_NAME)
-                    .startAt(toSearch).endAt(toSearch + "\uf8ff");
-            FirebaseRecyclerOptions<UserFile> filter_options = new FirebaseRecyclerOptions.Builder<UserFile>()
-                    .setQuery(query, UserFile.class).build();
-            myFilesAdapter.updateOptions(filter_options);
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if (isConnected) {
+            if (myNotesAdapter == null) {
+                Snackbar.make(findViewById(android.R.id.content), INTERNET_CONNECTED, Snackbar.LENGTH_LONG).show();
+                onStart();
+            }
+        } else {
+            Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
+        /*switch (requestCode) {
             case 1: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     new CustomMsgDialog(context, "Permissions Granted", "Now you can Download File");
@@ -108,18 +124,17 @@ public class SearchActivity extends AppCompatActivity implements IMyConstants, C
                     new CustomMsgDialog(context, "Permissions Denied", "Please Grant Permissions to Download File");
                 }
             }
-        }
+        }*/
     }
 
-    @Override
-    public void onNetworkConnectionChanged(boolean isConnected) {
-        if (isConnected) {
-            if (myFilesAdapter == null) {
-                Snackbar.make(findViewById(android.R.id.content), "Internet Connected", Snackbar.LENGTH_LONG).show();
-                onStart();
-            }
-        } else {
-            Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
+    private void searchDocument(String toSearch) {
+        if (CheckInternetConnectivity.isInternetConnected(context)) {
+            DatabaseReference childReference = parent_node.child(email_identifier);
+            Query query = childReference.child(ID_NOTES_PATH).orderByChild(KEY_NAME)
+                    .startAt(toSearch).endAt(toSearch + "\uf8ff");
+            FirebaseRecyclerOptions<UserNotes> filter_options = new FirebaseRecyclerOptions.Builder<UserNotes>()
+                    .setQuery(query, UserNotes.class).build();
+            myNotesAdapter.updateOptions(filter_options);
         }
     }
 
@@ -140,24 +155,54 @@ public class SearchActivity extends AppCompatActivity implements IMyConstants, C
     @Override
     protected void onStart() {
         super.onStart();
+        progDialog.showDialog();
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
-            FirebaseRecyclerOptions<UserFile> options = new FirebaseRecyclerOptions.Builder<UserFile>()
-                    .setQuery(childReference.child(ID_FILES_PATH), UserFile.class)
+            FirebaseRecyclerOptions<UserNotes> options = new FirebaseRecyclerOptions.Builder<UserNotes>()
+                    .setQuery(childReference.child(ID_NOTES_PATH), UserNotes.class)
                     .build();
-            myFilesAdapter = new MyFilesAdapter(SearchActivity.this, options);
-            recyclerView.setAdapter(myFilesAdapter);
-            if (myFilesAdapter != null) {
-                myFilesAdapter.startListening();
+            myNotesAdapter = new MyNotesAdapter(this, options);
+            myNotesAdapter.getSnapshots().addChangeEventListener(new ChangeEventListener() {
+                @Override
+                public void onChildChanged(@NonNull ChangeEventType type, @NonNull DataSnapshot snapshot, int newIndex, int oldIndex) {
+                    progDialog.dismissDialog();
+                }
+
+                @Override
+                public void onDataChanged() {
+                    progDialog.dismissDialog();
+                    if (myNotesAdapter.getItemCount() == 0 && !recyclerView.hasPendingAdapterUpdates()) {
+                        Snackbar.make(findViewById(android.R.id.content), "No data available to display", Snackbar.LENGTH_LONG).show();
+
+                    //////////
+
+                   //////////     HERE IS ERROR WHEN SEARCHING VIA VOICE
+
+                    /////////////////
+
+
+                    }
+                }
+
+                @Override
+                public void onError(@NonNull DatabaseError databaseError) {
+                    progDialog.dismissDialog();
+                }
+            });
+            recyclerView.setAdapter(myNotesAdapter);
+            if (myNotesAdapter != null) {
+                myNotesAdapter.startListening();
             }
+        } else {
+            progDialog.dismissDialog();
         }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (myFilesAdapter != null) {
-            myFilesAdapter.stopListening();
+        if (myNotesAdapter != null) {
+            myNotesAdapter.stopListening();
         }
     }
 
@@ -183,5 +228,4 @@ public class SearchActivity extends AppCompatActivity implements IMyConstants, C
             }
         }
     }
-
 }

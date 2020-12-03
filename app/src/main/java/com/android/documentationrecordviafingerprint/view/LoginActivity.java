@@ -12,12 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
-import com.android.documentationrecordviafingerprint.controller.SessionManagement;
-import com.android.documentationrecordviafingerprint.controller.StringOperations;
+import com.android.documentationrecordviafingerprint.helper.SessionManagement;
+import com.android.documentationrecordviafingerprint.helper.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
+import com.android.documentationrecordviafingerprint.model.IMyConstants;
 import com.google.android.material.snackbar.Snackbar;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements IMyConstants {
     private Context context;
 
     @Override
@@ -30,8 +31,8 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
         setContentView(R.layout.activity_user_login);
-        final EditText email = findViewById(R.id.email);
-        final EditText password = findViewById(R.id.password);
+        final EditText email = findViewById(R.id.login_email);
+        final EditText password = findViewById(R.id.login_password);
         Button login_btn = findViewById(R.id.login_btn);
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,16 +60,16 @@ public class LoginActivity extends AppCompatActivity {
                 if (CheckInternetConnectivity.isInternetConnected(context)) {
                     MyFirebaseDatabase.verifyLoginCredentials(context, getEnteredEmail, StringOperations.toMD5String(getEnteredPassword), LoginActivity.this);
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
                 }
             }
         });
 
-        Button new_account_btn = findViewById(R.id.new_account_btn);
+        Button new_account_btn = findViewById(R.id.login_new_account_btn);
         new_account_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(context, NewRegistrationActivity.class));
+                startActivity(new Intent(context, RegistrationActivity.class));
                 finish();
             }
         });

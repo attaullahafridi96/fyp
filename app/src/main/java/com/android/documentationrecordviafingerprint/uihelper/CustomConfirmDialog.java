@@ -1,6 +1,8 @@
 package com.android.documentationrecordviafingerprint.uihelper;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -45,11 +47,16 @@ public final class CustomConfirmDialog extends AlertDialog {
         return this;
     }
 
-    public void setPositiveBtn(View.OnClickListener listener) {
+    public void setOkBtn(View.OnClickListener listener) {
         btn.setOnClickListener(listener);
     }
 
     public void dismissDialog() {
-        alertDialog.dismiss();
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.dismiss();
+            }
+        });
     }
 }

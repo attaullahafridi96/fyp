@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fp"
+    style="@style/AppCustomTheme"
     android:orientation="vertical"
-    tools:context=".view.NewRegistrationActivity">
+    tools:context=".view.RegistrationActivity">
 
     <TextView
         android:id="@+id/dashboard"
@@ -40,7 +40,7 @@
                 android:layout_weight="1" />
 
             <EditText
-                android:id="@+id/first_name"
+                android:id="@+id/reg_first_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -55,7 +55,7 @@
                 android:layout_height="20dp" />
 
             <EditText
-                android:id="@+id/last_name"
+                android:id="@+id/reg_last_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -70,7 +70,7 @@
                 android:layout_height="20dp" />
 
             <EditText
-                android:id="@+id/email"
+                android:id="@+id/reg_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -85,7 +85,7 @@
                 android:layout_height="20dp" />
 
             <EditText
-                android:id="@+id/password"
+                android:id="@+id/reg_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -100,7 +100,7 @@
                 android:layout_height="20dp" />
 
             <EditText
-                android:id="@+id/confirmpassword"
+                android:id="@+id/reg_confirmpassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -115,7 +115,7 @@
                 android:layout_height="20dp" />
 
             <Button
-                android:id="@+id/create_account_btn"
+                android:id="@+id/reg_create_account_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
@@ -137,7 +137,7 @@
                 android:layout_height="10dp" />
 
             <Button
-                android:id="@+id/backToLogin_btn"
+                android:id="@+id/reg_backToLogin_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

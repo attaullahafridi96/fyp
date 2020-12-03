@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.controller;
+package com.android.documentationrecordviafingerprint.model;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

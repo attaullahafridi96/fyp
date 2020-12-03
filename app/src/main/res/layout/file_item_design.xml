@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="5dp">
 
         <ImageView
             android:id="@+id/file_type_icon"
@@ -40,8 +41,8 @@
                 android:id="@+id/upload_date_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
                 android:layout_marginStart="10dp"
                 android:fontFamily="sans-serif-condensed"
                 android:maxLines="1"
@@ -68,10 +69,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:fontFamily="sans-serif-condensed"
+            android:gravity="end"
             android:maxLines="1"
             android:text="999 KB"
             android:textColor="@color/white"
             android:textSize="18sp" />
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="match_parent" />
 
         <View
             android:layout_width="1dp"

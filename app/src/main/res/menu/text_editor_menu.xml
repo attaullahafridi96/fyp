@@ -10,18 +10,22 @@
         <menu>
             <group android:id="@+id/grp1">
                 <item
-                    android:id="@+id/editor_save_item"
+                    android:id="@+id/editor_save_menu_item"
                     android:icon="@drawable/ic_baseline_cloud_upload_24"
-                    android:title="Save"
+                    android:title="Save on Cloud"
                     app:showAsAction="never" />
                 <item
-                    android:id="@+id/editor_rename_item"
-                    android:enabled="false"
+                    android:id="@+id/editor_rename_menu_item"
                     android:icon="@drawable/ic_baseline_edit_24"
                     android:title="Rename Notes"
                     app:showAsAction="never" />
                 <item
-                    android:id="@+id/editor_delete_item"
+                    android:id="@+id/editor_download_menu_item"
+                    android:icon="@drawable/ic_baseline_save_24"
+                    android:title="Save on Device"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/editor_delete_menu_item"
                     android:icon="@drawable/ic_baseline_cancel_24"
                     android:title="Delete"
                     app:showAsAction="never" />

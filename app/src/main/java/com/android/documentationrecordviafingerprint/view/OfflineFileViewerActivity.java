@@ -22,7 +22,6 @@ import com.github.chrisbanes.photoview.PhotoView;
 
 public class OfflineFileViewerActivity extends AppCompatActivity {
     private PDFView pdfView;
-    private PhotoView photoView;
     private ProgressBar progressBar;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -45,7 +44,7 @@ public class OfflineFileViewerActivity extends AppCompatActivity {
         });
         pdfView = findViewById(R.id.pdf_view);
         progressBar = findViewById(R.id.pbar);
-        photoView = findViewById(R.id.imageview_viewer);
+        PhotoView photoView = findViewById(R.id.imageview_viewer);
         WebView webView = findViewById(R.id.webview);
         TextView nothingShow = findViewById(R.id.nothingShow);
         switch (file_extension) {

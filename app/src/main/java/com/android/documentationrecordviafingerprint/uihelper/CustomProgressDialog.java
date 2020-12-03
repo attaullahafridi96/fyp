@@ -1,6 +1,8 @@
 package com.android.documentationrecordviafingerprint.uihelper;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -14,7 +16,7 @@ public class CustomProgressDialog extends AlertDialog {
 
     private final AlertDialog alertDialog;
 
-    public CustomProgressDialog(@NonNull Context context,String msg) {
+    public CustomProgressDialog(@NonNull Context context, String msg) {
         super(context);
         Builder builder = new Builder(context);
         LayoutInflater inflater = getLayoutInflater();
@@ -28,10 +30,20 @@ public class CustomProgressDialog extends AlertDialog {
     }
 
     public void dismissDialog() {
-        alertDialog.dismiss();
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.dismiss();
+            }
+        });
     }
 
     public void showDialog() {
-        alertDialog.show();
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.show();
+            }
+        });
     }
 }

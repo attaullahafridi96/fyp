@@ -22,12 +22,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.controller.DB;
-import com.android.documentationrecordviafingerprint.controller.MyFilesAdapter;
+import com.android.documentationrecordviafingerprint.adapter.MyFilesAdapter;
 import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
-import com.android.documentationrecordviafingerprint.controller.SessionManagement;
+import com.android.documentationrecordviafingerprint.helper.SessionManagement;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.internetchecking.ConnectivityReceiver;
+import com.android.documentationrecordviafingerprint.model.DB;
+import com.android.documentationrecordviafingerprint.model.IMyConstants;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
@@ -41,7 +42,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
-public class DashboardActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
+public class DashboardActivity extends AppCompatActivity implements IMyConstants, ConnectivityReceiver.ConnectivityReceiverListener {
     private Context context;
     private static DrawerLayout drawerLayout;
     private MyFilesAdapter myAdapter;
@@ -58,7 +59,6 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
         setContentView(R.layout.activity_navigation_drawer);
         context = DashboardActivity.this;
         progDialog = new CustomProgressDialog(context, "Loading Content . . .");
-        progDialog.showDialog();
         internet_broadcast = new ConnectivityReceiver();
         session = new SessionManagement(context);
         parent_node = DB.getDBFirstNodeReference();
@@ -69,7 +69,7 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
         navigationView.setItemIconTintList(null);   //This is make drawer icons colorful
         MenuItem app_version_menu_item = navigationView.getMenu().findItem(R.id.app_version_item);
         View headerView = navigationView.getHeaderView(0);
-        TextView fullname = headerView.findViewById(R.id.nav_drawer_fullname);
+        TextView fullname_tv = headerView.findViewById(R.id.nav_drawer_fullname);
         TextView email = headerView.findViewById(R.id.nav_drawer_email);
         String app_version = "";
         try {
@@ -106,10 +106,10 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
             }
         });
 
-        findViewById(R.id.home_new_btn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.home_notes_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(activity_opener.setClass(DashboardActivity.this, TextEditorActivity.class));
+                startActivity(activity_opener.setClass(DashboardActivity.this, NotesActivity.class));
             }
         });
 
@@ -127,18 +127,20 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
             }
         });
 
-        MyFirebaseDatabase.getFullName(context, fullname);
+        MyFirebaseDatabase.getFullName(context, fullname_tv);   //Set full user name in drawer menu
+
         email.setText(session.getSession());
 
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.home_recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
     }
 
     private void logout() {
         final CustomConfirmDialog confirmDialog = new CustomConfirmDialog(context, "Are you sure to Logout?");
-        confirmDialog.setBtnText("Logout")
-                .setPositiveBtn(new View.OnClickListener() {
+        confirmDialog.dangerBtn()
+                .setBtnText("Logout")
+                .setOkBtn(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         confirmDialog.dismissDialog();
@@ -152,13 +154,11 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 1: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    new CustomMsgDialog(context, "Permissions Granted", "Now you can Download File");
-                } else {
-                    new CustomMsgDialog(context, "Permissions Denied", "Please Grant Permissions to Download File");
-                }
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                new CustomMsgDialog(context, "Permissions Granted", "Now you can Download File");
+            } else {
+                new CustomMsgDialog(context, "Permissions Denied", "Please Grant Permissions to Download File");
             }
         }
     }
@@ -166,23 +166,24 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         if (isConnected) {
-            if (myAdapter == null) {
-                Snackbar.make(findViewById(android.R.id.content), "Internet Connected", Snackbar.LENGTH_LONG).show();
+            if (myAdapter == null) {    //This condition is used for preventing repeating connection msg on each onStart()
+                Snackbar.make(findViewById(android.R.id.content), INTERNET_CONNECTED, Snackbar.LENGTH_LONG).show();
                 onStart();
             }
         } else {
-            Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
         }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        progDialog.showDialog();
         String email_identifier = session.getEmailIdentifier();
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
             FirebaseRecyclerOptions<UserFile> options = new FirebaseRecyclerOptions.Builder<UserFile>()
-                    .setQuery(childReference.child("files"), UserFile.class)
+                    .setQuery(childReference.child(ID_FILES_PATH), UserFile.class)
                     .build();
             myAdapter = new MyFilesAdapter(DashboardActivity.this, options);
             myAdapter.getSnapshots().addChangeEventListener(new ChangeEventListener() {
@@ -194,8 +195,9 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
                 @Override
                 public void onDataChanged() {
                     progDialog.dismissDialog();
-                    if (myAdapter.getItemCount() == 0)
-                        Snackbar.make(findViewById(android.R.id.content), "No Data Available to Display", Snackbar.LENGTH_LONG).show();
+                    if (myAdapter.getItemCount() == 0 && !recyclerView.hasPendingAdapterUpdates()) {
+                        Snackbar.make(findViewById(android.R.id.content), "No data available to display", Snackbar.LENGTH_LONG).show();
+                    }
                 }
 
                 @Override
@@ -226,7 +228,9 @@ public class DashboardActivity extends AppCompatActivity implements Connectivity
     @Override
     protected void onStop() {
         super.onStop();
-        myAdapter.stopListening();
+        if (myAdapter != null) {
+            myAdapter.stopListening();
+        }
     }
 
     /*private static boolean doubleBackToExitPressedOnce = false;

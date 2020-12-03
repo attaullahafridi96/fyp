@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.controller;
+package com.android.documentationrecordviafingerprint.helper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

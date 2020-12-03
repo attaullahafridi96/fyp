@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
@@ -25,13 +27,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
-import com.android.documentationrecordviafingerprint.controller.StringOperations;
+import com.android.documentationrecordviafingerprint.helper.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
+import com.android.documentationrecordviafingerprint.model.IMyConstants;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomInputDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.google.android.material.snackbar.Snackbar;
 
-public class UploadActivity extends AppCompatActivity {
+public class UploadActivity extends AppCompatActivity implements IMyConstants {
 
     private Context context;
     private static Uri file_uri;
@@ -50,7 +54,7 @@ public class UploadActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                        ///////////////////////////////////alert dialog
+                        new CustomMsgDialog(context, "READ PERMISSION REQUIRED", "This permission is required for getting files from your device.");
                     } else {
                         requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 99);
                     }
@@ -63,20 +67,23 @@ public class UploadActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (file_uri != null) {
-                    final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.upload_msg));
-                    customConfirmDialog.setPositiveBtn(new View.OnClickListener() {
+                    final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.file_upload_msg));
+                    customConfirmDialog.setOkBtn(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {
-                                MyFirebaseDatabase.requestFileUpload(context, file_icon_uri, file_name.toLowerCase(), file_extension, file_type, file_uri, file_identifier.toLowerCase(), formatted_file_size);
+                                MyFirebaseDatabase.requestFileUpload(UploadActivity.this,
+                                        file_icon_uri, file_name.toLowerCase(),
+                                        file_extension, file_type, file_uri,
+                                        file_identifier.toLowerCase(), formatted_file_size);
                             } else {
-                                Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
                             }
                             customConfirmDialog.dismissDialog();
                         }
                     });
                 } else {
-                    Toast.makeText(context, "No file selected", Toast.LENGTH_SHORT).show();
+                    new CustomMsgDialog(context, "Unsupported file", "Can't upload this type of file");
                 }
             }
         });
@@ -95,7 +102,7 @@ public class UploadActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
-        String[] mimetypes = {"application/pdf", "text/*", "image/*",".csv", "application/msword",
+        String[] mimetypes = {"application/pdf", "text/*", "image/*", ".csv", "application/msword",
                 "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 "application/vnd.openxmlformats-officedocument.presentationml.presentation",
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"};
@@ -135,6 +142,8 @@ public class UploadActivity extends AppCompatActivity {
         file_extension = mimeTypeMap.getExtensionFromMimeType(cr.getType(file_uri));
     }
 
+    private TextView selected_filename_tv;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("UseCompatLoadingForDrawables")
     private void drawSelectedFileInfo(final String file_extn) {
@@ -142,87 +151,92 @@ public class UploadActivity extends AppCompatActivity {
         switch (file_extn) {
             case "pdf":
                 imageNo = R.drawable.pdf_96px;
-                file_type = "doc";
-                file_icon_uri = getResources().getString(R.string.pdf_icon);
+                file_type = FILE_TYPE_DOCS;
+                file_icon_uri = FILE_ICON_URI_PDF;
                 break;
             case "rtf":
-                file_type = "doc";
+                file_type = FILE_TYPE_DOCS;
                 imageNo = R.drawable.microsoft_word_2019_96px;
-                file_icon_uri = getResources().getString(R.string.rtf_icon);
+                file_icon_uri = FILE_ICON_URI_RTF;
                 break;
             case "doc":
             case "docx":
-                file_type = "doc";
+                file_type = FILE_TYPE_DOCS;
                 imageNo = R.drawable.microsoft_word_96px;
-                file_icon_uri = getResources().getString(R.string.word_icon);
+                file_icon_uri = FILE_ICON_URI_WORD;
                 break;
             case "pptx":
             case "ppt":
-                file_type = "doc";
+                file_type = FILE_TYPE_DOCS;
                 imageNo = R.drawable.powerpoint_96px;
-                file_icon_uri = getResources().getString(R.string.powerpoint_icon);
+                file_icon_uri = FILE_ICON_URI_POWERPOINT;
                 break;
             case "xls":
             case "xlsx":
             case "csv":
-                file_type = "doc";
+                file_type = FILE_TYPE_DOCS;
                 imageNo = R.drawable.excel_96px;
-                file_icon_uri = getResources().getString(R.string.excel_icon);
+                file_icon_uri = FILE_ICON_URI_EXCEL;
+                break;
+            case "txt":
+                file_type = FILE_TYPE_DOCS;
+                imageNo = R.drawable.txt_96px;
+                file_icon_uri = FILE_ICON_URI_TXT;
                 break;
             case "jpeg":
             case "jpg":
-                file_type = "image";
+                file_type = FILE_TYPE_IMAGE;
                 imageNo = R.drawable.jpg_96px;
-                file_icon_uri = getResources().getString(R.string.jgep_icon);
+                file_icon_uri = FILE_ICON_URI_JPEG;
                 break;
             case "png":
-                file_type = "image";
+                file_type = FILE_TYPE_IMAGE;
                 imageNo = R.drawable.png_96px;
-                file_icon_uri = getResources().getString(R.string.png_icon);
+                file_icon_uri = FILE_ICON_URI_PNG;
                 break;
             case "gif":
-                file_type = "image";
+                file_type = FILE_TYPE_IMAGE;
                 imageNo = R.drawable.gif_96px;
-                file_icon_uri = getResources().getString(R.string.gif_icon);
+                file_icon_uri = FILE_ICON_URI_GIF;
                 break;
             case "bmp":
-                file_type = "image";
+                file_type = FILE_TYPE_IMAGE;
                 imageNo = R.drawable.image_96px;
-                file_icon_uri = getResources().getString(R.string.image_icon);
+                file_icon_uri = FILE_ICON_URI_BMP;
                 break;
             default:
-                file_type = "doc";
-                imageNo = R.drawable.note_96px;
-                file_icon_uri = getResources().getString(R.string.notes_icon);
+                file_uri = null;
+                imageNo = R.drawable.file_96px;
                 break;
         }
         ImageView file_type_icon = findViewById(R.id.file_type_icon);
         file_type_icon.setImageDrawable(getDrawable(imageNo));
-        TextView selected_filename_tv = findViewById(R.id.selected_filename);
+        selected_filename_tv = findViewById(R.id.selected_filename);
         selected_filename_tv.setText(file_name);
         TextView selected_file_size = findViewById(R.id.selected_file_size);
         selected_file_size.setText(formatted_file_size);
+        selected_file.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                menu.setHeaderTitle(file_name);
+                menu.add("Rename File").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        renameFile();
+                        return true;
+                    }
+                });
+            }
+        });
         selected_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (file_uri != null) {
                     if (file_extension.equals("doc") || file_extension.equals("docx") || file_extension.equals("rtf")) {
-                        /*StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                        StrictMode.setVmPolicy(builder.build());
-                        builder.detectFileUriExposure();
 
-                        Uri docUri = FileProvider.getUriForFile(getApplicationContext(),
-                                "com.android.documentationrecordviafingerprint.provider",
-                                new File(file_path)); // same as defined in Manifest file in android:authorities="com.sample.example.provider"
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(docUri, "application/msword");
-                        try {
-                            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                            Intent chooser = Intent.createChooser(intent, "Open With..");
-                            startActivity(chooser);
-                        } catch (ActivityNotFoundException e) {
-                            Toast.makeText(UploadActivity.this, "No application to open file", Toast.LENGTH_SHORT).show();
-                        }*/
+                        //////////incomplete////////////////////
+
+
                         new CustomMsgDialog(context, "Can't open this type of file", getResources().getString(R.string.canNotOpenMsg));
                     } else {
                         activity_opener.setClass(context, OfflineFileViewerActivity.class);
@@ -237,6 +251,33 @@ public class UploadActivity extends AppCompatActivity {
         });
         selected_file.setTooltipText(file_name);
         selected_file.setVisibility(View.VISIBLE);
+    }
+
+    private static String new_file_name;
+
+    private void renameFile() {
+        final CustomInputDialog customInputDialog = new CustomInputDialog(context, "Rename");
+        customInputDialog.setOkBtn(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customInputDialog.dismissDialog();
+                new_file_name = customInputDialog.getInputText();
+                if (StringOperations.isEmpty(new_file_name)) {
+                    new CustomMsgDialog(context, "Alert", "Can't Set Empty File Name.");
+                    return;
+                }
+                new_file_name += "." + file_extension;
+                String old_file_id = StringOperations.createFileIdentifier(file_name);
+                String new_file_id = StringOperations.createFileIdentifier(new_file_name);
+                if (old_file_id.equalsIgnoreCase(new_file_id)) {
+                    Toast.makeText(context, "Please enter different file name", Toast.LENGTH_LONG).show();
+                } else {
+                    file_name = new_file_name;
+                    file_identifier = new_file_id;
+                    selected_filename_tv.setText(file_name);
+                }
+            }
+        });
     }
 
     private void clearData() {

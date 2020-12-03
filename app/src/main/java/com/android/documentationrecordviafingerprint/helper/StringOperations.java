@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.controller;
+package com.android.documentationrecordviafingerprint.helper;
 
 import android.text.TextUtils;
 import android.util.Patterns;

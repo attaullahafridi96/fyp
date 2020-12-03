@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fp"
+    style="@style/AppCustomTheme"
     android:orientation="vertical"
     tools:context=".view.LoginActivity">
 
@@ -43,7 +43,7 @@
                 android:layout_weight="1" />
 
             <EditText
-                android:id="@+id/email"
+                android:id="@+id/login_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_shape"
@@ -59,7 +59,7 @@
                 android:layout_height="20dp" />
 
             <EditText
-                android:id="@+id/password"
+                android:id="@+id/login_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_shape"
@@ -97,7 +97,7 @@
                 android:layout_height="10dp" />
 
             <Button
-                android:id="@+id/new_account_btn"
+                android:id="@+id/login_new_account_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

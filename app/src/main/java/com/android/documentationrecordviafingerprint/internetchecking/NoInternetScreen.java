@@ -1,15 +1,12 @@
 package com.android.documentationrecordviafingerprint.internetchecking;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.view.LoginActivity;
 
 public class NoInternetScreen extends AppCompatActivity {
 
@@ -24,12 +21,13 @@ public class NoInternetScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(0);     //Stop App
             }
         });
 
-        new Thread() {
-            /*This thread will continuously check for an active connection*/
+        /*new Thread() {
+         *//*This thread will continuously check for an active connection*//*
             @Override
             public void run() {
                 boolean isInternetConnected;
@@ -43,6 +41,6 @@ public class NoInternetScreen extends AppCompatActivity {
                     SystemClock.sleep(3000);
                 }
             }
-        }.start();
+        }.start();*/
     }
 }

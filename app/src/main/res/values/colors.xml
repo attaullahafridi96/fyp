@@ -10,4 +10,5 @@
     <color name="rippleEffectColor">#CC999999</color>
     <color name="backgroundColor">#0D47A1</color>
     <color name="darkColor">#22313F</color>
+    <color name="redColor">#D50000</color>
 </resources>

@@ -27,8 +27,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
-import com.android.documentationrecordviafingerprint.controller.StringOperations;
+import com.android.documentationrecordviafingerprint.helper.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
+import com.android.documentationrecordviafingerprint.model.IMyConstants;
 import com.android.documentationrecordviafingerprint.model.UserFile;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomInputDialog;
@@ -45,7 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-public class OnlineFileViewerActivity extends AppCompatActivity {
+public class OnlineFileViewerActivity extends AppCompatActivity implements IMyConstants {
     private static PDFView pdfView;
     private ProgressBar progressBar;
     private static String file_name, file_storage_key;
@@ -67,9 +68,9 @@ public class OnlineFileViewerActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         /////////////ToolBar code/////////////
         Intent it = getIntent();
-        model = (UserFile) it.getSerializableExtra("USER_FILE");
-        file_name = model.getFile_name();
-        file_storage_key = model.getFile_storage_key();
+        model = (UserFile) it.getSerializableExtra(EXTRA_USER_FILE);
+        file_name = model.getName();
+        file_storage_key = model.getFile_storage_id();
         file_uri = model.getFile_uri();
         file_extension = model.getFile_extension();
         TextView document_title = findViewById(R.id.document_title);
@@ -188,86 +189,94 @@ public class OnlineFileViewerActivity extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        try {
-            switch (item.getItemId()) {
-                case R.id.rename_item:
-                    renameFile();
-                    break;
-                case R.id.download_file_item:
-                    downloadFile();
-                    break;
-                case R.id.delete_file_item:
-                    deleteFile();
-                    break;
-            }
-        } catch (Exception e) {
-            Toast.makeText(OnlineFileViewerActivity.this, "Error", Toast.LENGTH_SHORT).show();
+        switch (item.getItemId()) {
+            case R.id.rename_item:
+                renameFile();
+                break;
+            case R.id.download_file_item:
+                downloadFile();
+                break;
+            case R.id.delete_file_item:
+                deleteFileAndCloseActivity();
+                break;
         }
         return true;
     }
 
     private void renameFile() {
-        final CustomInputDialog customInputDialog = new CustomInputDialog(context, "Rename");
-        customInputDialog.setOkBtn(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                customInputDialog.dismissDialog();
-                new_file_name = customInputDialog.getInputText();
-                if (StringOperations.isEmpty(new_file_name)) {
-                    new CustomMsgDialog(context, "Alert", "Can't Set Empty File Name.");
-                    return;
-                }
-                new_file_name += "." + file_extension;
-                String old_file_id = StringOperations.createFileIdentifier(file_name);
-                String new_file_id = StringOperations.createFileIdentifier(new_file_name);
-                if (old_file_id.equalsIgnoreCase(new_file_id)) {
-                    Toast.makeText(context, "Please enter different file name", Toast.LENGTH_LONG).show();
-                } else {
-                    if (CheckInternetConnectivity.isInternetConnected(context)) {
-                        MyFirebaseDatabase.renameFile(OnlineFileViewerActivity.this, new_file_name, new_file_id, model);
+        try {
+            final CustomInputDialog customInputDialog = new CustomInputDialog(context, "Rename");
+            customInputDialog.setOkBtn(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    customInputDialog.dismissDialog();
+                    new_file_name = customInputDialog.getInputText();
+                    if (StringOperations.isEmpty(new_file_name)) {
+                        new CustomMsgDialog(context, "Alert", "Can't Set Empty File Name.");
+                        return;
+                    }
+                    new_file_name += "." + file_extension;
+                    String old_file_id = StringOperations.createFileIdentifier(file_name);
+                    String new_file_id = StringOperations.createFileIdentifier(new_file_name);
+                    if (old_file_id.equalsIgnoreCase(new_file_id)) {
+                        Toast.makeText(context, "Please enter different file name", Toast.LENGTH_LONG).show();
                     } else {
-                        Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
+                        if (CheckInternetConnectivity.isInternetConnected(context)) {
+                            MyFirebaseDatabase.renameFileOnCloud(OnlineFileViewerActivity.this, new_file_name, new_file_id, model);
+                        } else {
+                            Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            Toast.makeText(OnlineFileViewerActivity.this, "Error", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void downloadFile() {
-        final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.download_msg));
-        customConfirmDialog.setBtnText("Download")
-                .setPositiveBtn(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (CheckInternetConnectivity.isInternetConnected(context)) {
-                            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        try {
+            final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.download_msg));
+            customConfirmDialog.setBtnText("Download")
+                    .setOkBtn(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (CheckInternetConnectivity.isInternetConnected(context)) {
+                                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                                } else {
+                                    startDownload(file_uri);
+                                }
                             } else {
-                                startDownload(file_uri);
+                                Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
                             }
-                        } else {
-                            Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
+                            customConfirmDialog.dismissDialog();
                         }
-                        customConfirmDialog.dismissDialog();
-                    }
-                });
+                    });
+        } catch (Exception e) {
+            Toast.makeText(OnlineFileViewerActivity.this, "Error", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void deleteFile() {
-        final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.delete_msg));
-        customConfirmDialog.dangerBtn()
-                .setBtnText("Delete")
-                .setPositiveBtn(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (CheckInternetConnectivity.isInternetConnected(context)) {
-                            String file_id = StringOperations.createFileIdentifier(file_name);
-                            MyFirebaseDatabase.deleteFile(OnlineFileViewerActivity.this, file_storage_key, file_id);
-                        } else {
-                            Snackbar.make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG).show();
+    private void deleteFileAndCloseActivity() {
+        try {
+            final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.delete_msg));
+            customConfirmDialog.dangerBtn()
+                    .setBtnText("Delete")
+                    .setOkBtn(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (CheckInternetConnectivity.isInternetConnected(context)) {
+                                String file_id = StringOperations.createFileIdentifier(file_name);
+                                MyFirebaseDatabase.deleteFile(OnlineFileViewerActivity.this, file_storage_key, file_id,true);
+                            } else {
+                                Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
+                            }
+                            customConfirmDialog.dismissDialog();
                         }
-                        customConfirmDialog.dismissDialog();
-                    }
-                });
+                    });
+        } catch (Exception e) {
+            Toast.makeText(OnlineFileViewerActivity.this, "Error", Toast.LENGTH_SHORT).show();
+        }
     }
 }

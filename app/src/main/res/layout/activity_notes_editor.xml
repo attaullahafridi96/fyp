@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/fp"
     android:orientation="vertical"
-    tools:context=".view.TextEditorActivity">
+    tools:context=".view.NotesEditorActivity">
 
     <LinearLayout
         android:id="@+id/top_container"
@@ -16,13 +16,13 @@
         android:weightSum="1.3">
 
         <TextView
-            android:id="@+id/app_name"
+            android:id="@+id/editor_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="sans-serif-condensed"
             android:padding="10dp"
-            android:text="New Notes"
+            android:text="New"
             android:textColor="#FFFFFF"
             android:textSize="24dp"
             android:textStyle="bold" />
@@ -39,36 +39,49 @@
             app:titleTextColor="@color/white" />
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/noteTitle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:autofillHints=""
-        android:background="@drawable/text_editor_design"
-        android:ems="10"
-        android:fontFamily="sans-serif-condensed-light"
-        android:hint="Title"
-        android:inputType="textPersonName"
-        android:maxLength="50"
-        android:padding="10dp"
-        android:textColor="#000" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="5dp">
 
-    <EditText
-        android:id="@+id/noteDetails"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:autofillHints=""
-        android:background="@drawable/text_editor_design"
-        android:ems="10"
-        android:fontFamily="sans-serif-condensed-light"
-        android:gravity="start|top"
-        android:hint="Write Notes..."
-        android:inputType="textMultiLine"
-        android:overScrollMode="ifContentScrolls"
-        android:padding="10dp"
-        android:textColor="#000"
-        android:textSize="18sp" />
+        <EditText
+            android:id="@+id/notes_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:background="@drawable/text_editor_design"
+            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-()%*!~`{}?+;: "
+            android:ems="10"
+            android:fontFamily="sans-serif-condensed-light"
+            android:hint="Title"
+            android:inputType="textPersonName"
+            android:maxLength="50"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:textColor="#000" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp" />
+
+        <EditText
+            android:id="@+id/notes_data"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:autofillHints=""
+            android:background="@drawable/text_editor_design"
+            android:ems="10"
+            android:fontFamily="sans-serif-condensed-light"
+            android:gravity="start|top"
+            android:hint="Write Notes . . ."
+            android:inputType="textMultiLine"
+            android:padding="10dp"
+            android:scrollbars="vertical"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </LinearLayout>
 
     <!--  <LinearLayout
           android:layout_width="match_parent"

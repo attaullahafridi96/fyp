@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fp"
+    style="@style/AppCustomTheme"
     android:orientation="vertical"
     android:padding="10dp"
     tools:context=".view.UploadActivity">
@@ -72,7 +72,7 @@
         android:id="@+id/file_chooser_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_design"
+        android:background="@drawable/dialog_btn_design"
         android:fontFamily="sans-serif-condensed-light"
         android:letterSpacing="0.2"
         android:text="Choose File from phone"

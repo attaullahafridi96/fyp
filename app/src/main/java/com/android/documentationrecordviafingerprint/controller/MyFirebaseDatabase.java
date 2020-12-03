@@ -11,8 +11,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.android.documentationrecordviafingerprint.helper.SessionManagement;
+import com.android.documentationrecordviafingerprint.helper.StringOperations;
+import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
+import com.android.documentationrecordviafingerprint.model.DB;
+import com.android.documentationrecordviafingerprint.model.IMyConstants;
 import com.android.documentationrecordviafingerprint.model.User;
 import com.android.documentationrecordviafingerprint.model.UserFile;
+import com.android.documentationrecordviafingerprint.model.UserNotes;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
@@ -20,7 +26,6 @@ import com.android.documentationrecordviafingerprint.uihelper.CustomProgressbar;
 import com.android.documentationrecordviafingerprint.view.DashboardActivity;
 import com.android.documentationrecordviafingerprint.view.OnlineFileViewerActivity;
 import com.google.android.gms.tasks.OnCanceledListener;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -35,12 +40,11 @@ import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
 
-public final class MyFirebaseDatabase {
+public final class MyFirebaseDatabase implements IMyConstants {
     private static final DatabaseReference databaseReference;
     private static final StorageReference storageReference;
     private static String email_identifier;
     private static CustomProgressDialog progDialog;
-    private static final String FILES_KEY = "files";
     @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -53,7 +57,7 @@ public final class MyFirebaseDatabase {
         progDialog = new CustomProgressDialog(context, "Processing . . .");
         progDialog.showDialog();
         try {
-            Query checkDuplicateAcc = databaseReference.orderByChild("email").equalTo(user.getEmail());
+            Query checkDuplicateAcc = databaseReference.orderByChild(KEY_EMAIL).equalTo(user.getEmail());
 
             email_identifier = StringOperations.removeInvalidCharsFromIdentifier(user.getEmail());
 
@@ -107,7 +111,7 @@ public final class MyFirebaseDatabase {
                 "\n\nAre you sure to delete all data?\n\n");
         customConfirmDialog.setBtnText("Delete Data")
                 .dangerBtn()
-                .setPositiveBtn(new View.OnClickListener() {
+                .setOkBtn(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         customConfirmDialog.dismissDialog();
@@ -122,7 +126,7 @@ public final class MyFirebaseDatabase {
                 "\n\nAre you sure to delete your account?\n\n");
         customConfirmDialog.setBtnText("Delete Account")
                 .dangerBtn()
-                .setPositiveBtn(new View.OnClickListener() {
+                .setOkBtn(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         customConfirmDialog.dismissDialog();
@@ -131,7 +135,7 @@ public final class MyFirebaseDatabase {
                 });
     }
 
-    public static void getFullName(final Context context, final TextView textView) {
+    public static void getFullName(final Context context, final TextView fullname_tv) {
         try {
             email_identifier = new SessionManagement(context).getEmailIdentifier();
             Query checkAccount = databaseReference.child(email_identifier);
@@ -140,10 +144,10 @@ public final class MyFirebaseDatabase {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        String first_name = dataSnapshot.child("first_name").getValue(String.class);
-                        String last_name = dataSnapshot.child("last_name").getValue(String.class);
+                        String first_name = dataSnapshot.child(KEY_FIRST_NAME).getValue(String.class);
+                        String last_name = dataSnapshot.child(KEY_LAST_NAME).getValue(String.class);
                         String full_name = first_name + " " + last_name;
-                        textView.setText(StringOperations.capitalizeString(full_name));
+                        fullname_tv.setText(StringOperations.capitalizeString(full_name));
                     }
                 }
 
@@ -160,7 +164,7 @@ public final class MyFirebaseDatabase {
         progDialog = new CustomProgressDialog(context, "Processing . . .");
         progDialog.showDialog();
         try {
-            Query checkAccount = databaseReference.orderByChild("email").equalTo(email);
+            Query checkAccount = databaseReference.orderByChild(KEY_EMAIL).equalTo(email);
 
             email_identifier = StringOperations.removeInvalidCharsFromIdentifier(email);
 
@@ -168,7 +172,7 @@ public final class MyFirebaseDatabase {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        String passFromDB = dataSnapshot.child(email_identifier).child("password").getValue(String.class);
+                        String passFromDB = dataSnapshot.child(email_identifier).child(KEY_PASSWORD).getValue(String.class);
                         if (password.equals(passFromDB)) {
                             new SessionManagement(context).setSession(email);
                             progDialog.dismissDialog();
@@ -193,8 +197,8 @@ public final class MyFirebaseDatabase {
         }
     }
 
-    public static void deleteFile(final Activity activity, final String file_key, final String file_identifier) {
-        progDialog = new CustomProgressDialog(activity, "Deleting Existing File...");
+    public static void deleteFile(final Activity activity, final String file_key, final String file_identifier, final boolean close_activity) {
+        progDialog = new CustomProgressDialog(activity, "Deleting Existing File . . .");
         progDialog.showDialog();
         try {
             email_identifier = new SessionManagement(activity).getEmailIdentifier();
@@ -202,19 +206,22 @@ public final class MyFirebaseDatabase {
             task.addOnSuccessListener(activity, new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    databaseReference.child(email_identifier).child(FILES_KEY).child(file_identifier)
+                    databaseReference.child(email_identifier).child(ID_FILES_PATH).child(file_identifier)
                             .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(activity, "File Deleted Successfully", Toast.LENGTH_LONG).show();
                             progDialog.dismissDialog();
-                            activity.finish();
+                            if (close_activity) {
+                                activity.finish();
+                            }
                         }
                     });
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
+                    progDialog.dismissDialog();
                     Toast.makeText(activity, "Failed to Delete File", Toast.LENGTH_LONG).show();
                 }
             });
@@ -223,79 +230,58 @@ public final class MyFirebaseDatabase {
         }
     }
 
-    public static void deleteFile(final Context context, final String storage_file_key, final String file_identifier) {
-        progDialog = new CustomProgressDialog(context, "Deleting Existing File...");
+    public static void requestFileUpload(final Activity activity, final String file_icon_uri, final String file_name, final String file_extension, final String file_type, final Uri file_uri, final String file_identifier, final String file_size) {
+        progDialog = new CustomProgressDialog(activity, "Checking Database . . .");
         progDialog.showDialog();
         try {
-            email_identifier = new SessionManagement(context).getEmailIdentifier();
-            Task<Void> task = storageReference.child(storage_file_key).delete();
-            task.addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    databaseReference.child(email_identifier).child(FILES_KEY).child(file_identifier)
-                            .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            progDialog.dismissDialog();
-                            Toast.makeText(context, "File Deleted Successfully", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(context, "Failed to Delete File", Toast.LENGTH_LONG).show();
-                }
-            });
-        } catch (Exception e) {
-            Toast.makeText(context, "Error: " + e, Toast.LENGTH_LONG).show();
-        }
-    }
+            email_identifier = new SessionManagement(activity).getEmailIdentifier();
 
-    public static void requestFileUpload(final Context context, final String file_icon_uri, final String file_name, final String file_extension, final String file_type, final Uri file_uri, final String file_identifier, final String file_size) {
-        progDialog = new CustomProgressDialog(context, "Checking Database . . .");
-        progDialog.showDialog();
-        try {
-            email_identifier = new SessionManagement(context).getEmailIdentifier();
-
-            DatabaseReference childReference = databaseReference.child(email_identifier).child(FILES_KEY).child(file_identifier);
-            Query checkuser = childReference.orderByChild("file_name");
+            DatabaseReference childReference = databaseReference.child(email_identifier).child(ID_FILES_PATH).child(file_identifier);
+            Query checkuser = childReference.orderByChild(KEY_NAME);
             checkuser.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
+                    if (dataSnapshot.exists()) {        //checking filename and type if exist
                         progDialog.dismissDialog();
-                        final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, "File already exists do you want to Update file?");
+                        final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, "File Duplication not Allowed!\n\n" +
+                                "File already exists with this name and type, Long press selected file to Rename file " +
+                                "or Update existing file on cloud.");
                         customConfirmDialog.setBtnText("Update")
-                                .setPositiveBtn(new View.OnClickListener() {
+                                .setOkBtn(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         customConfirmDialog.dismissDialog();
-                                        String old_file_storage_key = dataSnapshot.child("file_storage_key").getValue(String.class);
-                                        deleteFile(context, old_file_storage_key, file_identifier);
-                                        uploadFile(context, file_icon_uri, file_name, file_extension, file_type, file_uri, file_identifier, file_size);
+                                        if (CheckInternetConnectivity.isInternetConnected(activity)) {
+                                            String old_file_storage_key = dataSnapshot.child(KEY_FILE_STORAGE_ID).getValue(String.class);
+                                            deleteFile(activity, old_file_storage_key, file_identifier, false);
+                                            uploadFile(activity, file_icon_uri, file_name, file_extension, file_type, file_uri, file_identifier, file_size);
+                                        } else {
+                                            Toast.makeText(activity, NO_INTERNET_CONNECTION, Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 });
                     } else {
                         progDialog.dismissDialog();
-                        uploadFile(context, file_icon_uri, file_name, file_extension, file_type, file_uri, file_identifier, file_size);
+                        uploadFile(activity, file_icon_uri, file_name, file_extension, file_type, file_uri, file_identifier, file_size);
                     }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(context, "Upload Cancelled " + databaseError, Toast.LENGTH_LONG).show();
+                    progDialog.dismissDialog();
+                    Toast.makeText(activity, "Upload Cancelled " + databaseError, Toast.LENGTH_LONG).show();
                 }
             });
         } catch (Exception e) {
-            Toast.makeText(context, "Error: " + e, Toast.LENGTH_LONG).show();
+            progDialog.dismissDialog();
+            Toast.makeText(activity, "Error: " + e, Toast.LENGTH_LONG).show();
         }
     }
 
     private static void uploadFile(final Context context, final String file_icon_uri, final String file_name, final String file_extension, final String file_type, final Uri file_uri, final String file_identifier, final String file_size) {
         final CustomProgressbar pbar = new CustomProgressbar(context);
-        final String file_storage_key = System.currentTimeMillis() + "";
-        final UploadTask uploadTask = storageReference.child(file_storage_key).putFile(file_uri);
+        final String file_storage_id = System.currentTimeMillis() + "";
+        final UploadTask uploadTask = storageReference.child(file_storage_id).putFile(file_uri);
         pbar.setCancelBtn(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -320,9 +306,10 @@ public final class MyFirebaseDatabase {
                     @Override
                     public void onSuccess(final Uri uri) {
                         String upload_date = simpleDateFormat.format(System.currentTimeMillis());
-                        final UserFile userFile = new UserFile(file_icon_uri, file_name, file_extension, file_type, uri.toString(), file_size, file_identifier, file_storage_key, upload_date);
-                        databaseReference.child(email_identifier).child(FILES_KEY).child(file_identifier).setValue(userFile);
+                        UserFile userFile = new UserFile(file_icon_uri, file_name, file_extension, file_type, uri.toString(), file_size, file_identifier, file_storage_id, upload_date);
+                        databaseReference.child(email_identifier).child(ID_FILES_PATH).child(file_identifier).setValue(userFile);
                         Toast.makeText(context, "File Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                        pbar.dismissDialog();
                     }
                 });
             }
@@ -344,21 +331,16 @@ public final class MyFirebaseDatabase {
                 Toast.makeText(context, "File Upload Canceled", Toast.LENGTH_LONG).show();
                 pbar.dismissDialog();
             }
-        }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                pbar.dismissDialog();
-            }
         });
     }
 
-    public static void renameFile(final Activity activity, final String new_file_name, final String new_file_id, final UserFile model) {
-        final String old_file_id = model.getFile_key();
+    public static void renameFileOnCloud(final Activity activity, final String new_file_name, final String new_file_id, final UserFile model) {
+        final String old_file_id = model.getId();
         progDialog = new CustomProgressDialog(activity, "Renaming File Name . . .");
         progDialog.showDialog();
         try {
             email_identifier = new SessionManagement(activity).getEmailIdentifier();
-            DatabaseReference childReference = databaseReference.child(email_identifier).child(FILES_KEY).child(new_file_id);
+            DatabaseReference childReference = databaseReference.child(email_identifier).child(ID_FILES_PATH).child(new_file_id);
             childReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -366,15 +348,15 @@ public final class MyFirebaseDatabase {
                         progDialog.dismissDialog();
                         new CustomMsgDialog(activity, "File Duplication Not Allowed", "File already exists with this name and type, Try different file name.");
                     } else {
-                        model.setFile_key(new_file_id);
-                        model.setFile_name(new_file_name);
-                        Task<Void> task = databaseReference.child(email_identifier).child(FILES_KEY).child(new_file_id).setValue(model);
+                        model.setId(new_file_id);
+                        model.setName(new_file_name);
+                        Task<Void> task = databaseReference.child(email_identifier).child(ID_FILES_PATH).child(new_file_id).setValue(model);
                         task.addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                databaseReference.child(email_identifier).child(FILES_KEY).child(old_file_id).setValue(null);
+                                databaseReference.child(email_identifier).child(ID_FILES_PATH).child(old_file_id).setValue(null);
                                 Intent it = new Intent(activity, OnlineFileViewerActivity.class);
-                                it.putExtra("USER_FILE", model);
+                                it.putExtra(EXTRA_USER_FILE, model);
                                 progDialog.dismissDialog();
                                 activity.finish();
                                 activity.startActivity(it);
@@ -394,9 +376,56 @@ public final class MyFirebaseDatabase {
         }
     }
 
-    public static void createNotes(final Context context) {
+    public static void uploadNotes(final Context context, final UserNotes userNotes) {
+        progDialog = new CustomProgressDialog(context, "Processing . . .");
+        progDialog.showDialog();
         try {
+            email_identifier = new SessionManagement(context).getEmailIdentifier();
+            DatabaseReference childReference = databaseReference.child(email_identifier).child(ID_NOTES_PATH).child(userNotes.getId());
+            childReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        progDialog.dismissDialog();
+                        final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, "Notes with title "
+                                + userNotes.getName().toUpperCase() + " already exists!\n\nDo you want to Update them?");
+                        customConfirmDialog.setBtnText("Update")
+                                .setOkBtn(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        customConfirmDialog.dismissDialog();
+                                        if (CheckInternetConnectivity.isInternetConnected(context)) {
+                                            String date_modify = simpleDateFormat.format(System.currentTimeMillis());
+                                            userNotes.setDate_modify(date_modify);
+                                            databaseReference.child(email_identifier).child(ID_NOTES_PATH)
+                                                    .child(userNotes.getId())
+                                                    .setValue(userNotes).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(context, "Notes Updated on Server Successfully", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        } else {
+                                            Toast.makeText(context, NO_INTERNET_CONNECTION, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    } else {
+                        try {
+                            databaseReference.child(email_identifier).child(ID_NOTES_PATH).child(userNotes.getId()).setValue(userNotes);
+                            progDialog.dismissDialog();
+                            Toast.makeText(context, "Notes Saved Successfully", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            progDialog.dismissDialog();
+                            Toast.makeText(context, "Can't create notes due to some errors", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
         } catch (Exception e) {
             Toast.makeText(context, "Error: " + e, Toast.LENGTH_LONG).show();
         }
@@ -418,11 +447,43 @@ public final class MyFirebaseDatabase {
         }
     }
 
-    public static void deleteNotes(final Context context) {
+    public static void deleteNotes(final Activity activity, final String file_id, final boolean close_activity) {
+        progDialog = new CustomProgressDialog(activity, "Deleting Existing Notes . . .");
+        progDialog.showDialog();
         try {
+            email_identifier = new SessionManagement(activity).getEmailIdentifier();
+            final DatabaseReference childReference = databaseReference.child(email_identifier).child(ID_NOTES_PATH).child(file_id);
+            childReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        childReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                progDialog.dismissDialog();
+                                if (close_activity) {
+                                    activity.finish();
+                                }
+                                Toast.makeText(activity, "Notes Deleted Successfully", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                progDialog.dismissDialog();
+                                Toast.makeText(activity, "Failed to Delete Notes", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } else {
+                        progDialog.dismissDialog();
+                    }
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
         } catch (Exception e) {
-            Toast.makeText(context, "Error: " + e, Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, "Error: " + e, Toast.LENGTH_LONG).show();
         }
     }
 }

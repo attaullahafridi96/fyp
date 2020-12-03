@@ -9,9 +9,8 @@
         <item name="colorControlHighlight">@color/special</item>
     </style>
 
-    <style name="ActionBarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimaryDark</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <style name="AppCustomTheme">
+        <item name="android:background">@drawable/fp</item>
     </style>
 
     <style name="MyToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
