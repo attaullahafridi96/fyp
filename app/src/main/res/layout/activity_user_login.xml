@@ -79,7 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:background="@drawable/btn_design"
+                android:background="@drawable/primary_btn_design"
                 android:drawableEnd="@drawable/ic_outline_lock_open_24"
                 android:drawablePadding="10dp"
                 android:paddingLeft="20dp"
@@ -101,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/btn_design"
+                android:background="@drawable/primary_btn_design"
                 android:text="CREATE A NEW ACCOUNT"
                 android:textColor="@color/white" />
         </LinearLayout>

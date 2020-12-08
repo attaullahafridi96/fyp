@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
+import com.android.documentationrecordviafingerprint.helper.CryptUtil;
 import com.android.documentationrecordviafingerprint.helper.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.model.IMyConstants;
@@ -100,6 +101,10 @@ public final class MyNotesAdapter extends FirebaseRecyclerAdapter<UserNotes, MyN
         setAnimation(holder.itemView, position);
     }
 
+    private String decryptNotesData(final String data) {
+        return CryptUtil.decrypt(data);
+    }
+
     private void deleteNotes(final String notes_title) {
         final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, activity.getResources().getString(R.string.notes_delete_msg));
         customConfirmDialog.setBtnText("Delete")
@@ -112,27 +117,11 @@ public final class MyNotesAdapter extends FirebaseRecyclerAdapter<UserNotes, MyN
                             String notes_id = StringOperations.createFileIdentifier(title);
                             MyFirebaseDatabase.deleteNotes(activity, notes_id, false);
                         } else {
-                            Snackbar.make(activity.findViewById(android.R.id.content), NO_INTERNET_CONNECTION , Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(activity.findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
                         }
                         customConfirmDialog.dismissDialog();
                     }
                 });
-    }
-
-    private void startDownload(UserNotes userNotes) {
-        /*try {
-            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(userFile.getFile_uri()));
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-            request.setTitle("Download");
-            request.setDescription("Downloading file...");
-            request.allowScanningByMediaScanner();
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, userFile.getFile_name());
-            DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
-            manager.enqueue(request);
-        } catch (Exception e) {
-            Toast.makeText(activity, "Error: " + e, Toast.LENGTH_SHORT).show();
-        }*/
     }
 
     private void setAnimation(View viewToAnimate, int position) {

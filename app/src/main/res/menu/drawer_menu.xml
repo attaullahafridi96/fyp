@@ -12,7 +12,7 @@
             android:title="Settings" />
         <item
             android:id="@+id/drawer_logout_item"
-            android:icon="@drawable/ic_baseline_power_settings_new_24"
+            android:icon="@drawable/export_104px"
             android:title="Logout" />
     </group>
     <group android:id="@+id/menu2">
