@@ -27,10 +27,10 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
+import com.android.documentationrecordviafingerprint.helper.IMyConstants;
 import com.android.documentationrecordviafingerprint.helper.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.model.IMyConstants;
-import com.android.documentationrecordviafingerprint.model.UserFile;
+import com.android.documentationrecordviafingerprint.model.UserUploads;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomInputDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
@@ -54,7 +54,7 @@ public class OnlineFileViewerActivity extends AppCompatActivity implements IMyCo
     private String file_uri;
     private static String new_file_name;
     private static String file_extension;
-    private static UserFile model;
+    private static UserUploads model;
 
 
     @SuppressLint({"StaticFieldLeak", "SetJavaScriptEnabled"})
@@ -68,13 +68,14 @@ public class OnlineFileViewerActivity extends AppCompatActivity implements IMyCo
         setSupportActionBar(myToolbar);
         /////////////ToolBar code/////////////
         Intent it = getIntent();
-        model = (UserFile) it.getSerializableExtra(EXTRA_USER_FILE);
+        model = (UserUploads) it.getSerializableExtra(EXTRA_USER_FILE);
         file_name = model.getName();
         file_storage_key = model.getFile_storage_id();
         file_uri = model.getFile_uri();
         file_extension = model.getFile_extension();
         TextView document_title = findViewById(R.id.document_title);
         document_title.setText(file_name);
+        document_title.setSelected(true);
         ImageButton back_btn = findViewById(R.id.back_btn);
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,7 +207,7 @@ public class OnlineFileViewerActivity extends AppCompatActivity implements IMyCo
     private void renameFile() {
         try {
             final CustomInputDialog customInputDialog = new CustomInputDialog(context, "Rename");
-            customInputDialog.setOkBtn(new View.OnClickListener() {
+            customInputDialog.setOkBtnListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     customInputDialog.dismissDialog();

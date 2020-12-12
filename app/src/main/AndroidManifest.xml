@@ -30,7 +30,6 @@
         <activity
             android:name=".view.NotesEditorActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".internetchecking.NoInternetScreen" />
         <activity
             android:name=".view.RegistrationActivity"
             android:windowSoftInputMode="stateHidden" />

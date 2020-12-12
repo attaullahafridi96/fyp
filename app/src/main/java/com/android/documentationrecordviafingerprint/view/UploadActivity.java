@@ -27,9 +27,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
+import com.android.documentationrecordviafingerprint.helper.IMyConstants;
 import com.android.documentationrecordviafingerprint.helper.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.model.IMyConstants;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomInputDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
@@ -49,13 +49,21 @@ public class UploadActivity extends AppCompatActivity implements IMyConstants {
         setContentView(R.layout.activity_upload);
         context = UploadActivity.this;
         selected_file = findViewById(R.id.selected_file);
+        findViewById(R.id.take_capture_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Toast.makeText(context, "No Ready Yet", Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
         findViewById(R.id.file_chooser_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                        new CustomMsgDialog(context, "READ PERMISSION REQUIRED", "This permission is required for getting files from your device.");
-                    } else {
                         requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 99);
                     }
                 } else {
@@ -92,9 +100,9 @@ public class UploadActivity extends AppCompatActivity implements IMyConstants {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == 99 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            selectFile();
+            new CustomMsgDialog(context, "Permission Granted", "Now you can Upload Files");
         } else {
-            Toast.makeText(this, "Permission Denied, Please Grant Storage Access Permission", Toast.LENGTH_SHORT).show();
+            new CustomMsgDialog(context, "Permission Denied", "READ PERMISSION REQUIRED!\n\nThis permission is required for getting files from your device, Please grant storage access Permission");
         }
     }
 
@@ -144,7 +152,6 @@ public class UploadActivity extends AppCompatActivity implements IMyConstants {
 
     private TextView selected_filename_tv;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("UseCompatLoadingForDrawables")
     private void drawSelectedFileInfo(final String file_extn) {
         int imageNo;
@@ -249,7 +256,8 @@ public class UploadActivity extends AppCompatActivity implements IMyConstants {
                 }
             }
         });
-        selected_file.setTooltipText(file_name);
+        if (Build.VERSION.SDK_INT >= 26)
+            selected_file.setTooltipText(file_name);
         selected_file.setVisibility(View.VISIBLE);
     }
 
@@ -257,7 +265,7 @@ public class UploadActivity extends AppCompatActivity implements IMyConstants {
 
     private void renameFile() {
         final CustomInputDialog customInputDialog = new CustomInputDialog(context, "Rename");
-        customInputDialog.setOkBtn(new View.OnClickListener() {
+        customInputDialog.setOkBtnListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 customInputDialog.dismissDialog();

@@ -8,6 +8,7 @@
     <string name="delete_msg">Are you sure to Delete this file from Cloud?</string>
     <string name="file_upload_msg">Do you want to Upload this file to Cloud?</string>
     <string name="notes_upload_msg">Do you want to Save Notes on Cloud?</string>
+   <!-- <string name="notes_download_msg">Are you sure to Download this Notes?</string>-->
     <string name="notes_delete_msg">Are you sure to Delete this Notes from Cloud?</string>
     <string name="canNotOpenMsg">Download this file and open it with file specific App</string>
 

@@ -1,8 +1,10 @@
 package com.android.documentationrecordviafingerprint.adapter;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -13,23 +15,28 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.helper.CryptUtil;
+import com.android.documentationrecordviafingerprint.helper.IMyConstants;
+import com.android.documentationrecordviafingerprint.helper.NotesDownloader;
 import com.android.documentationrecordviafingerprint.helper.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.model.IMyConstants;
 import com.android.documentationrecordviafingerprint.model.UserNotes;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomInputDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.view.NotesEditorActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.snackbar.Snackbar;
+
+import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 public final class MyNotesAdapter extends FirebaseRecyclerAdapter<UserNotes, MyNotesAdapter.ViewHolder> implements IMyConstants {
     private final Activity activity;
@@ -50,19 +57,19 @@ public final class MyNotesAdapter extends FirebaseRecyclerAdapter<UserNotes, MyN
     }
 
     @SuppressLint("SetTextI18n")
-    @RequiresApi(api = Build.VERSION_CODES.O)  // Annotation used for TooltipText
     @Override
     protected void onBindViewHolder(@NonNull final MyNotesAdapter.ViewHolder holder, int position, @NonNull final UserNotes model) {
-        final String capitalizeFileName = model.getName().toUpperCase();
-        holder.filename.setText(capitalizeFileName);
-        if ((model.getDate_modify() != null && !model.getDate_modify().isEmpty())) {
+        final String FileNameInLarge = model.getName().toUpperCase();
+        holder.filename.setText(FileNameInLarge);
+        if (!StringOperations.isEmpty(model.getDateModify())) {
             holder.upload_date_text.setText("Date Modified: ");
-            holder.upload_date.setText(model.getDate_modify());
+            holder.upload_date.setText(model.getDateModify());
         } else {
-            holder.upload_date.setText(model.getDate_upload());
+            holder.upload_date.setText(model.getDateUpload());
         }
         holder.file_size.setText(model.getSize());
-        holder.selected_notes.setTooltipText(model.getName());
+        if (Build.VERSION.SDK_INT >= 26)
+            holder.selected_notes.setTooltipText(model.getName());
         holder.selected_notes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,18 +81,26 @@ public final class MyNotesAdapter extends FirebaseRecyclerAdapter<UserNotes, MyN
         holder.selected_notes.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-                menu.setHeaderTitle(capitalizeFileName);
+                menu.setHeaderTitle(FileNameInLarge);
                 menu.add("Download").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-
+                        if (CheckInternetConnectivity.isInternetConnected(activity)) {
+                            if (checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                activity.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                            } else {
+                                NotesDownloader.saveNotes(activity, model.getName().toLowerCase().trim(), CryptUtil.decrypt(model.getNotes_data()));
+                            }
+                        } else {
+                            Snackbar.make(activity.findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
+                        }
                         return true;
                     }
                 });
                 menu.add("Rename").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-
+                        renameNotes(model);
                         return true;
                     }
                 });
@@ -101,8 +116,36 @@ public final class MyNotesAdapter extends FirebaseRecyclerAdapter<UserNotes, MyN
         setAnimation(holder.itemView, position);
     }
 
-    private String decryptNotesData(final String data) {
-        return CryptUtil.decrypt(data);
+    private String new_notes_name;
+
+    private void renameNotes(final UserNotes model) {
+        try {
+            final CustomInputDialog customInputDialog = new CustomInputDialog(activity, "Rename");
+            customInputDialog.setOkBtnListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    customInputDialog.dismissDialog();
+                    new_notes_name = customInputDialog.getInputText();
+                    if (StringOperations.isEmpty(new_notes_name)) {
+                        new CustomMsgDialog(activity, "Alert", "Can't Set Empty Notes Name.");
+                        return;
+                    }
+                    String old_notes_id = model.getId();
+                    String new_notes_id = StringOperations.createFileIdentifier(new_notes_name);
+                    if (old_notes_id.equalsIgnoreCase(new_notes_id)) {
+                        Toast.makeText(activity, "Please enter different notes name", Toast.LENGTH_LONG).show();
+                    } else {
+                        if (CheckInternetConnectivity.isInternetConnected(activity)) {
+                            MyFirebaseDatabase.renameNotesOnCloud(activity, new_notes_name, new_notes_id, model, false);
+                        } else {
+                            Snackbar.make(activity.findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(activity, "Error", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void deleteNotes(final String notes_title) {

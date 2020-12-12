@@ -22,12 +22,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.adapter.MyFilesAdapter;
+import com.android.documentationrecordviafingerprint.helper.IMyConstants;
 import com.android.documentationrecordviafingerprint.helper.SessionManagement;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.internetchecking.ConnectivityReceiver;
 import com.android.documentationrecordviafingerprint.model.DB;
-import com.android.documentationrecordviafingerprint.model.IMyConstants;
-import com.android.documentationrecordviafingerprint.model.UserFile;
+import com.android.documentationrecordviafingerprint.model.UserUploads;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.snackbar.Snackbar;
@@ -51,7 +51,7 @@ public class SearchActivity extends AppCompatActivity implements IMyConstants, C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         context = SearchActivity.this;
-        parent_node = DB.getDBFirstNodeReference();
+        parent_node = DB.getRtDBFirstNodeReference();
         email_identifier = new SessionManagement(context).getEmailIdentifier();
 
         text_search = findViewById(R.id.text_search);
@@ -89,10 +89,10 @@ public class SearchActivity extends AppCompatActivity implements IMyConstants, C
     private void searchDocument(String toSearch) {
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
-            Query query = childReference.child(ID_FILES_PATH).orderByChild(KEY_NAME)
+            Query query = childReference.child(ID_FILES).orderByChild(KEY_NAME)
                     .startAt(toSearch).endAt(toSearch + "\uf8ff");
-            FirebaseRecyclerOptions<UserFile> filter_options = new FirebaseRecyclerOptions.Builder<UserFile>()
-                    .setQuery(query, UserFile.class).build();
+            FirebaseRecyclerOptions<UserUploads> filter_options = new FirebaseRecyclerOptions.Builder<UserUploads>()
+                    .setQuery(query, UserUploads.class).build();
             myFilesAdapter.updateOptions(filter_options);
         }
     }
@@ -105,7 +105,7 @@ public class SearchActivity extends AppCompatActivity implements IMyConstants, C
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     new CustomMsgDialog(context, "Permissions Granted", "Now you can Download File");
                 } else {
-                    new CustomMsgDialog(context, "Permissions Denied", "Please Grant Permissions to Download File");
+                    new CustomMsgDialog(context, "Permissions Denied", "READ|WRITE PERMISSION REQUIRED!\n\nThis permission is required for saving files on your device, Please grant Permissions to Download File");
                 }
             }
         }
@@ -142,8 +142,8 @@ public class SearchActivity extends AppCompatActivity implements IMyConstants, C
         super.onStart();
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
-            FirebaseRecyclerOptions<UserFile> options = new FirebaseRecyclerOptions.Builder<UserFile>()
-                    .setQuery(childReference.child(ID_FILES_PATH), UserFile.class)
+            FirebaseRecyclerOptions<UserUploads> options = new FirebaseRecyclerOptions.Builder<UserUploads>()
+                    .setQuery(childReference.child(ID_FILES), UserUploads.class)
                     .build();
             myFilesAdapter = new MyFilesAdapter(SearchActivity.this, options);
             recyclerView.setAdapter(myFilesAdapter);

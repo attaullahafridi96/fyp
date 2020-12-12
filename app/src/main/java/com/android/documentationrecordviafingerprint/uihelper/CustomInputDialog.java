@@ -42,7 +42,7 @@ public class CustomInputDialog extends androidx.appcompat.app.AlertDialog {
         return custom_input.getText().toString().trim().toLowerCase();
     }
 
-    public CustomInputDialog setOkBtn(View.OnClickListener listener) {
+    public CustomInputDialog setOkBtnListener(View.OnClickListener listener) {
         btnOk.setOnClickListener(listener);
         return this;
     }

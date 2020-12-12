@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppCustomTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/AppCustomTheme"
     android:orientation="vertical"
     tools:context=".view.LoginActivity">
 
@@ -50,7 +50,7 @@
                 android:drawableStart="@drawable/ic_outline_email_24"
                 android:drawablePadding="10dp"
                 android:fontFamily="sans-serif-condensed"
-                android:hint="Email e.g zahid@gmail.com"
+                android:hint="Email e.g email@gmail.com"
                 android:inputType="textEmailAddress"
                 android:padding="10dp" />
 
@@ -101,8 +101,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/primary_btn_design"
-                android:text="CREATE A NEW ACCOUNT"
+                android:background="@drawable/secondry_btn_design"
+                android:text="Don't have an account? Sign Up"
+                android:textAllCaps="false"
                 android:textColor="@color/white" />
         </LinearLayout>
     </ScrollView>

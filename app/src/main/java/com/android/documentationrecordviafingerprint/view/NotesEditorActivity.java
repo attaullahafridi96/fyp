@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,12 +21,13 @@ import androidx.appcompat.widget.Toolbar;
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.helper.CryptUtil;
+import com.android.documentationrecordviafingerprint.helper.IMyConstants;
 import com.android.documentationrecordviafingerprint.helper.NotesDownloader;
 import com.android.documentationrecordviafingerprint.helper.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.model.IMyConstants;
 import com.android.documentationrecordviafingerprint.model.UserNotes;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomInputDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -57,7 +59,7 @@ public class NotesEditorActivity extends AppCompatActivity implements IMyConstan
         editor_title = findViewById(R.id.editor_title);
 
         if (model != null) {
-            editor_title.setText(model.getName());
+            editor_title.setText(StringOperations.capitalizeString(model.getName()));
             notes_title_ed.setEnabled(false);
             notes_title_ed.setText(model.getName());
             note_data_ed.setText(decryptNotesData(model.getNotes_data()));
@@ -119,21 +121,17 @@ public class NotesEditorActivity extends AppCompatActivity implements IMyConstan
 
     private void uploadNotes() {
         if (CheckInternetConnectivity.isInternetConnected(context)) {
-            String file_name = getNotesTitle().toLowerCase().trim();
-            if (file_name.isEmpty()) {
+            String notes_name = getNotesTitle().toLowerCase().trim();
+            if (notes_name.isEmpty()) {
                 new CustomMsgDialog(context, "Notes title Empty!", "Can not leave Notes title empty");
             } else {
-                String file_id = StringOperations.createFileIdentifier(file_name);
+                String file_id = StringOperations.createFileIdentifier(notes_name);
                 String notes_data = getNotesData(); //No need of trim, notes may be empty
                 String file_size = android.text.format.Formatter.formatShortFileSize(context, notes_data.getBytes().length);
                 String upload_date = simpleDateFormat.format(System.currentTimeMillis());
                 final String encrypted_notes = encryptNotesData(notes_data);
-                UserNotes userNotes = new UserNotes(file_name, encrypted_notes, file_id, file_size, upload_date, "");
-                MyFirebaseDatabase.uploadNotes(context, userNotes);
-                toolbar_menu.findItem(R.id.editor_rename_menu_item).setVisible(true);
-                toolbar_menu.findItem(R.id.editor_delete_menu_item).setVisible(true);
-                notes_title_ed.setEnabled(false);
-                editor_title.setText(getNotesTitle());
+                UserNotes userNotes = new UserNotes(notes_name, encrypted_notes, file_id, file_size, upload_date);
+                MyFirebaseDatabase.uploadNotes(context, userNotes, toolbar_menu, notes_title_ed, editor_title);
             }
         } else {
             Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
@@ -159,8 +157,36 @@ public class NotesEditorActivity extends AppCompatActivity implements IMyConstan
                 });
     }
 
-    private void renameNotes() {
+    private String new_notes_name;
 
+    private void renameNotes() {
+        try {
+            final CustomInputDialog customInputDialog = new CustomInputDialog(context, "Rename");
+            customInputDialog.setOkBtnListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    customInputDialog.dismissDialog();
+                    new_notes_name = customInputDialog.getInputText();
+                    if (StringOperations.isEmpty(new_notes_name)) {
+                        new CustomMsgDialog(context, "Alert", "Can't Set Empty Notes Name.");
+                        return;
+                    }
+                    String old_notes_id = model.getId();
+                    String new_notes_id = StringOperations.createFileIdentifier(new_notes_name);
+                    if (old_notes_id.equalsIgnoreCase(new_notes_id)) {
+                        Toast.makeText(context, "Please enter different notes name", Toast.LENGTH_LONG).show();
+                    } else {
+                        if (CheckInternetConnectivity.isInternetConnected(context)) {
+                            MyFirebaseDatabase.renameNotesOnCloud(NotesEditorActivity.this, new_notes_name, new_notes_id, model, true);
+                        } else {
+                            Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -168,9 +194,9 @@ public class NotesEditorActivity extends AppCompatActivity implements IMyConstan
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                new CustomMsgDialog(context, "Permissions Granted", "Now you can Save File");
+                new CustomMsgDialog(context, "Permissions Granted", "Now you can Download Notes");
             } else {
-                new CustomMsgDialog(context, "Permissions Denied", "Please Grant Permissions to Save File");
+                new CustomMsgDialog(context, "Permissions Denied", "READ|WRITE PERMISSION REQUIRED!\n\nThis permission is required for saving notes on your device, Please grant Permissions to Download Notes");
             }
         }
     }

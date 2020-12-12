@@ -47,7 +47,7 @@
         android:layout_margin="40dp"
         android:contentDescription="btn"
         android:src="@android:drawable/ic_menu_edit"
-        android:tooltipText="New Notes"
+        android:tooltipText="Create New"
         android:visibility="gone"
         app:backgroundTint="@color/colorPrimaryDark" />
 </RelativeLayout>

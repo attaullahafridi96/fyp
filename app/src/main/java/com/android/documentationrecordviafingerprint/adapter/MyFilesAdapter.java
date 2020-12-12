@@ -1,6 +1,7 @@
 package com.android.documentationrecordviafingerprint.adapter;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
@@ -21,15 +22,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
+import com.android.documentationrecordviafingerprint.helper.IMyConstants;
 import com.android.documentationrecordviafingerprint.helper.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
-import com.android.documentationrecordviafingerprint.model.IMyConstants;
-import com.android.documentationrecordviafingerprint.model.UserFile;
+import com.android.documentationrecordviafingerprint.model.UserUploads;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.view.OnlineFileViewerActivity;
 import com.bumptech.glide.Glide;
@@ -40,13 +40,13 @@ import com.google.android.material.snackbar.Snackbar;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 public final class MyFilesAdapter
-        extends FirebaseRecyclerAdapter<UserFile, MyFilesAdapter.ViewHolder> implements IMyConstants {
+        extends FirebaseRecyclerAdapter<UserUploads, MyFilesAdapter.ViewHolder> implements IMyConstants {
     private final Activity activity;
 
     private static final Intent activity_opener = new Intent();
     private int lastPosition = -1;
 
-    public MyFilesAdapter(Activity activity, @NonNull FirebaseRecyclerOptions<UserFile> options) {
+    public MyFilesAdapter(Activity activity, @NonNull FirebaseRecyclerOptions<UserUploads> options) {
         super(options);
         this.activity = activity;
     }
@@ -58,15 +58,21 @@ public final class MyFilesAdapter
         return new ViewHolder(view);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    @SuppressLint("SetTextI18n")
     @Override
-    protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final UserFile model) {
+    protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final UserUploads model) {
         String capitalizeFileName = model.getName().toUpperCase();
         Glide.with(holder.file_type_icon.getContext()).load(model.getFile_icon_uri()).into(holder.file_type_icon);
         holder.filename.setText(capitalizeFileName);
-        holder.upload_date.setText(model.getDate_upload());
+        if (!StringOperations.isEmpty(model.getDateModify())) {
+            holder.upload_date_text.setText("Date Modified: ");
+            holder.upload_date.setText(model.getDateModify());
+        } else {
+            holder.upload_date.setText(model.getDateUpload());
+        }
         holder.file_size.setText(model.getSize());
-        holder.selected_file.setTooltipText(model.getName());
+        if (Build.VERSION.SDK_INT >= 26)
+            holder.selected_file.setTooltipText(model.getName());
         holder.download_file_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +106,7 @@ public final class MyFilesAdapter
                             public void onClick(View v) {
                                 if (CheckInternetConnectivity.isInternetConnected(activity)) {
                                     String file_id = StringOperations.createFileIdentifier(model.getName());
-                                    MyFirebaseDatabase.deleteFile(activity, model.getFile_storage_id(), file_id,false);
+                                    MyFirebaseDatabase.deleteFile(activity, model.getFile_storage_id(), file_id, false);
                                 } else {
                                     Toast.makeText(activity, NO_INTERNET_CONNECTION, Toast.LENGTH_LONG).show();
                                 }
@@ -112,13 +118,13 @@ public final class MyFilesAdapter
         holder.selected_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(CheckInternetConnectivity.isInternetConnected(activity)){
+                if (CheckInternetConnectivity.isInternetConnected(activity)) {
                     if (model.getFile_uri() != null) {
                         activity_opener.setClass(activity, OnlineFileViewerActivity.class);
                         activity_opener.putExtra(EXTRA_USER_FILE, model);
                         activity.startActivity(activity_opener);
                     }
-                }else {
+                } else {
                     Snackbar.make(activity.findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
                 }
             }
@@ -126,15 +132,15 @@ public final class MyFilesAdapter
         setAnimation(holder.itemView, position);
     }
 
-    private void startDownload(UserFile userFile) {
+    private void startDownload(UserUploads userUploads) {
         try {
-            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(userFile.getFile_uri()));
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(userUploads.getFile_uri()));
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
             request.setTitle("Download");
             request.setDescription("Downloading file...");
             request.allowScanningByMediaScanner();
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, userFile.getName());
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, userUploads.getName());
             DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
             manager.enqueue(request);
         } catch (Exception e) {
@@ -157,6 +163,7 @@ public final class MyFilesAdapter
         private final LinearLayout selected_file;
         private final ImageButton download_file_btn;
         private final ImageButton delete_file_btn;
+        private final TextView upload_date_text;
         private final TextView upload_date;
 
         public ViewHolder(@NonNull View itemView) {
@@ -167,7 +174,8 @@ public final class MyFilesAdapter
             file_size = itemView.findViewById(R.id.selected_file_size);
             download_file_btn = itemView.findViewById(R.id.download_file_btn);
             delete_file_btn = itemView.findViewById(R.id.delete_file_btn);
-            upload_date = itemView.findViewById(R.id.upload_date);
+            upload_date_text = itemView.findViewById(R.id.files_upload_date_text);
+            upload_date = itemView.findViewById(R.id.files_upload_date);
         }
     }
 }

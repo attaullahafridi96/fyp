@@ -1,40 +1,57 @@
 package com.android.documentationrecordviafingerprint.model;
 
-public final class User {
-    private String first_name, last_name, email, password;
+public final class User implements IUser {
+    private String firstName, lastName, email, password;
 
     public User() {
         //Required Constructor for Firebase
     }
 
-    public User(String first_name, String last_name, String email, String password) {
-        this.first_name = first_name;
-        this.last_name = last_name;
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    @Override
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getLast_name() {
-        return last_name;
+    @Override
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    @Override
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    @Override
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
+    @Override
     public String getEmail() {
         return email;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
+
+    @Override
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }

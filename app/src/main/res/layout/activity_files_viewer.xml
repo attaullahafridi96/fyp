@@ -32,24 +32,21 @@
             android:layout_width="10dp"
             android:layout_height="wrap_content" />
 
-        <HorizontalScrollView
+        <TextView
+            android:id="@+id/document_title"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:scrollbarThumbHorizontal="@null">
-
-            <TextView
-                android:id="@+id/document_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:fontFamily="sans-serif-condensed"
-                android:maxLines="1"
-                android:text="File Name"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-        </HorizontalScrollView>
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:fontFamily="sans-serif-condensed"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="File Name"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/viewer_toolbar"

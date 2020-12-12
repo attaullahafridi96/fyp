@@ -1,5 +1,5 @@
 
-package com.android.documentationrecordviafingerprint.model;
+package com.android.documentationrecordviafingerprint.helper;
 
 public interface IMyConstants {
     String FILE_TYPE_DOCS = "doc";
@@ -20,12 +20,13 @@ public interface IMyConstants {
     String KEY_NAME = "name";
     String KEY_EMAIL = "email";
     String KEY_FIRST_NAME = "first_name";
+    String KEY_DATE_UPLOAD = "date_upload";
     String KEY_LAST_NAME = "last_name";
     String KEY_PASSWORD = "password";
     String KEY_FILE_STORAGE_ID = "file_storage_id";
 
-    String ID_FILES_PATH = "files";
-    String ID_NOTES_PATH = "notes";
+    String ID_FILES = "files";
+    String ID_NOTES = "notes";
     /////////////////////////////////////////////////
 
     String[] SUPPORTED_FILE_EXTENSIONS = {
@@ -39,7 +40,7 @@ public interface IMyConstants {
     String FILE_ICON_URI_POWERPOINT = "https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fpowerpoint_96px.png?alt=media&amp;token=5ad9745a-120b-47fd-a908-df939bb665ab";
     String FILE_ICON_URI_EXCEL = "https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fexcel_96px.png?alt=media&amp;token=a10b4a20-a73c-42b2-accb-b098be9da824";
     String FILE_ICON_URI_RTF = "https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Frtf_96px.png?alt=media&amp;token=2fa49bbb-d4a8-4d4b-9aba-5d31d53e4082";
-    String FILE_ICON_URI_NOTES = "https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fnote_96px.png?alt=media&amp;token=e5fe1995-eeb6-4ee9-b5ad-b0855a142a18";
+    //String FILE_ICON_URI_NOTES = "https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fnote_96px.png?alt=media&amp;token=e5fe1995-eeb6-4ee9-b5ad-b0855a142a18";
     String FILE_ICON_URI_JPEG = "https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fjpg_96px.png?alt=media&amp;token=0a1c3294-36d4-4ed5-9c13-2aa153bc370e";
     String FILE_ICON_URI_PNG = "https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fpng_96px.png?alt=media&amp;token=6c9b7dba-afb6-477d-9c2b-83e54bc903e9";
     String FILE_ICON_URI_GIF = "https://firebasestorage.googleapis.com/v0/b/notesviafingerprint.appspot.com/o/icons%2Fgif_96px.png?alt=media&amp;token=50709bc9-6ad1-4d6a-9ad3-7f7449715c3e";

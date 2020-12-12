@@ -13,7 +13,8 @@ public final class DB {
         //Constructor Locked
     }
 
-    public static DatabaseReference getDBFirstNodeReference() {
+    public static DatabaseReference getRtDBFirstNodeReference() {
+        //Firebase Realtime database reference
         if (database == null) {
             database = FirebaseDatabase.getInstance();
         }
@@ -21,6 +22,7 @@ public final class DB {
     }
 
     public static StorageReference getStorageReference() {
+        //Firebase Storage reference
         if (storage == null) {
             storage = FirebaseStorage.getInstance();
         }

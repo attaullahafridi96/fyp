@@ -24,12 +24,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.adapter.MyFilesAdapter;
 import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
+import com.android.documentationrecordviafingerprint.helper.IMyConstants;
 import com.android.documentationrecordviafingerprint.helper.SessionManagement;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.internetchecking.ConnectivityReceiver;
 import com.android.documentationrecordviafingerprint.model.DB;
-import com.android.documentationrecordviafingerprint.model.IMyConstants;
-import com.android.documentationrecordviafingerprint.model.UserFile;
+import com.android.documentationrecordviafingerprint.model.UserUploads;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
@@ -56,12 +56,12 @@ public class DashboardActivity extends AppCompatActivity implements IMyConstants
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navigation_drawer);
         context = DashboardActivity.this;
+        setContentView(R.layout.activity_navigation_drawer);
         progDialog = new CustomProgressDialog(context, "Loading Content . . .");
         internet_broadcast = new ConnectivityReceiver();
         session = new SessionManagement(context);
-        parent_node = DB.getDBFirstNodeReference();
+        parent_node = DB.getRtDBFirstNodeReference();
 
         drawerLayout = findViewById(R.id.drawer_layout);
         /*Set App Version*/
@@ -87,6 +87,7 @@ public class DashboardActivity extends AppCompatActivity implements IMyConstants
                     switch (item.getItemId()) {
                         case R.id.drawer_settings_item:
                             startActivity(activity_opener.setClass(context, AppSettingsActivity.class));
+                            finish();
                             break;
                         case R.id.drawer_logout_item:
                             logout();
@@ -145,8 +146,8 @@ public class DashboardActivity extends AppCompatActivity implements IMyConstants
                     public void onClick(View v) {
                         confirmDialog.dismissDialog();
                         session.destroySession();
+                        startActivity(activity_opener.setClass(context, LoginActivity.class));
                         finish();
-                        activity_opener.setClass(context, LoginActivity.class);
                     }
                 });
     }
@@ -182,8 +183,8 @@ public class DashboardActivity extends AppCompatActivity implements IMyConstants
         String email_identifier = session.getEmailIdentifier();
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
-            FirebaseRecyclerOptions<UserFile> options = new FirebaseRecyclerOptions.Builder<UserFile>()
-                    .setQuery(childReference.child(ID_FILES_PATH), UserFile.class)
+            FirebaseRecyclerOptions<UserUploads> options = new FirebaseRecyclerOptions.Builder<UserUploads>()
+                    .setQuery(childReference.child(ID_FILES), UserUploads.class)
                     .build();
             myAdapter = new MyFilesAdapter(DashboardActivity.this, options);
             myAdapter.getSnapshots().addChangeEventListener(new ChangeEventListener() {

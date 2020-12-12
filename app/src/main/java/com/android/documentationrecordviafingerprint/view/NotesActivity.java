@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -21,12 +22,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.adapter.MyNotesAdapter;
+import com.android.documentationrecordviafingerprint.helper.IMyConstants;
 import com.android.documentationrecordviafingerprint.helper.SessionManagement;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.internetchecking.ConnectivityReceiver;
 import com.android.documentationrecordviafingerprint.model.DB;
-import com.android.documentationrecordviafingerprint.model.IMyConstants;
 import com.android.documentationrecordviafingerprint.model.UserNotes;
+import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
 import com.firebase.ui.common.ChangeEventType;
 import com.firebase.ui.database.ChangeEventListener;
@@ -58,7 +60,7 @@ public class NotesActivity extends AppCompatActivity implements IMyConstants, Co
         setContentView(R.layout.activity_search);
         context = NotesActivity.this;
         progDialog = new CustomProgressDialog(context, "Loading Content . . .");
-        parent_node = DB.getDBFirstNodeReference();
+        parent_node = DB.getRtDBFirstNodeReference();
         email_identifier = new SessionManagement(context).getEmailIdentifier();
 
         text_search = findViewById(R.id.text_search);
@@ -116,21 +118,19 @@ public class NotesActivity extends AppCompatActivity implements IMyConstants, Co
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        /*switch (requestCode) {
-            case 1: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    new CustomMsgDialog(context, "Permissions Granted", "Now you can Download File");
-                } else {
-                    new CustomMsgDialog(context, "Permissions Denied", "Please Grant Permissions to Download File");
-                }
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                new CustomMsgDialog(context, "Permissions Granted", "Now you can Download Notes");
+            } else {
+                new CustomMsgDialog(context, "Permissions Denied", "READ|WRITE PERMISSION REQUIRED!\n\nThis permission is required for saving notes on your device, Please grant Permissions to Download Notes");
             }
-        }*/
+        }
     }
 
     private void searchDocument(String toSearch) {
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
-            Query query = childReference.child(ID_NOTES_PATH).orderByChild(KEY_NAME)
+            Query query = childReference.child(ID_NOTES).orderByChild(KEY_NAME)
                     .startAt(toSearch).endAt(toSearch + "\uf8ff");
             FirebaseRecyclerOptions<UserNotes> filter_options = new FirebaseRecyclerOptions.Builder<UserNotes>()
                     .setQuery(query, UserNotes.class).build();
@@ -159,7 +159,7 @@ public class NotesActivity extends AppCompatActivity implements IMyConstants, Co
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
             FirebaseRecyclerOptions<UserNotes> options = new FirebaseRecyclerOptions.Builder<UserNotes>()
-                    .setQuery(childReference.child(ID_NOTES_PATH), UserNotes.class)
+                    .setQuery(childReference.child(ID_NOTES), UserNotes.class)
                     .build();
             myNotesAdapter = new MyNotesAdapter(this, options);
             myNotesAdapter.getSnapshots().addChangeEventListener(new ChangeEventListener() {

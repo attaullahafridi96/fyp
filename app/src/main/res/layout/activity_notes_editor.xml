@@ -22,7 +22,7 @@
             android:layout_weight="1"
             android:fontFamily="sans-serif-condensed"
             android:padding="10dp"
-            android:text="New"
+            android:text="Create New"
             android:textColor="#FFFFFF"
             android:textSize="24dp"
             android:textStyle="bold" />

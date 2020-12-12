@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.widget.Toast;
 
-import com.android.documentationrecordviafingerprint.model.IMyConstants;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomToast;
@@ -95,7 +94,7 @@ public final class NotesDownloader implements IMyConstants {
     @SuppressLint("StaticFieldLeak")
     private static void saveAsMsWord(final Context context, final File dir, final String full_file_name, final String file_data) {
         new AsyncTask<Void, Void, Boolean>() {
-            private final CustomProgressDialog customProgressDialog = new CustomProgressDialog(context, "Processing . . .");
+            private final CustomProgressDialog customProgressDialog = new CustomProgressDialog(context, "Saving Notes . . .");
 
             @Override
             protected void onPreExecute() {
@@ -111,7 +110,7 @@ public final class NotesDownloader implements IMyConstants {
                     doc.save(dir + "/" + full_file_name);
                     return true;
                 } catch (final Exception e) {
-                    CustomToast.makeToast(context, "Error: " + e);
+                    CustomToast.makeToast(context, "Error: " + e,Toast.LENGTH_LONG);
                 }
                 return false;
             }

@@ -12,13 +12,13 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.android.documentationrecordviafingerprint.R;
 
-public class CustomProgressbar extends AlertDialog {
+public class CustomHorizontalProgressDialog extends AlertDialog {
     private final Button pauseBtn;
     private final Button cancelBtn;
     private final ProgressBar progressBar;
     private final AlertDialog alertDialog;
 
-    public CustomProgressbar(@NonNull Context context) {
+    public CustomHorizontalProgressDialog(@NonNull Context context) {
         super(context);
         Builder builder = new Builder(context);
         LayoutInflater inflater = getLayoutInflater();
@@ -37,7 +37,7 @@ public class CustomProgressbar extends AlertDialog {
         progressBar.setProgress(progress);
     }
 
-    public CustomProgressbar setPauseBtn(View.OnClickListener listener) {
+    public CustomHorizontalProgressDialog setPauseBtn(View.OnClickListener listener) {
         pauseBtn.setOnClickListener(listener);
         return this;
     }
@@ -52,7 +52,7 @@ public class CustomProgressbar extends AlertDialog {
         pauseBtn.setText("Pause");
     }
 
-    public CustomProgressbar setCancelBtn(View.OnClickListener listener) {
+    public CustomHorizontalProgressDialog setCancelBtn(View.OnClickListener listener) {
         cancelBtn.setOnClickListener(listener);
         return this;
     }
