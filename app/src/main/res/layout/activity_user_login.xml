@@ -52,7 +52,8 @@
                 android:fontFamily="sans-serif-condensed"
                 android:hint="Email e.g email@gmail.com"
                 android:inputType="textEmailAddress"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:textColor="@color/black"/>
 
             <View
                 android:layout_width="wrap_content"
@@ -68,7 +69,8 @@
                 android:fontFamily="sans-serif-condensed"
                 android:hint="Password"
                 android:inputType="textPassword"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:textColor="@color/black" />
 
             <View
                 android:layout_width="wrap_content"

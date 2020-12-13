@@ -39,7 +39,7 @@ dependencies {
     implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.itextpdf:itextg:5.5.10'
-    compile (group: 'com.aspose', name: 'aspose-words', version: '20.9', classifier: 'android.via.java')
+    implementation (group: 'com.aspose', name: 'aspose-words', version: '20.9', classifier: 'android.via.java')
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

@@ -12,7 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.android.documentationrecordviafingerprint.R;
 
-public class CustomHorizontalProgressDialog extends AlertDialog {
+public final class CustomHorizontalProgressDialog extends AlertDialog {
     private final Button pauseBtn;
     private final Button cancelBtn;
     private final ProgressBar progressBar;

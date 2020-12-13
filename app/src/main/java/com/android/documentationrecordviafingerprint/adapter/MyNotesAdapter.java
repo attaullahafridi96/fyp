@@ -44,7 +44,7 @@ public final class MyNotesAdapter extends FirebaseRecyclerAdapter<UserNotes, MyN
     private static final Intent activity_opener = new Intent();
     private int lastPosition = -1;
 
-    public MyNotesAdapter(Activity activity, @NonNull FirebaseRecyclerOptions<UserNotes> options) {
+    public MyNotesAdapter(final Activity activity, @NonNull final FirebaseRecyclerOptions<UserNotes> options) {
         super(options);
         this.activity = activity;
     }
@@ -59,7 +59,7 @@ public final class MyNotesAdapter extends FirebaseRecyclerAdapter<UserNotes, MyN
     @SuppressLint("SetTextI18n")
     @Override
     protected void onBindViewHolder(@NonNull final MyNotesAdapter.ViewHolder holder, int position, @NonNull final UserNotes model) {
-        final String FileNameInLarge = model.getName().toUpperCase();
+        final String FileNameInLarge = model.getTitle().toUpperCase();
         holder.filename.setText(FileNameInLarge);
         if (!StringOperations.isEmpty(model.getDateModify())) {
             holder.upload_date_text.setText("Date Modified: ");
@@ -69,7 +69,7 @@ public final class MyNotesAdapter extends FirebaseRecyclerAdapter<UserNotes, MyN
         }
         holder.file_size.setText(model.getSize());
         if (Build.VERSION.SDK_INT >= 26)
-            holder.selected_notes.setTooltipText(model.getName());
+            holder.selected_notes.setTooltipText(model.getTitle());
         holder.selected_notes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +89,7 @@ public final class MyNotesAdapter extends FirebaseRecyclerAdapter<UserNotes, MyN
                             if (checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                 activity.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                             } else {
-                                NotesDownloader.saveNotes(activity, model.getName().toLowerCase().trim(), CryptUtil.decrypt(model.getNotes_data()));
+                                NotesDownloader.saveNotes(activity, model.getTitle().toLowerCase().trim(), CryptUtil.decrypt(model.getNotesData()));
                             }
                         } else {
                             Snackbar.make(activity.findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
@@ -107,7 +107,7 @@ public final class MyNotesAdapter extends FirebaseRecyclerAdapter<UserNotes, MyN
                 menu.add("Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        deleteNotes(model.getName());
+                        deleteNotes(model.getTitle());
                         return true;
                     }
                 });

@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.widget.Toast;
 
+import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomToast;
@@ -27,7 +28,7 @@ public final class NotesDownloader implements IMyConstants {
             new CustomMsgDialog(context, "Notes title Empty!", "Can not leave Notes title empty");
             return;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyToolbarTheme);
         builder.setTitle("Save File As")
                 .setSingleChoiceItems(new String[]{"Text file", "PDF file", "Word file"}, -1, new DialogInterface.OnClickListener() {
                     @Override

@@ -17,14 +17,19 @@ public interface IMyConstants {
     String INTERNET_CONNECTED = "Internet connected";
 
     ////////////Database Keys or IDs//////////////////
-    String KEY_NAME = "name";
-    String KEY_EMAIL = "email";
-    String KEY_FIRST_NAME = "first_name";
-    String KEY_DATE_UPLOAD = "date_upload";
-    String KEY_LAST_NAME = "last_name";
-    String KEY_PASSWORD = "password";
-    String KEY_FILE_STORAGE_ID = "file_storage_id";
+    String USER_KEY_FIRST_NAME = "firstName";
+    String USER_KEY_LAST_NAME = "lastName";
+    String USER_KEY_EMAIL = "email";
+    String USER_KEY_PASSWORD = "password";
+    /////////////////////////////////////////////////
 
+    ////////////Firebase Uploads Keys//////////////////
+    String KEY_TITLE = "title";
+    String KEY_DATE_UPLOAD = "dateUpload";
+    String KEY_FILE_STORAGE_ID = "fileStorageId";
+    /////////////////////////////////////////////////
+
+    ////////////Firebase IDs//////////////////
     String ID_FILES = "files";
     String ID_NOTES = "notes";
     /////////////////////////////////////////////////

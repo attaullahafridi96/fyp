@@ -50,6 +50,10 @@ public class SearchActivity extends AppCompatActivity implements IMyConstants, C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        /*//////////////ToolBar code/////////////
+        Toolbar myToolbar = findViewById(R.id.search_activity_toolbar);
+        setSupportActionBar(myToolbar);
+        /////////////ToolBar code/////////////*/
         context = SearchActivity.this;
         parent_node = DB.getRtDBFirstNodeReference();
         email_identifier = new SessionManagement(context).getEmailIdentifier();
@@ -86,10 +90,32 @@ public class SearchActivity extends AppCompatActivity implements IMyConstants, C
         });
     }
 
+    /* @Override
+        public boolean onCreateOptionsMenu(Menu menu) {
+            getMenuInflater().inflate(R.menu.text_editor_menu, menu);
+            return super.onCreateOptionsMenu(menu);
+        }
+
+        @SuppressLint("NonConstantResourceId")
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.editor_upload_menu_item:
+
+                    break;
+                case R.id.editor_rename_menu_item:
+
+                    break;
+                default:
+                    return false;
+            }
+            return true;
+        }*/
+
     private void searchDocument(String toSearch) {
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
-            Query query = childReference.child(ID_FILES).orderByChild(KEY_NAME)
+            Query query = childReference.child(ID_FILES).orderByChild(KEY_TITLE)
                     .startAt(toSearch).endAt(toSearch + "\uf8ff");
             FirebaseRecyclerOptions<UserUploads> filter_options = new FirebaseRecyclerOptions.Builder<UserUploads>()
                     .setQuery(query, UserUploads.class).build();

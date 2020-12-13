@@ -69,10 +69,10 @@ public class OnlineFileViewerActivity extends AppCompatActivity implements IMyCo
         /////////////ToolBar code/////////////
         Intent it = getIntent();
         model = (UserUploads) it.getSerializableExtra(EXTRA_USER_FILE);
-        file_name = model.getName();
-        file_storage_key = model.getFile_storage_id();
-        file_uri = model.getFile_uri();
-        file_extension = model.getFile_extension();
+        file_name = model.getTitle();
+        file_storage_key = model.getFileStorageId();
+        file_uri = model.getFileUri();
+        file_extension = model.getFileExtension();
         TextView document_title = findViewById(R.id.document_title);
         document_title.setText(file_name);
         document_title.setSelected(true);

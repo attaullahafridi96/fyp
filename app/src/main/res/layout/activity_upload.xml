@@ -68,7 +68,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <Button
+    <!--<Button
         android:id="@+id/take_capture_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="20dp" />
+        android:layout_height="20dp" />-->
 
     <Button
         android:id="@+id/file_chooser_btn"

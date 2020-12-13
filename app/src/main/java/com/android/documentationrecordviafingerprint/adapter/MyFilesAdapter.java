@@ -46,7 +46,7 @@ public final class MyFilesAdapter
     private static final Intent activity_opener = new Intent();
     private int lastPosition = -1;
 
-    public MyFilesAdapter(Activity activity, @NonNull FirebaseRecyclerOptions<UserUploads> options) {
+    public MyFilesAdapter(final Activity activity, @NonNull final FirebaseRecyclerOptions<UserUploads> options) {
         super(options);
         this.activity = activity;
     }
@@ -61,8 +61,8 @@ public final class MyFilesAdapter
     @SuppressLint("SetTextI18n")
     @Override
     protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final UserUploads model) {
-        String capitalizeFileName = model.getName().toUpperCase();
-        Glide.with(holder.file_type_icon.getContext()).load(model.getFile_icon_uri()).into(holder.file_type_icon);
+        String capitalizeFileName = model.getTitle().toUpperCase();
+        Glide.with(holder.file_type_icon.getContext()).load(model.getFileIconUri()).into(holder.file_type_icon);
         holder.filename.setText(capitalizeFileName);
         if (!StringOperations.isEmpty(model.getDateModify())) {
             holder.upload_date_text.setText("Date Modified: ");
@@ -72,7 +72,7 @@ public final class MyFilesAdapter
         }
         holder.file_size.setText(model.getSize());
         if (Build.VERSION.SDK_INT >= 26)
-            holder.selected_file.setTooltipText(model.getName());
+            holder.selected_file.setTooltipText(model.getTitle());
         holder.download_file_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,8 +105,8 @@ public final class MyFilesAdapter
                             @Override
                             public void onClick(View v) {
                                 if (CheckInternetConnectivity.isInternetConnected(activity)) {
-                                    String file_id = StringOperations.createFileIdentifier(model.getName());
-                                    MyFirebaseDatabase.deleteFile(activity, model.getFile_storage_id(), file_id, false);
+                                    String file_id = StringOperations.createFileIdentifier(model.getTitle());
+                                    MyFirebaseDatabase.deleteFile(activity, model.getFileStorageId(), file_id, false);
                                 } else {
                                     Toast.makeText(activity, NO_INTERNET_CONNECTION, Toast.LENGTH_LONG).show();
                                 }
@@ -119,7 +119,7 @@ public final class MyFilesAdapter
             @Override
             public void onClick(View v) {
                 if (CheckInternetConnectivity.isInternetConnected(activity)) {
-                    if (model.getFile_uri() != null) {
+                    if (model.getFileUri() != null) {
                         activity_opener.setClass(activity, OnlineFileViewerActivity.class);
                         activity_opener.putExtra(EXTRA_USER_FILE, model);
                         activity.startActivity(activity_opener);
@@ -134,13 +134,13 @@ public final class MyFilesAdapter
 
     private void startDownload(UserUploads userUploads) {
         try {
-            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(userUploads.getFile_uri()));
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(userUploads.getFileUri()));
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
             request.setTitle("Download");
             request.setDescription("Downloading file...");
             request.allowScanningByMediaScanner();
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, userUploads.getName());
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, userUploads.getTitle());
             DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
             manager.enqueue(request);
         } catch (Exception e) {

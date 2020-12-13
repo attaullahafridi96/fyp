@@ -24,7 +24,6 @@ import com.android.documentationrecordviafingerprint.model.UserNotes;
 import com.android.documentationrecordviafingerprint.model.UserUploads;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomHorizontalProgressDialog;
-import com.android.documentationrecordviafingerprint.uihelper.CustomInputDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomToast;
@@ -36,7 +35,6 @@ import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,7 +64,7 @@ public final class MyFirebaseDatabase implements IMyConstants {
         progDialog = new CustomProgressDialog(context, "Processing . . .");
         progDialog.showDialog();
         try {
-            Query checkDuplicateAcc = realtimeDatabaseReference.orderByChild(KEY_EMAIL).equalTo(user.getEmail());
+            Query checkDuplicateAcc = realtimeDatabaseReference.orderByChild(USER_KEY_EMAIL).equalTo(user.getEmail());
 
             email_identifier = StringOperations.removeInvalidCharsFromIdentifier(user.getEmail());
 
@@ -104,28 +102,11 @@ public final class MyFirebaseDatabase implements IMyConstants {
     }
 
     ////////////////////////////////    SETTINGS LOGIC STARTS FROM HERE    ////////////////////////////////////////////////////
-    private static String user_name;
-
     public static void changeFirstName(final Activity activity) {
-        progDialog = new CustomProgressDialog(activity, "Changing Name . . .");
+        progDialog = new CustomProgressDialog(activity, "Changing First Name . . .");
+        progDialog.showDialog();
         try {
-            final CustomInputDialog customInputDialog = new CustomInputDialog(activity, "Rename");
-            customInputDialog.setOkBtnListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    customInputDialog.dismissDialog();
-                    user_name = customInputDialog.getInputText();
-                    if (StringOperations.isEmpty(user_name)) {
-                        new CustomMsgDialog(activity, "Alert", "Can't Set Empty Name.");
-                        return;
-                    }
-                    if (CheckInternetConnectivity.isInternetConnected(activity)) {
-                        progDialog.showDialog();
-                    } else {
-                        Snackbar.make(activity.findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_SHORT).show();
-                    }
-                }
-            });
+
         } catch (Exception e) {
             progDialog.dismissDialog();
             CustomToast.makeToast(activity, "Error:" + e.getMessage(), Toast.LENGTH_LONG);
@@ -155,7 +136,7 @@ public final class MyFirebaseDatabase implements IMyConstants {
                     if (uploaded_files.exists()) {
                         for (DataSnapshot snapshot1 : uploaded_files.getChildren()) {
                             UserUploads user = snapshot1.getValue(UserUploads.class);
-                            file_storage_ids.add(user.getFile_storage_id());
+                            file_storage_ids.add(user.getFileStorageId());
                         }
                         for (int i = 0; i < file_storage_ids.size(); i++) {
                             if (i == file_storage_ids.size() - 1) {
@@ -168,7 +149,6 @@ public final class MyFirebaseDatabase implements IMyConstants {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
                                                         progDialog.dismissDialog();
-                                                        CustomToast.makeToast(activity, "All your files Deleted Successfully", Toast.LENGTH_LONG);
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override
@@ -182,7 +162,7 @@ public final class MyFirebaseDatabase implements IMyConstants {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
                                                         progDialog.dismissDialog();
-                                                        CustomToast.makeToast(activity, "All your Notes Deleted Successfully", Toast.LENGTH_LONG);
+                                                        CustomToast.makeToast(activity, "All your Files and Notes Deleted Successfully", Toast.LENGTH_SHORT);
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override
@@ -209,7 +189,7 @@ public final class MyFirebaseDatabase implements IMyConstants {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 progDialog.dismissDialog();
-                                CustomToast.makeToast(activity, "All your Data Deleted Successfully", Toast.LENGTH_LONG);
+                                CustomToast.makeToast(activity, "All your Notes Deleted Successfully", Toast.LENGTH_LONG);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -246,7 +226,7 @@ public final class MyFirebaseDatabase implements IMyConstants {
                     if (uploaded_files.exists()) {
                         for (DataSnapshot snapshot1 : uploaded_files.getChildren()) {
                             UserUploads user = snapshot1.getValue(UserUploads.class);
-                            file_storage_ids.add(user.getFile_storage_id());
+                            file_storage_ids.add(user.getFileStorageId());
                         }
                         for (int i = 0; i < file_storage_ids.size(); i++) {
                             if (i == file_storage_ids.size() - 1) {
@@ -328,8 +308,8 @@ public final class MyFirebaseDatabase implements IMyConstants {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        String first_name = dataSnapshot.child(KEY_FIRST_NAME).getValue(String.class);
-                        String last_name = dataSnapshot.child(KEY_LAST_NAME).getValue(String.class);
+                        String first_name = dataSnapshot.child(USER_KEY_FIRST_NAME).getValue(String.class);
+                        String last_name = dataSnapshot.child(USER_KEY_LAST_NAME).getValue(String.class);
                         String full_name = first_name + " " + last_name;
                         fullname_tv.setText(StringOperations.capitalizeString(full_name));
                     }
@@ -348,7 +328,7 @@ public final class MyFirebaseDatabase implements IMyConstants {
         progDialog = new CustomProgressDialog(context, "Processing . . .");
         progDialog.showDialog();
         try {
-            Query checkAccount = realtimeDatabaseReference.orderByChild(KEY_EMAIL).equalTo(email);
+            Query checkAccount = realtimeDatabaseReference.orderByChild(USER_KEY_EMAIL).equalTo(email);
 
             email_identifier = StringOperations.removeInvalidCharsFromIdentifier(email);
 
@@ -356,7 +336,7 @@ public final class MyFirebaseDatabase implements IMyConstants {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        String passFromDB = dataSnapshot.child(email_identifier).child(KEY_PASSWORD).getValue(String.class);
+                        String passFromDB = dataSnapshot.child(email_identifier).child(USER_KEY_PASSWORD).getValue(String.class);
                         if (password.equals(passFromDB)) {
                             new SessionManagement(context).setSession(email);
                             progDialog.dismissDialog();
@@ -423,7 +403,7 @@ public final class MyFirebaseDatabase implements IMyConstants {
             email_identifier = new SessionManagement(activity).getEmailIdentifier();
 
             DatabaseReference childReference = realtimeDatabaseReference.child(email_identifier).child(ID_FILES).child(file_identifier);
-            Query checkuser = childReference.orderByChild(KEY_NAME);
+            Query checkuser = childReference.orderByChild(KEY_TITLE);
             checkuser.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
@@ -546,7 +526,7 @@ public final class MyFirebaseDatabase implements IMyConstants {
                         new CustomMsgDialog(activity, "File Duplication Not Allowed", "File already exists with this name and type, Try different file name.");
                     } else {
                         model.setId(new_file_id);
-                        model.setName(new_file_name);
+                        model.setTitle(new_file_name);
                         Task<Void> task = realtimeDatabaseReference.child(email_identifier).child(ID_FILES).child(new_file_id).setValue(model);
                         task.addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -587,7 +567,7 @@ public final class MyFirebaseDatabase implements IMyConstants {
                     if (dataSnapshot.exists()) {
                         progDialog.dismissDialog();
                         final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, "Notes with title "
-                                + userNotes.getName().toUpperCase() + " already exists!\n\nDo you want to Update them?");
+                                + userNotes.getTitle().toUpperCase() + " already exists!\n\nDo you want to Update them?");
                         customConfirmDialog.setBtnText("Update")
                                 .setOkBtn(new View.OnClickListener() {
                                     @Override
@@ -623,7 +603,7 @@ public final class MyFirebaseDatabase implements IMyConstants {
                                     toolbar_menu.findItem(R.id.editor_rename_menu_item).setVisible(true);
                                     toolbar_menu.findItem(R.id.editor_delete_menu_item).setVisible(true);
                                     notes_title_ed.setEnabled(false);
-                                    editor_title.setText(StringOperations.capitalizeString(userNotes.getName()));
+                                    editor_title.setText(StringOperations.capitalizeString(userNotes.getTitle()));
                                     progDialog.dismissDialog();
                                     Toast.makeText(context, "Notes Uploaded to Server Successfully", Toast.LENGTH_SHORT).show();
                                 }
@@ -666,7 +646,7 @@ public final class MyFirebaseDatabase implements IMyConstants {
                         new CustomMsgDialog(activity, "Notes Duplication Not Allowed", "Notes already exists with this name, Try different notes name.");
                     } else {
                         model.setId(new_notes_id);
-                        model.setName(new_notes_name);
+                        model.setTitle(new_notes_name);
                         Task<Void> task = realtimeDatabaseReference.child(email_identifier).child(ID_NOTES).child(new_notes_id).setValue(model);
                         task.addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override

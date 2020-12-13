@@ -1,12 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base application theme. -->
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
-        <item name="colorControlHighlight">@color/special</item>
+        <item name="android:colorControlHighlight">@color/special</item>
+        <item name="android:contextPopupMenuStyle">@style/MyToolbarTheme</item>
+        <item name="android:colorForeground">@color/special</item>
     </style>
 
     <style name="AppCustomTheme">
@@ -18,6 +21,7 @@
     </style>
 
     <style name="MyToolbarTheme" parent="android:Theme.Material.Dialog.Alert">
+        <item name="android:popupBackground">@color/darkColor</item>
         <item name="android:colorBackgroundFloating">@color/darkColor</item>
     </style>
 

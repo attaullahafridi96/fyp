@@ -12,7 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.android.documentationrecordviafingerprint.R;
 
-public class CustomProgressDialog extends AlertDialog {
+public final class CustomProgressDialog extends AlertDialog {
 
     private final AlertDialog alertDialog;
 

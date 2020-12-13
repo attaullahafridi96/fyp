@@ -1,6 +1,7 @@
 package com.android.documentationrecordviafingerprint.view;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,14 +30,9 @@ import com.android.documentationrecordviafingerprint.internetchecking.Connectivi
 import com.android.documentationrecordviafingerprint.model.DB;
 import com.android.documentationrecordviafingerprint.model.UserNotes;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
-import com.android.documentationrecordviafingerprint.uihelper.CustomProgressDialog;
-import com.firebase.ui.common.ChangeEventType;
-import com.firebase.ui.database.ChangeEventListener;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 
@@ -52,14 +48,12 @@ public class NotesActivity extends AppCompatActivity implements IMyConstants, Co
     private static String email_identifier;
     private static BroadcastReceiver internet_broadcast;
     private FloatingActionButton floatingActionButton;
-    private static CustomProgressDialog progDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         context = NotesActivity.this;
-        progDialog = new CustomProgressDialog(context, "Loading Content . . .");
         parent_node = DB.getRtDBFirstNodeReference();
         email_identifier = new SessionManagement(context).getEmailIdentifier();
 
@@ -122,7 +116,7 @@ public class NotesActivity extends AppCompatActivity implements IMyConstants, Co
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 new CustomMsgDialog(context, "Permissions Granted", "Now you can Download Notes");
             } else {
-                new CustomMsgDialog(context, "Permissions Denied", "READ|WRITE PERMISSION REQUIRED!\n\nThis permission is required for saving notes on your device, Please grant Permissions to Download Notes");
+                new CustomMsgDialog(context, "Permissions Denied", "READ | WRITE PERMISSION REQUIRED!\n\nThis permission is required for saving notes on your device, Please grant Permissions to Download Notes");
             }
         }
     }
@@ -130,7 +124,7 @@ public class NotesActivity extends AppCompatActivity implements IMyConstants, Co
     private void searchDocument(String toSearch) {
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
-            Query query = childReference.child(ID_NOTES).orderByChild(KEY_NAME)
+            Query query = childReference.child(ID_NOTES).orderByChild(KEY_TITLE)
                     .startAt(toSearch).endAt(toSearch + "\uf8ff");
             FirebaseRecyclerOptions<UserNotes> filter_options = new FirebaseRecyclerOptions.Builder<UserNotes>()
                     .setQuery(query, UserNotes.class).build();
@@ -155,46 +149,16 @@ public class NotesActivity extends AppCompatActivity implements IMyConstants, Co
     @Override
     protected void onStart() {
         super.onStart();
-        progDialog.showDialog();
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
             FirebaseRecyclerOptions<UserNotes> options = new FirebaseRecyclerOptions.Builder<UserNotes>()
                     .setQuery(childReference.child(ID_NOTES), UserNotes.class)
                     .build();
-            myNotesAdapter = new MyNotesAdapter(this, options);
-            myNotesAdapter.getSnapshots().addChangeEventListener(new ChangeEventListener() {
-                @Override
-                public void onChildChanged(@NonNull ChangeEventType type, @NonNull DataSnapshot snapshot, int newIndex, int oldIndex) {
-                    progDialog.dismissDialog();
-                }
-
-                @Override
-                public void onDataChanged() {
-                    progDialog.dismissDialog();
-                    if (myNotesAdapter.getItemCount() == 0 && !recyclerView.hasPendingAdapterUpdates()) {
-                        Snackbar.make(findViewById(android.R.id.content), "No data available to display", Snackbar.LENGTH_LONG).show();
-
-                    //////////
-
-                   //////////     HERE IS ERROR WHEN SEARCHING VIA VOICE
-
-                    /////////////////
-
-
-                    }
-                }
-
-                @Override
-                public void onError(@NonNull DatabaseError databaseError) {
-                    progDialog.dismissDialog();
-                }
-            });
+            myNotesAdapter = new MyNotesAdapter((Activity) context, options);
             recyclerView.setAdapter(myNotesAdapter);
             if (myNotesAdapter != null) {
                 myNotesAdapter.startListening();
             }
-        } else {
-            progDialog.dismissDialog();
         }
     }
 

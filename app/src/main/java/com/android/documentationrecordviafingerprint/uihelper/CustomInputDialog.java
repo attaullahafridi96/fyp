@@ -12,7 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.android.documentationrecordviafingerprint.R;
 
-public class CustomInputDialog extends androidx.appcompat.app.AlertDialog {
+public final class CustomInputDialog extends androidx.appcompat.app.AlertDialog {
     private final Button btnOk;
     private final AlertDialog alertDialog;
     private final EditText custom_input;
@@ -36,6 +36,11 @@ public class CustomInputDialog extends androidx.appcompat.app.AlertDialog {
             }
         });
         alertDialog.show();
+    }
+
+    public CustomInputDialog setInputHint(final String hint){
+        custom_input.setHint(hint);
+        return this;
     }
 
     public String getInputText() {

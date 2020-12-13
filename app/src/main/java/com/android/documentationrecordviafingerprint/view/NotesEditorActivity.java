@@ -59,10 +59,10 @@ public class NotesEditorActivity extends AppCompatActivity implements IMyConstan
         editor_title = findViewById(R.id.editor_title);
 
         if (model != null) {
-            editor_title.setText(StringOperations.capitalizeString(model.getName()));
+            editor_title.setText(StringOperations.capitalizeString(model.getTitle()));
             notes_title_ed.setEnabled(false);
-            notes_title_ed.setText(model.getName());
-            note_data_ed.setText(decryptNotesData(model.getNotes_data()));
+            notes_title_ed.setText(model.getTitle());
+            note_data_ed.setText(decryptNotesData(model.getNotesData()));
         }
     }
 

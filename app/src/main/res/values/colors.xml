@@ -5,10 +5,10 @@
     <color name="colorAccent">#0091EA</color>
     <color name="white">#fff</color>
     <color name="black">#000</color>
-    <color name="selected_file_color">#CCd4d4d4</color>
     <color name="special">#d4d4d4</color>
     <color name="rippleEffectColor">#CC999999</color>
     <color name="backgroundColor">#0D47A1</color>
     <color name="darkColor">#22313F</color>
+    <color name="searchToolbarBgColor">#8022313F</color>
     <color name="redColor">#D50000</color>
 </resources>

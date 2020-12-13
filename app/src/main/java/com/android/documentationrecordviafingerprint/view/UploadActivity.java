@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
@@ -49,23 +48,17 @@ public class UploadActivity extends AppCompatActivity implements IMyConstants {
         setContentView(R.layout.activity_upload);
         context = UploadActivity.this;
         selected_file = findViewById(R.id.selected_file);
-        findViewById(R.id.take_capture_btn).setOnClickListener(new View.OnClickListener() {
+        /*findViewById(R.id.take_capture_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                Toast.makeText(context, "No Ready Yet", Toast.LENGTH_SHORT).show();
-
-
+                Toast.makeText(context, "Not Ready Yet", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
         findViewById(R.id.file_chooser_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 99);
-                    }
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 99);
                 } else {
                     selectFile();
                 }
@@ -119,7 +112,6 @@ public class UploadActivity extends AppCompatActivity implements IMyConstants {
         startActivityForResult(intent, 89);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -140,7 +132,7 @@ public class UploadActivity extends AppCompatActivity implements IMyConstants {
             drawSelectedFileInfo(file_extension);
         } else {
             clearData();
-            Toast.makeText(this, "No file Selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -239,20 +231,12 @@ public class UploadActivity extends AppCompatActivity implements IMyConstants {
             @Override
             public void onClick(View v) {
                 if (file_uri != null) {
-                    if (file_extension.equals("doc") || file_extension.equals("docx") || file_extension.equals("rtf")) {
-
-                        //////////incomplete////////////////////
-
-
-                        new CustomMsgDialog(context, "Can't open this type of file", getResources().getString(R.string.canNotOpenMsg));
-                    } else {
-                        activity_opener.setClass(context, OfflineFileViewerActivity.class);
-                        activity_opener.putExtra("FILE_NAME", file_name);
-                        activity_opener.putExtra("URI", file_uri.toString());
-                        activity_opener.putExtra("FILE_EXTENSION", file_extension);
-                        activity_opener.putExtra("FILE_PATH", file_path);
-                        startActivity(activity_opener);
-                    }
+                    activity_opener.setClass(context, OfflineFileViewerActivity.class);
+                    activity_opener.putExtra("FILE_NAME", file_name);
+                    activity_opener.putExtra("URI", file_uri.toString());
+                    activity_opener.putExtra("FILE_EXTENSION", file_extension);
+                    //activity_opener.putExtra("FILE_PATH", file_path);
+                    startActivity(activity_opener);
                 }
             }
         });

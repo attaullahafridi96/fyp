@@ -1,49 +1,57 @@
 package com.android.documentationrecordviafingerprint.model;
 
-public final class UserUploads extends UserFile {
-    private String file_icon_uri, file_extension, file_uri, file_storage_id;
+public final class UserUploads extends UserFile implements IUserUploads {
+    private String fileIconUri, fileExtension, fileUri, fileStorageId;
 
     public UserUploads() {     //required constructor for firebase
         super("", "", "", "", "");
     }
 
-    public UserUploads(String file_icon_uri, String file_name, String file_extension, String file_type, String file_uri, String file_size, String file_key, String file_storage_id, String upload_date) {
+    public UserUploads(String fileIconUri, String file_name, String fileExtension, String file_type, String fileUri, String file_size, String file_key, String fileStorageId, String upload_date) {
         super(file_name, file_type, file_key, file_size, upload_date);
-        this.file_icon_uri = file_icon_uri;
-        this.file_extension = file_extension;
-        this.file_uri = file_uri;
-        this.file_storage_id = file_storage_id;
+        this.fileIconUri = fileIconUri;
+        this.fileExtension = fileExtension;
+        this.fileUri = fileUri;
+        this.fileStorageId = fileStorageId;
     }
 
-    public String getFile_icon_uri() {
-        return file_icon_uri;
+    @Override
+    public String getFileIconUri() {
+        return fileIconUri;
     }
 
-    public String getFile_storage_id() {
-        return file_storage_id;
+    @Override
+    public String getFileStorageId() {
+        return fileStorageId;
     }
 
-    public String getFile_extension() {
-        return file_extension;
+    @Override
+    public String getFileExtension() {
+        return fileExtension;
     }
 
-    public String getFile_uri() {
-        return file_uri;
+    @Override
+    public String getFileUri() {
+        return fileUri;
     }
 
-    public void setFile_icon_uri(String file_icon_uri) {
-        this.file_icon_uri = file_icon_uri;
+    @Override
+    public void setFileIconUri(String fileIconUri) {
+        this.fileIconUri = fileIconUri;
     }
 
-    public void setFile_extension(String file_extension) {
-        this.file_extension = file_extension;
+    @Override
+    public void setFileExtension(String fileExtension) {
+        this.fileExtension = fileExtension;
     }
 
-    public void setFile_uri(String file_uri) {
-        this.file_uri = file_uri;
+    @Override
+    public void setFileUri(String fileUri) {
+        this.fileUri = fileUri;
     }
 
-    public void setFile_storage_id(String file_storage_id) {
-        this.file_storage_id = file_storage_id;
+    @Override
+    public void setFileStorageId(String fileStorageId) {
+        this.fileStorageId = fileStorageId;
     }
 }

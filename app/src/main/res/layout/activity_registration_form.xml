@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppCustomTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/AppCustomTheme"
     android:orientation="vertical"
     tools:context=".view.RegistrationActivity">
 
@@ -48,7 +48,8 @@
                 android:fontFamily="sans-serif-condensed"
                 android:hint="First Name"
                 android:inputType="textPersonName|textCapWords"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:textColor="@color/black" />
 
             <View
                 android:layout_width="wrap_content"
@@ -63,7 +64,8 @@
                 android:fontFamily="sans-serif-condensed"
                 android:hint="Last Name (Optional)"
                 android:inputType="textPersonName|textCapWords"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:textColor="@color/black" />
 
             <View
                 android:layout_width="wrap_content"
@@ -78,7 +80,8 @@
                 android:fontFamily="sans-serif-condensed"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:textColor="@color/black" />
 
             <View
                 android:layout_width="wrap_content"
@@ -93,7 +96,8 @@
                 android:fontFamily="sans-serif-condensed"
                 android:hint="Password"
                 android:inputType="textPassword"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:textColor="@color/black" />
 
             <View
                 android:layout_width="wrap_content"
@@ -108,7 +112,8 @@
                 android:fontFamily="sans-serif-condensed"
                 android:hint="Confirm Password"
                 android:inputType="textPassword"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:textColor="@color/black" />
 
             <View
                 android:layout_width="wrap_content"

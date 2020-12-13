@@ -21,7 +21,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.NotesActivity" android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".view.NotesActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".view.AppSettingsActivity" />
         <activity android:name=".view.UploadActivity" />
         <activity
@@ -33,7 +35,8 @@
         <activity
             android:name=".view.RegistrationActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".view.LoginActivity"
+        <activity
+            android:name=".view.LoginActivity"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,7 +47,7 @@
         <activity android:name=".fingerprint.FingerprintAuthentication">
 
         </activity>
-        <activity android:name=".view.DashboardActivity"/>
+        <activity android:name=".view.DashboardActivity" />
         <activity android:name=".view.OfflineFileViewerActivity" />
         <activity android:name=".view.OnlineFileViewerActivity" />
 

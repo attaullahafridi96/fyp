@@ -13,13 +13,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.controller.MyFirebaseDatabase;
 import com.android.documentationrecordviafingerprint.helper.IMyConstants;
+import com.android.documentationrecordviafingerprint.helper.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomInputDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
 import com.google.android.material.snackbar.Snackbar;
 
 public class AppSettingsActivity extends AppCompatActivity implements IMyConstants {
     private Context context;
     private CustomConfirmDialog customConfirmDialog;
+    private String user_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,24 @@ public class AppSettingsActivity extends AppCompatActivity implements IMyConstan
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-
+                        final CustomInputDialog customInputDialog = new CustomInputDialog(context, "Rename");
+                        customInputDialog.setInputHint("Enter first name")
+                                .setOkBtnListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        customInputDialog.dismissDialog();
+                                        user_name = customInputDialog.getInputText();
+                                        if (StringOperations.isEmpty(user_name)) {
+                                            new CustomMsgDialog(context, "Alert", "Can't Set Empty Name.");
+                                            return;
+                                        }
+                                        if (CheckInternetConnectivity.isInternetConnected(context)) {
+                                            MyFirebaseDatabase.changeFirstName(AppSettingsActivity.this);
+                                        } else {
+                                            Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
                         break;
                     case 1:
 
