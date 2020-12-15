@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -128,8 +129,6 @@ public class DashboardActivity extends AppCompatActivity implements IMyConstants
             }
         });
 
-        MyFirebaseDatabase.getFullName(context, drawer_fullname_tv);   //Set full user name in drawer menu
-
         email.setText(session.getSession());
 
         recyclerView = findViewById(R.id.home_recyclerView);
@@ -180,6 +179,7 @@ public class DashboardActivity extends AppCompatActivity implements IMyConstants
     protected void onStart() {
         super.onStart();
         progDialog.showDialog();
+        MyFirebaseDatabase.getFullName(context, drawer_fullname_tv);   //Set full user name in drawer menu
         String email_identifier = session.getEmailIdentifier();
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
@@ -234,7 +234,7 @@ public class DashboardActivity extends AppCompatActivity implements IMyConstants
         }
     }
 
-    /*private static boolean doubleBackToExitPressedOnce = false;
+    private static boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onBackPressed() {
@@ -255,5 +255,5 @@ public class DashboardActivity extends AppCompatActivity implements IMyConstants
                 }
             }, 1500);
         }
-    }*/
+    }
 }

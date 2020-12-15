@@ -9,6 +9,8 @@
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
         android:background="@drawable/search_toolbar_design"
         android:orientation="horizontal">
@@ -18,27 +20,28 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:theme="@style/searchViewStyle"
-            android:searchIcon="@drawable/ic_baseline_search_24"
             android:closeIcon="@drawable/ic_outline_cancel_24"
-            android:fontFamily="sans-serif-condensed" />
+            android:fontFamily="sans-serif-condensed"
+            android:searchIcon="@drawable/ic_baseline_search_24"
+            android:theme="@style/SearchViewStyle" />
 
         <ImageButton
             android:id="@+id/voice_search"
-            android:layout_width="60dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:background="@drawable/ripple_effect"
             android:contentDescription="@string/image"
             android:src="@drawable/ic_baseline_mic_none_34" />
 
-        <!--<androidx.appcompat.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/search_activity_toolbar"
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:visibility="gone"
             app:popupTheme="@style/MyToolbarTheme"
             app:title=" "
-            app:titleTextColor="@color/white" />-->
+            app:titleTextColor="@color/white" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

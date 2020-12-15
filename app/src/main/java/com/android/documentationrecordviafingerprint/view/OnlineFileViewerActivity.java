@@ -74,7 +74,7 @@ public class OnlineFileViewerActivity extends AppCompatActivity implements IMyCo
         file_uri = model.getFileUri();
         file_extension = model.getFileExtension();
         TextView document_title = findViewById(R.id.document_title);
-        document_title.setText(file_name);
+        document_title.setText(StringOperations.capitalizeString(file_name));
         document_title.setSelected(true);
         ImageButton back_btn = findViewById(R.id.back_btn);
         back_btn.setOnClickListener(new View.OnClickListener() {
@@ -269,7 +269,7 @@ public class OnlineFileViewerActivity extends AppCompatActivity implements IMyCo
                         public void onClick(View v) {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {
                                 String file_id = StringOperations.createFileIdentifier(file_name);
-                                MyFirebaseDatabase.deleteFile(OnlineFileViewerActivity.this, file_storage_key, file_id,true);
+                                MyFirebaseDatabase.deleteFile(OnlineFileViewerActivity.this, file_storage_key, file_id, true);
                             } else {
                                 Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
                             }

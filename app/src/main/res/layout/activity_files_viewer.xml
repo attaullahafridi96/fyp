@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000">
+    android:background="@color/black">
 
     <LinearLayout
         android:id="@+id/title_bar"
@@ -11,26 +11,18 @@
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="#0D47A1"
+        android:background="@color/backgroundColor"
         android:orientation="horizontal">
-
-        <View
-            android:layout_width="10dp"
-            android:layout_height="wrap_content" />
 
         <ImageButton
             android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:background="@drawable/ripple_effect"
             android:contentDescription="@string/image"
             android:src="@drawable/ic_baseline_arrow_back_ios_24"
             android:tooltipText="Go Back" />
-
-        <View
-            android:layout_width="10dp"
-            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/document_title"

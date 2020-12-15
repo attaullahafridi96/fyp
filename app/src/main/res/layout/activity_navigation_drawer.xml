@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        android:theme="@style/drawerMenuTheme"
+        android:theme="@style/DrawerMenuTheme"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/drawer_menu" />
 </androidx.drawerlayout.widget.DrawerLayout>

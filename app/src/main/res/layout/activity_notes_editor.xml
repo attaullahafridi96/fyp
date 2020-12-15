@@ -12,8 +12,17 @@
         android:id="@+id/top_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1.3">
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/ripple_effect"
+            android:contentDescription="@string/image"
+            android:src="@drawable/ic_baseline_arrow_back_ios_24"
+            android:tooltipText="Go Back" />
 
         <TextView
             android:id="@+id/editor_title"
@@ -24,15 +33,13 @@
             android:padding="10dp"
             android:text="Create New"
             android:textColor="#FFFFFF"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/editor_activity_toolbar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:elevation="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/MyToolbarTheme"
             app:title=" "

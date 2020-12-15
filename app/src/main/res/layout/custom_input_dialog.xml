@@ -32,6 +32,7 @@
         android:hint="Enter new file name"
         android:inputType="textCapWords"
         android:maxLines="1"
+        android:singleLine="true"
         android:padding="20dp"
         android:textColor="@android:color/white"
         android:textColorHint="@color/special"

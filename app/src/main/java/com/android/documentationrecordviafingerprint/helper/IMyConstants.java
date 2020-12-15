@@ -25,6 +25,7 @@ public interface IMyConstants {
 
     ////////////Firebase Uploads Keys//////////////////
     String KEY_TITLE = "title";
+    String KEY_TYPE = "type";
     String KEY_DATE_UPLOAD = "dateUpload";
     String KEY_FILE_STORAGE_ID = "fileStorageId";
     /////////////////////////////////////////////////

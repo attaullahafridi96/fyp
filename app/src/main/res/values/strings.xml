@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Notes via Fingerprint</string>
     <string name="image">image icon</string>
-    <string name="nav_header_title">First Name + Last Name</string>
+    <string name="nav_header_title"></string>
     <string name="nav_header_subtitle">email@gmail.com</string>
 
     <string name="download_msg">Are you sure to Download this file?</string>

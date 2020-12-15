@@ -44,7 +44,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".fingerprint.FingerprintAuthentication">
+        <activity android:name=".view.FingerprintAuthenActivity"
+            android:theme="@style/FingerprintTheme">
 
         </activity>
         <activity android:name=".view.DashboardActivity" />

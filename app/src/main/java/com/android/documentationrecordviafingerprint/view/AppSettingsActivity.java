@@ -23,7 +23,7 @@ import com.google.android.material.snackbar.Snackbar;
 public class AppSettingsActivity extends AppCompatActivity implements IMyConstants {
     private Context context;
     private CustomConfirmDialog customConfirmDialog;
-    private String user_name;
+    private String newInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,72 +39,126 @@ public class AppSettingsActivity extends AppCompatActivity implements IMyConstan
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        final CustomInputDialog customInputDialog = new CustomInputDialog(context, "Rename");
-                        customInputDialog.setInputHint("Enter first name")
-                                .setOkBtnListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        customInputDialog.dismissDialog();
-                                        user_name = customInputDialog.getInputText();
-                                        if (StringOperations.isEmpty(user_name)) {
-                                            new CustomMsgDialog(context, "Alert", "Can't Set Empty Name.");
-                                            return;
-                                        }
-                                        if (CheckInternetConnectivity.isInternetConnected(context)) {
-                                            MyFirebaseDatabase.changeFirstName(AppSettingsActivity.this);
-                                        } else {
-                                            Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
+                        changeFirstName();
                         break;
                     case 1:
-
+                        changeLastName();
                         break;
                     case 2:
-
+                        changePassword();
                         break;
                     case 3:
-                        customConfirmDialog = new CustomConfirmDialog(context, "WARNING!!!" +
-                                "\n\nAll your data will be deleted and can not be recovered!" +
-                                "\n\nAre you sure to delete all your data?");
-                        customConfirmDialog.setBtnText("Delete All Data")
-                                .dangerBtn()
-                                .setOkBtn(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (CheckInternetConnectivity.isInternetConnected(context)) {
-                                            MyFirebaseDatabase.deleteUserAllData(AppSettingsActivity.this);
-                                        } else {
-                                            Snackbar.make(v, NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
-                                        }
-                                        customConfirmDialog.dismissDialog();
-                                    }
-                                });
+                        removeAllData();
                         break;
                     case 4:
-                        customConfirmDialog = new CustomConfirmDialog(context, "WARNING!!!" +
-                                "\n\nAll your data will be deleted and can not be recovered!" +
-                                "\n\nAre you sure to delete your account?");
-                        customConfirmDialog.setBtnText("Delete Account")
-                                .dangerBtn()
-                                .setOkBtn(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (CheckInternetConnectivity.isInternetConnected(context)) {
-                                            MyFirebaseDatabase.deleteUserAccount(AppSettingsActivity.this);
-                                        } else {
-                                            Snackbar.make(v, NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
-                                        }
-                                        customConfirmDialog.dismissDialog();
-                                    }
-                                });
+                        deleteAccount();
                         break;
                     default:
                         break;
                 }
             }
         });
+    }
+
+
+    private void changeFirstName() {
+        final CustomInputDialog customInputDialog = new CustomInputDialog(context, "Change First Name");
+        customInputDialog.setInputHint("Enter first name")
+                .setOkBtnListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        customInputDialog.dismissDialog();
+                        newInput = customInputDialog.getInputText();
+                        if (StringOperations.isEmpty(newInput)) {
+                            new CustomMsgDialog(context, "Alert", "Can't Set Empty Name.");
+                            return;
+                        }
+                        if (CheckInternetConnectivity.isInternetConnected(context)) {
+                            newInput = StringOperations.capitalizeString(newInput);
+                            MyFirebaseDatabase.changeFirstName(AppSettingsActivity.this, newInput);
+                        } else {
+                            Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void changeLastName() {
+        final CustomInputDialog customInputDialog = new CustomInputDialog(context, "Change Last Name");
+        customInputDialog.setInputHint("Enter last name")
+                .setOkBtnListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        customInputDialog.dismissDialog();
+                        newInput = customInputDialog.getInputText();
+                        if (CheckInternetConnectivity.isInternetConnected(context)) {
+                            newInput = StringOperations.capitalizeString(newInput);
+                            MyFirebaseDatabase.changeLastName(AppSettingsActivity.this, newInput);
+                        } else {
+                            Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void changePassword() {
+        final CustomInputDialog customInputDialog = new CustomInputDialog(context, "Change Password");
+        customInputDialog.setInputHint("Enter a new Password")
+                .setOkBtnListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        customInputDialog.dismissDialog();
+                        newInput = customInputDialog.getInputText();
+                        if (StringOperations.isEmpty(newInput)) {
+                            new CustomMsgDialog(context, "Alert", "Can't Set Empty Password.");
+                            return;
+                        }
+                        if (CheckInternetConnectivity.isInternetConnected(context)) {
+                            newInput = StringOperations.toMD5String(newInput);
+                            MyFirebaseDatabase.changePassword(AppSettingsActivity.this, newInput);
+                        } else {
+                            Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void removeAllData() {
+        customConfirmDialog = new CustomConfirmDialog(context, "WARNING!!!" +
+                "\n\nAll your data will be deleted and can not be recovered!" +
+                "\n\nAre you sure to delete all your data?");
+        customConfirmDialog.setBtnText("Delete All Data")
+                .dangerBtn()
+                .setOkBtn(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (CheckInternetConnectivity.isInternetConnected(context)) {
+                            MyFirebaseDatabase.deleteUserAllData(AppSettingsActivity.this);
+                        } else {
+                            Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
+                        }
+                        customConfirmDialog.dismissDialog();
+                    }
+                });
+    }
+
+    private void deleteAccount() {
+        customConfirmDialog = new CustomConfirmDialog(context, "WARNING!!!" +
+                "\n\nAll your data will be deleted and can not be recovered!" +
+                "\n\nAre you sure to delete your account?");
+        customConfirmDialog.setBtnText("Delete Account")
+                .dangerBtn()
+                .setOkBtn(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (CheckInternetConnectivity.isInternetConnected(context)) {
+                            MyFirebaseDatabase.deleteUserAccount(AppSettingsActivity.this);
+                        } else {
+                            Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
+                        }
+                        customConfirmDialog.dismissDialog();
+                    }
+                });
     }
 
     @Override

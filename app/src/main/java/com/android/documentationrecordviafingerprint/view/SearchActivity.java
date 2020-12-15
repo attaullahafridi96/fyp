@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SearchView;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,15 +48,17 @@ public class SearchActivity extends AppCompatActivity implements IMyConstants, C
     private DatabaseReference parent_node;
     private static String email_identifier;
     private static BroadcastReceiver internet_broadcast;
+    private static String type = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        /*//////////////ToolBar code/////////////
+        //////////////ToolBar code///////////////
         Toolbar myToolbar = findViewById(R.id.search_activity_toolbar);
         setSupportActionBar(myToolbar);
-        /////////////ToolBar code/////////////*/
+        myToolbar.setVisibility(View.VISIBLE);
+        /////////////End ToolBar code////////////////
         context = SearchActivity.this;
         parent_node = DB.getRtDBFirstNodeReference();
         email_identifier = new SessionManagement(context).getEmailIdentifier();
@@ -90,27 +95,31 @@ public class SearchActivity extends AppCompatActivity implements IMyConstants, C
         });
     }
 
-    /* @Override
-        public boolean onCreateOptionsMenu(Menu menu) {
-            getMenuInflater().inflate(R.menu.text_editor_menu, menu);
-            return super.onCreateOptionsMenu(menu);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_file_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search_all_menu_item:
+                type = "";
+                break;
+            case R.id.search_doc_menu_item:
+                type = FILE_TYPE_DOCS;
+                break;
+            case R.id.search_image_menu_item:
+                type = FILE_TYPE_IMAGE;
+                break;
+            default:
+                return false;
         }
-
-        @SuppressLint("NonConstantResourceId")
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.editor_upload_menu_item:
-
-                    break;
-                case R.id.editor_rename_menu_item:
-
-                    break;
-                default:
-                    return false;
-            }
-            return true;
-        }*/
+        onStart();
+        return true;
+    }
 
     private void searchDocument(String toSearch) {
         if (CheckInternetConnectivity.isInternetConnected(context)) {
@@ -168,9 +177,26 @@ public class SearchActivity extends AppCompatActivity implements IMyConstants, C
         super.onStart();
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             DatabaseReference childReference = parent_node.child(email_identifier);
-            FirebaseRecyclerOptions<UserUploads> options = new FirebaseRecyclerOptions.Builder<UserUploads>()
-                    .setQuery(childReference.child(ID_FILES), UserUploads.class)
-                    .build();
+            FirebaseRecyclerOptions<UserUploads> options;
+            switch (type) {
+                case FILE_TYPE_IMAGE:
+                    options = new FirebaseRecyclerOptions.Builder<UserUploads>()
+                            .setQuery(childReference.child(ID_FILES)
+                                    .orderByChild(KEY_TYPE).equalTo(FILE_TYPE_IMAGE), UserUploads.class)
+                            .build();
+                    break;
+                case FILE_TYPE_DOCS:
+                    options = new FirebaseRecyclerOptions.Builder<UserUploads>()
+                            .setQuery(childReference.child(ID_FILES)
+                                    .orderByChild(KEY_TYPE).equalTo(FILE_TYPE_DOCS), UserUploads.class)
+                            .build();
+                    break;
+                default:
+                    options = new FirebaseRecyclerOptions.Builder<UserUploads>()
+                            .setQuery(childReference.child(ID_FILES), UserUploads.class)
+                            .build();
+                    break;
+            }
             myFilesAdapter = new MyFilesAdapter(SearchActivity.this, options);
             recyclerView.setAdapter(myFilesAdapter);
             if (myFilesAdapter != null) {

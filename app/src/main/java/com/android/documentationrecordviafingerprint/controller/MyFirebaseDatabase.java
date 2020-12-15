@@ -102,23 +102,76 @@ public final class MyFirebaseDatabase implements IMyConstants {
     }
 
     ////////////////////////////////    SETTINGS LOGIC STARTS FROM HERE    ////////////////////////////////////////////////////
-    public static void changeFirstName(final Activity activity) {
+    public static void changeFirstName(final Activity activity, final String newFirstName) {
         progDialog = new CustomProgressDialog(activity, "Changing First Name . . .");
         progDialog.showDialog();
         try {
-
+            Task<Void> task = realtimeDatabaseReference.child(email_identifier).child(USER_KEY_FIRST_NAME).setValue(newFirstName);
+            task.addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    progDialog.dismissDialog();
+                    CustomToast.makeToast(activity, "First Name Changed Successfully", Toast.LENGTH_LONG);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progDialog.dismissDialog();
+                    CustomToast.makeToast(activity, "Changing first name failed!\nError:" + e.getMessage(), Toast.LENGTH_LONG);
+                }
+            });
         } catch (Exception e) {
             progDialog.dismissDialog();
             CustomToast.makeToast(activity, "Error:" + e.getMessage(), Toast.LENGTH_LONG);
         }
     }
 
-    public static void changeLastName() {
-
+    public static void changeLastName(final Activity activity, final String newLastName) {
+        progDialog = new CustomProgressDialog(activity, "Changing Last Name . . .");
+        progDialog.showDialog();
+        try {
+            Task<Void> task = realtimeDatabaseReference.child(email_identifier).child(USER_KEY_LAST_NAME).setValue(newLastName);
+            task.addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    progDialog.dismissDialog();
+                    CustomToast.makeToast(activity, "Last Name Changed Successfully", Toast.LENGTH_LONG);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progDialog.dismissDialog();
+                    CustomToast.makeToast(activity, "Changing last name failed!\nError:" + e.getMessage(), Toast.LENGTH_LONG);
+                }
+            });
+        } catch (Exception e) {
+            progDialog.dismissDialog();
+            CustomToast.makeToast(activity, "Error:" + e.getMessage(), Toast.LENGTH_LONG);
+        }
     }
 
-    public static void changePassword() {
-
+    public static void changePassword(final Activity activity, final String newPassword) {
+        progDialog = new CustomProgressDialog(activity, "Changing Password . . .");
+        progDialog.showDialog();
+        try {
+            Task<Void> task = realtimeDatabaseReference.child(email_identifier).child(USER_KEY_PASSWORD).setValue(newPassword);
+            task.addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    progDialog.dismissDialog();
+                    CustomToast.makeToast(activity, "Password Changed Successfully", Toast.LENGTH_LONG);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progDialog.dismissDialog();
+                    CustomToast.makeToast(activity, "Changing password failed!\nError:" + e.getMessage(), Toast.LENGTH_LONG);
+                }
+            });
+        } catch (Exception e) {
+            progDialog.dismissDialog();
+            CustomToast.makeToast(activity, "Error:" + e.getMessage(), Toast.LENGTH_LONG);
+        }
     }
 
     public static void deleteUserAllData(final Activity activity) {

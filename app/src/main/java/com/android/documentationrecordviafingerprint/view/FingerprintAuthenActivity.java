@@ -1,4 +1,4 @@
-package com.android.documentationrecordviafingerprint.fingerprint;
+package com.android.documentationrecordviafingerprint.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,18 +17,21 @@ import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
 import com.android.documentationrecordviafingerprint.R;
-import com.android.documentationrecordviafingerprint.view.LoginActivity;
 
 import java.util.concurrent.Executor;
 
-public class FingerprintAuthentication extends AppCompatActivity {
+public class FingerprintAuthenActivity extends AppCompatActivity {
     private static final Intent activity_opener = new Intent();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fingerprint_authentication);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -39,17 +42,17 @@ public class FingerprintAuthentication extends AppCompatActivity {
 
     private void checkBiometricAuthentication() {
         Executor executor = ContextCompat.getMainExecutor(this);
-        BiometricPrompt biometricPrompt = new BiometricPrompt(FingerprintAuthentication.this,
+        BiometricPrompt biometricPrompt = new BiometricPrompt(FingerprintAuthenActivity.this,
                 executor, new BiometricPrompt.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
                 switch (errorCode) {
                     case BiometricConstants.ERROR_LOCKOUT:
-                        Toast.makeText(FingerprintAuthentication.this, "Too many attempts, Try again later after 30 seconds.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FingerprintAuthenActivity.this, "Too many attempts, Try again later after 30 seconds.", Toast.LENGTH_LONG).show();
                         break;
                     case BiometricConstants.ERROR_LOCKOUT_PERMANENT:
-                        Toast.makeText(FingerprintAuthentication.this, errString + " Now lock your device and unlock it with Pin, Pattern or Password", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FingerprintAuthenActivity.this, errString + " Now lock your device and unlock it with Pin, Pattern or Password", Toast.LENGTH_LONG).show();
                         break;
                 }
                 finish();
@@ -59,7 +62,7 @@ public class FingerprintAuthentication extends AppCompatActivity {
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
                 finish();
-                startActivity(activity_opener.setClass(FingerprintAuthentication.this, LoginActivity.class));
+                startActivity(activity_opener.setClass(FingerprintAuthenActivity.this, LoginActivity.class));
             }
 
             @Override
@@ -94,7 +97,7 @@ public class FingerprintAuthentication extends AppCompatActivity {
     }
 
     private void showMsgDialog(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(FingerprintAuthentication.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(FingerprintAuthenActivity.this ,R.style.MyToolbarTheme);
         builder.setTitle("WARNING");
         builder.setMessage(message);
         builder.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
@@ -102,13 +105,15 @@ public class FingerprintAuthentication extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 finish();
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(0);
             }
         });
         builder.create().show();
     }
 
     private void showSecuritySettingsMsgDialog(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(FingerprintAuthentication.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(FingerprintAuthenActivity.this, R.style.MyToolbarTheme);
         builder.setTitle("Enroll Fingerprint");
         builder.setMessage(message);
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

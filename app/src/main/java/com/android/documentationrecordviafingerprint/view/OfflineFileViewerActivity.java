@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.documentationrecordviafingerprint.R;
+import com.android.documentationrecordviafingerprint.helper.StringOperations;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnRenderListener;
@@ -34,7 +35,7 @@ public class OfflineFileViewerActivity extends AppCompatActivity {
         final String file_uri = it.getStringExtra("URI");
         String file_extension = it.getStringExtra("FILE_EXTENSION");
         TextView document_title = findViewById(R.id.document_title);
-        document_title.setText(file_name);
+        document_title.setText(StringOperations.capitalizeString(file_name));
         ImageButton back_btn = findViewById(R.id.back_btn);
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override

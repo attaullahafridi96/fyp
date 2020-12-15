@@ -9,19 +9,23 @@
         <item name="colorControlHighlight">@color/special</item>
     </style>
 
+    <style name="FingerprintTheme" parent="AppTheme">
+        <item name="android:colorForeground">@color/black</item>
+    </style>
+
     <style name="AppCustomTheme">
         <item name="android:background">@drawable/fp</item>
     </style>
 
-    <style name="drawerMenuTheme">
+    <style name="DrawerMenuTheme">
         <item name="android:colorForeground">@color/black</item>
     </style>
 
-    <style name="MyToolbarTheme" parent="android:Theme.Material.Dialog.Alert">
+    <style name="MyToolbarTheme" parent="android:Theme.Material.Dialog.NoActionBar">
         <item name="android:colorBackgroundFloating">@color/darkColor</item>
     </style>
 
-    <style name="searchViewStyle">
+    <style name="SearchViewStyle">
         <item name="android:editTextColor">@android:color/white</item>
     </style>
 </resources>

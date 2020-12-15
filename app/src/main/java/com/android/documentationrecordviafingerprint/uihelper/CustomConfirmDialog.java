@@ -43,7 +43,7 @@ public final class CustomConfirmDialog extends AlertDialog {
     }
 
     public CustomConfirmDialog dangerBtn() {
-        btn.setBackgroundResource(R.drawable.red_btn_design);
+        btn.setBackgroundResource(R.drawable.danger_btn_design);
         return this;
     }
 
