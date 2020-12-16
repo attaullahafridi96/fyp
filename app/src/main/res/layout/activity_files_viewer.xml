@@ -18,7 +18,6 @@
             android:id="@+id/back_btn"
             android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
             android:background="@drawable/ripple_effect"
             android:contentDescription="@string/image"
             android:src="@drawable/ic_baseline_arrow_back_ios_24"
@@ -46,7 +45,7 @@
             android:layout_height="wrap_content"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/MyToolbarTheme"
+            app:popupTheme="@style/MyDailogTheme"
             app:title=" "
             app:titleTextColor="@color/white" />
     </LinearLayout>

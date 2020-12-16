@@ -77,8 +77,8 @@ public final class MyFilesAdapter
             @Override
             public void onClick(View v) {
                 final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, activity.getResources().getString(R.string.download_msg));
-                customConfirmDialog.setBtnText("Download")
-                        .setOkBtn(new View.OnClickListener() {
+                customConfirmDialog.setOkBtnText("Download")
+                        .setOkBtnListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 if (CheckInternetConnectivity.isInternetConnected(activity)) {
@@ -100,8 +100,8 @@ public final class MyFilesAdapter
             public void onClick(View v) {
                 final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, activity.getResources().getString(R.string.delete_msg));
                 customConfirmDialog.dangerBtn()
-                        .setBtnText("Delete")
-                        .setOkBtn(new View.OnClickListener() {
+                        .setOkBtnText("Delete")
+                        .setOkBtnListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 if (CheckInternetConnectivity.isInternetConnected(activity)) {

@@ -11,16 +11,13 @@
             <group android:id="@+id/grp1">
             <item
                 android:id="@+id/search_all_menu_item"
-                android:title="Show All"
-                app:showAsAction="never" />
+                android:title="Show All" />
             <item
                 android:id="@+id/search_doc_menu_item"
-                android:title="Show Documents"
-                app:showAsAction="never" />
+                android:title="Show Documents" />
             <item
                 android:id="@+id/search_image_menu_item"
-                android:title="Show Images"
-                app:showAsAction="never" />
+                android:title="Show Images" />
             </group>
         </menu>
     </item>

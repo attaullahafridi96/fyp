@@ -97,7 +97,7 @@ public class FingerprintAuthenActivity extends AppCompatActivity {
     }
 
     private void showMsgDialog(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(FingerprintAuthenActivity.this ,R.style.MyToolbarTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(FingerprintAuthenActivity.this ,R.style.MyDailogTheme);
         builder.setTitle("WARNING");
         builder.setMessage(message);
         builder.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
@@ -113,7 +113,7 @@ public class FingerprintAuthenActivity extends AppCompatActivity {
     }
 
     private void showSecuritySettingsMsgDialog(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(FingerprintAuthenActivity.this, R.style.MyToolbarTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(FingerprintAuthenActivity.this, R.style.MyDailogTheme);
         builder.setTitle("Enroll Fingerprint");
         builder.setMessage(message);
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

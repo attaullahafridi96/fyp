@@ -150,9 +150,9 @@ public final class MyNotesAdapter extends FirebaseRecyclerAdapter<UserNotes, MyN
 
     private void deleteNotes(final String notes_title) {
         final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, activity.getResources().getString(R.string.notes_delete_msg));
-        customConfirmDialog.setBtnText("Delete")
+        customConfirmDialog.setOkBtnText("Delete")
                 .dangerBtn()
-                .setOkBtn(new View.OnClickListener() {
+                .setOkBtnListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (CheckInternetConnectivity.isInternetConnected(activity)) {

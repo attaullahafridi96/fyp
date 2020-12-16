@@ -21,7 +21,7 @@
         <item name="android:colorForeground">@color/black</item>
     </style>
 
-    <style name="MyToolbarTheme" parent="android:Theme.Material.Dialog.NoActionBar">
+    <style name="MyDailogTheme" parent="android:Theme.Material.Dialog.NoActionBar">
         <item name="android:colorBackgroundFloating">@color/darkColor</item>
     </style>
 

@@ -22,7 +22,7 @@ public class RegistrationActivity extends AppCompatActivity implements IMyConsta
     private static String enteredFirstName, enteredLastName, enteredEmailAddress, enteredPassword, enteredConfirmPassword;
     private Context context;
     private static final int MIN_FIRST_NAME_CHARS = 3;
-    private static final int MIN_PASSWORD_CHARS = 3;
+    private static final int MIN_PASSWORD_CHARS = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -6,11 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +39,7 @@ public class NotesEditorActivity extends AppCompatActivity implements IMyConstan
     private UserNotes model;
     private Context context;
     private Menu toolbar_menu;
+    private static String check_changes;
     @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -51,6 +52,13 @@ public class NotesEditorActivity extends AppCompatActivity implements IMyConstan
         Toolbar myToolbar = findViewById(R.id.editor_activity_toolbar);
         setSupportActionBar(myToolbar);
         /////////////ToolBar code/////////////
+        ImageButton back_btn = findViewById(R.id.editor_back_btn);
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         Intent it = getIntent();
         model = (UserNotes) it.getSerializableExtra(EXTRA_USER_NOTES);
 
@@ -64,6 +72,12 @@ public class NotesEditorActivity extends AppCompatActivity implements IMyConstan
             notes_title_ed.setText(model.getTitle());
             note_data_ed.setText(decryptNotesData(model.getNotesData()));
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        check_changes = getNotesData();
     }
 
     private String getNotesTitle() {
@@ -98,7 +112,7 @@ public class NotesEditorActivity extends AppCompatActivity implements IMyConstan
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.editor_upload_menu_item:
-                uploadNotes();
+                uploadNotes(false);
                 break;
             case R.id.editor_rename_menu_item:
                 renameNotes();
@@ -119,7 +133,7 @@ public class NotesEditorActivity extends AppCompatActivity implements IMyConstan
         return true;
     }
 
-    private void uploadNotes() {
+    private void uploadNotes(final boolean close_activity) {
         if (CheckInternetConnectivity.isInternetConnected(context)) {
             String notes_name = getNotesTitle().toLowerCase().trim();
             if (notes_name.isEmpty()) {
@@ -131,7 +145,8 @@ public class NotesEditorActivity extends AppCompatActivity implements IMyConstan
                 String upload_date = simpleDateFormat.format(System.currentTimeMillis());
                 final String encrypted_notes = encryptNotesData(notes_data);
                 UserNotes userNotes = new UserNotes(notes_name, encrypted_notes, file_id, file_size, upload_date);
-                MyFirebaseDatabase.uploadNotes(context, userNotes, toolbar_menu, notes_title_ed, editor_title);
+                MyFirebaseDatabase.uploadNotes(NotesEditorActivity.this, userNotes, toolbar_menu, notes_title_ed, editor_title, close_activity);
+                check_changes = notes_data;
             }
         } else {
             Snackbar.make(findViewById(android.R.id.content), NO_INTERNET_CONNECTION, Snackbar.LENGTH_LONG).show();
@@ -140,9 +155,9 @@ public class NotesEditorActivity extends AppCompatActivity implements IMyConstan
 
     private void deleteNotes() {
         final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.notes_delete_msg));
-        customConfirmDialog.setBtnText("Delete")
+        customConfirmDialog.setOkBtnText("Delete")
                 .dangerBtn()
-                .setOkBtn(new View.OnClickListener() {
+                .setOkBtnListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (CheckInternetConnectivity.isInternetConnected(context)) {
@@ -201,20 +216,27 @@ public class NotesEditorActivity extends AppCompatActivity implements IMyConstan
         }
     }
 
-    private static boolean doubleBackToExitPressedOnce = false;
-
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
+        if (!check_changes.equals(getNotesData())) {
+            final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, "Do you want to save changes?");
+            customConfirmDialog.setNegBtnListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    customConfirmDialog.dismissDialog();
+                    NotesEditorActivity.super.onBackPressed();
+                }
+            });
+            customConfirmDialog.setOkBtnText("Save")
+                    .setOkBtnListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            customConfirmDialog.dismissDialog();
+                            uploadNotes(true);
+                        }
+                    });
+        } else {
             super.onBackPressed();
         }
-        doubleBackToExitPressedOnce = true;
-        Snackbar.make(findViewById(android.R.id.content), "Press back again to exit", Snackbar.LENGTH_SHORT).show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce = false;
-            }
-        }, 1500);
     }
 }

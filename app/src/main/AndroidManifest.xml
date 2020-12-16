@@ -21,6 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".view.ForgetPasswordActivity" android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".view.NotesActivity"
             android:windowSoftInputMode="stateHidden" />
@@ -44,7 +45,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.FingerprintAuthenActivity"
+        <activity
+            android:name=".view.FingerprintAuthenActivity"
             android:theme="@style/FingerprintTheme">
 
         </activity>

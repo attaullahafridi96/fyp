@@ -28,7 +28,7 @@ public final class NotesDownloader implements IMyConstants {
             new CustomMsgDialog(context, "Notes title Empty!", "Can not leave Notes title empty");
             return;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyToolbarTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyDailogTheme);
         builder.setTitle("Save File As")
                 .setSingleChoiceItems(new String[]{"Text file", "PDF file", "Word file"}, -1, new DialogInterface.OnClickListener() {
                     @Override

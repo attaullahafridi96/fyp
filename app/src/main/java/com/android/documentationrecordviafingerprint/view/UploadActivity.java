@@ -69,7 +69,7 @@ public class UploadActivity extends AppCompatActivity implements IMyConstants {
             public void onClick(View v) {
                 if (file_uri != null) {
                     final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.file_upload_msg));
-                    customConfirmDialog.setOkBtn(new View.OnClickListener() {
+                    customConfirmDialog.setOkBtnListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {

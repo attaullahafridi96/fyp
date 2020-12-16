@@ -1,15 +1,19 @@
 <resources>
     <string name="app_name">Notes via Fingerprint</string>
     <string name="image">image icon</string>
-    <string name="nav_header_title"></string>
+    <string name="nav_header_title" />
     <string name="nav_header_subtitle">email@gmail.com</string>
 
     <string name="download_msg">Are you sure to Download this file?</string>
     <string name="delete_msg">Are you sure to Delete this file from Cloud?</string>
     <string name="file_upload_msg">Do you want to Upload this file to Cloud?</string>
-    <!-- <string name="notes_download_msg">Are you sure to Download this Notes?</string>-->
+    <string name="un">firebaseaccfyp@gmail.com</string>
     <string name="notes_delete_msg">Are you sure to Delete this Notes from Cloud?</string>
+    <string name="up">OurFirebaseFYP</string>
     <string name="canNotOpenMsg">Download this file and open it with file specific App</string>
+    <string name="new_password_note">PLEASE NOTE:
+        \nNew Password will be send to the email you enter in the above textbox if an account is associated with this email, therefore enter your correct Notes via Fingerprint account email address.
+    </string>
 
     <string-array name="settings_items">
         <item>Change First Name</item>

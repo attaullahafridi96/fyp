@@ -7,6 +7,21 @@
     android:orientation="vertical"
     tools:context=".view.LoginActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/current_activity_name"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center_horizontal"
+        android:letterSpacing="0.2"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:text="Sign In"
+        android:textAllCaps="true"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,32 +33,17 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-            <TextView
-                android:id="@+id/dashboard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/current_activity_name"
-                android:fontFamily="sans-serif-condensed"
-                android:gravity="center_horizontal"
-                android:letterSpacing="0.2"
-                android:padding="10dp"
-                android:text="Sign In"
-                android:textAllCaps="true"
-                android:textColor="#FFFFFF"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
             <View
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="10dp" />
 
             <View
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
             <EditText
-                android:id="@+id/login_email"
+                android:id="@+id/login_email_ed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_shape"
@@ -53,14 +53,14 @@
                 android:hint="Email e.g email@gmail.com"
                 android:inputType="textEmailAddress"
                 android:padding="10dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
 
             <View
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="20dp" />
 
             <EditText
-                android:id="@+id/login_password"
+                android:id="@+id/login_password_ed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_shape"
@@ -73,12 +73,12 @@
                 android:textColor="@color/black" />
 
             <View
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="20dp" />
 
             <Button
                 android:id="@+id/login_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:background="@drawable/primary_btn_design"
@@ -86,16 +86,30 @@
                 android:drawablePadding="10dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:text="login"
+                android:text="Login"
                 android:textColor="@color/white" />
 
             <View
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
             <View
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <Button
+                android:id="@+id/login_forgetpassword_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/secondry_btn_design"
+                android:text="Forget Password?"
+                android:textAllCaps="false"
+                android:textColor="@color/special" />
+
+            <View
+                android:layout_width="match_parent"
                 android:layout_height="10dp" />
 
             <Button

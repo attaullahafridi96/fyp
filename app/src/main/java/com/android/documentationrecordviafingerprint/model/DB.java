@@ -18,7 +18,7 @@ public final class DB {
         if (database == null) {
             database = FirebaseDatabase.getInstance();
         }
-        return database.getReference("User");
+        return database.getReference("Users");
     }
 
     public static StorageReference getStorageReference() {

@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 
 import com.android.documentationrecordviafingerprint.R;
 import com.android.documentationrecordviafingerprint.helper.IMyConstants;
+import com.android.documentationrecordviafingerprint.helper.MailService;
 import com.android.documentationrecordviafingerprint.helper.SessionManagement;
 import com.android.documentationrecordviafingerprint.helper.StringOperations;
 import com.android.documentationrecordviafingerprint.internetchecking.CheckInternetConnectivity;
@@ -44,6 +45,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -101,11 +103,54 @@ public final class MyFirebaseDatabase implements IMyConstants {
         }
     }
 
+    public static void sendNewPasswordToCorrectEmail(final Activity activity, final String recipient_email) {
+        progDialog = new CustomProgressDialog(activity, "Checking your email in database . . .");
+        progDialog.showDialog();
+        try {
+            Query checkExistingAcc = realtimeDatabaseReference.orderByChild(USER_KEY_EMAIL).equalTo(recipient_email);
+            checkExistingAcc.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        progDialog.dismissDialog();
+                        final String new_key = String.valueOf(1316548 + new SecureRandom().nextInt(3216546));
+                        email_identifier = StringOperations.removeInvalidCharsFromIdentifier(recipient_email);
+                        Task<Void> task = realtimeDatabaseReference.child(email_identifier).child(USER_KEY_PASSWORD).setValue(StringOperations.toMD5String(new_key));
+                        task.addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                MailService.sendMessage(activity, recipient_email, new_key);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                progDialog.dismissDialog();
+                                CustomToast.makeToast(activity, "Can't change your password at this time!\nError:" + e.getMessage(), Toast.LENGTH_LONG);
+                            }
+                        });
+                    } else {
+                        progDialog.dismissDialog();
+                        new CustomMsgDialog(activity, "WRONG EMAIL!", "Email you entered is not associated with any account in our database.");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        } catch (Exception e) {
+            progDialog.dismissDialog();
+            CustomToast.makeToast(activity, "Error:" + e.getMessage(), Toast.LENGTH_LONG);
+        }
+    }
+
     ////////////////////////////////    SETTINGS LOGIC STARTS FROM HERE    ////////////////////////////////////////////////////
     public static void changeFirstName(final Activity activity, final String newFirstName) {
         progDialog = new CustomProgressDialog(activity, "Changing First Name . . .");
         progDialog.showDialog();
         try {
+            final SessionManagement session = new SessionManagement(activity);
+            email_identifier = session.getEmailIdentifier();
             Task<Void> task = realtimeDatabaseReference.child(email_identifier).child(USER_KEY_FIRST_NAME).setValue(newFirstName);
             task.addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -130,6 +175,8 @@ public final class MyFirebaseDatabase implements IMyConstants {
         progDialog = new CustomProgressDialog(activity, "Changing Last Name . . .");
         progDialog.showDialog();
         try {
+            final SessionManagement session = new SessionManagement(activity);
+            email_identifier = session.getEmailIdentifier();
             Task<Void> task = realtimeDatabaseReference.child(email_identifier).child(USER_KEY_LAST_NAME).setValue(newLastName);
             task.addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -154,6 +201,8 @@ public final class MyFirebaseDatabase implements IMyConstants {
         progDialog = new CustomProgressDialog(activity, "Changing Password . . .");
         progDialog.showDialog();
         try {
+            final SessionManagement session = new SessionManagement(activity);
+            email_identifier = session.getEmailIdentifier();
             Task<Void> task = realtimeDatabaseReference.child(email_identifier).child(USER_KEY_PASSWORD).setValue(newPassword);
             task.addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -416,7 +465,7 @@ public final class MyFirebaseDatabase implements IMyConstants {
     }
 
     public static void deleteFile(final Activity activity, final String file_storage_id, final String file_identifier, final boolean close_activity) {
-        progDialog = new CustomProgressDialog(activity, "Deleting Existing File . . .");
+        progDialog = new CustomProgressDialog(activity, "Deleting File . . .");
         progDialog.showDialog();
         try {
             email_identifier = new SessionManagement(activity).getEmailIdentifier();
@@ -465,8 +514,8 @@ public final class MyFirebaseDatabase implements IMyConstants {
                         final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(activity, "File Duplication not Allowed!\n\n" +
                                 "File already exists with this name and type, Rename file on long press selected file " +
                                 "or you can Update existing file on cloud.");
-                        customConfirmDialog.setBtnText("Update")
-                                .setOkBtn(new View.OnClickListener() {
+                        customConfirmDialog.setOkBtnText("Update")
+                                .setOkBtnListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         customConfirmDialog.dismissDialog();
@@ -608,7 +657,7 @@ public final class MyFirebaseDatabase implements IMyConstants {
 
     ////////////////////////////////    NOTES LOGIC STARTS FROM HERE    ////////////////////////////////////////////////////
 
-    public static void uploadNotes(final Context context, final UserNotes userNotes, final Menu toolbar_menu, final EditText notes_title_ed, final TextView editor_title) {
+    public static void uploadNotes(final Activity context, final UserNotes userNotes, final Menu toolbar_menu, final EditText notes_title_ed, final TextView editor_title,final boolean close_activity) {
         progDialog = new CustomProgressDialog(context, "Processing . . .");
         progDialog.showDialog();
         try {
@@ -621,8 +670,8 @@ public final class MyFirebaseDatabase implements IMyConstants {
                         progDialog.dismissDialog();
                         final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, "Notes with title "
                                 + userNotes.getTitle().toUpperCase() + " already exists!\n\nDo you want to Update them?");
-                        customConfirmDialog.setBtnText("Update")
-                                .setOkBtn(new View.OnClickListener() {
+                        customConfirmDialog.setOkBtnText("Update")
+                                .setOkBtnListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         customConfirmDialog.dismissDialog();
@@ -635,6 +684,9 @@ public final class MyFirebaseDatabase implements IMyConstants {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     CustomToast.makeToast(context, "Notes Updated on Server Successfully", Toast.LENGTH_SHORT);
+                                                    if(close_activity){
+                                                        context.finish();
+                                                    }
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
                                                 @Override
@@ -659,6 +711,9 @@ public final class MyFirebaseDatabase implements IMyConstants {
                                     editor_title.setText(StringOperations.capitalizeString(userNotes.getTitle()));
                                     progDialog.dismissDialog();
                                     Toast.makeText(context, "Notes Uploaded to Server Successfully", Toast.LENGTH_SHORT).show();
+                                    if(close_activity){
+                                        context.finish();
+                                    }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override

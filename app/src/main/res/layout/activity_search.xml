@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:visibility="gone"
-            app:popupTheme="@style/MyToolbarTheme"
+            app:popupTheme="@style/MyDailogTheme"
             app:title=" "
             app:titleTextColor="@color/white" />
     </LinearLayout>
@@ -59,9 +59,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="40dp"
-        android:contentDescription="btn"
+        android:contentDescription="@string/image"
         android:src="@android:drawable/ic_menu_edit"
-        android:tooltipText="Create New"
+        android:tooltipText="New Notes"
         android:visibility="gone"
         app:backgroundTint="@color/colorPrimaryDark" />
 </RelativeLayout>

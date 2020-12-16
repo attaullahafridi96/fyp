@@ -238,8 +238,8 @@ public class OnlineFileViewerActivity extends AppCompatActivity implements IMyCo
     private void downloadFile() {
         try {
             final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.download_msg));
-            customConfirmDialog.setBtnText("Download")
-                    .setOkBtn(new View.OnClickListener() {
+            customConfirmDialog.setOkBtnText("Download")
+                    .setOkBtnListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {
@@ -263,8 +263,8 @@ public class OnlineFileViewerActivity extends AppCompatActivity implements IMyCo
         try {
             final CustomConfirmDialog customConfirmDialog = new CustomConfirmDialog(context, getResources().getString(R.string.delete_msg));
             customConfirmDialog.dangerBtn()
-                    .setBtnText("Delete")
-                    .setOkBtn(new View.OnClickListener() {
+                    .setOkBtnText("Delete")
+                    .setOkBtnListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (CheckInternetConnectivity.isInternetConnected(context)) {

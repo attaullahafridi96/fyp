@@ -54,6 +54,7 @@ public class DashboardActivity extends AppCompatActivity implements IMyConstants
     private static BroadcastReceiver internet_broadcast;
     private static CustomProgressDialog progDialog;
     private TextView drawer_fullname_tv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +71,7 @@ public class DashboardActivity extends AppCompatActivity implements IMyConstants
         navigationView.setItemIconTintList(null);   //This is make drawer icons colorful
         MenuItem app_version_menu_item = navigationView.getMenu().findItem(R.id.app_version_item);
         View headerView = navigationView.getHeaderView(0);
-         drawer_fullname_tv = headerView.findViewById(R.id.nav_drawer_fullname);
+        drawer_fullname_tv = headerView.findViewById(R.id.nav_drawer_fullname);
         TextView email = headerView.findViewById(R.id.nav_drawer_email);
         String app_version = "";
         try {
@@ -139,8 +140,8 @@ public class DashboardActivity extends AppCompatActivity implements IMyConstants
     private void logout() {
         final CustomConfirmDialog confirmDialog = new CustomConfirmDialog(context, "Are you sure to Logout?");
         confirmDialog.dangerBtn()
-                .setBtnText("Logout")
-                .setOkBtn(new View.OnClickListener() {
+                .setOkBtnText("Logout")
+                .setOkBtnListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         confirmDialog.dismissDialog();

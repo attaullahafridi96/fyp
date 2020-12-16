@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
         <item name="android:colorControlHighlight">@color/special</item>
-        <item name="android:contextPopupMenuStyle">@style/MyToolbarTheme</item>
+        <item name="android:contextPopupMenuStyle">@style/MyDailogTheme</item>
         <item name="android:colorForeground">@color/special</item>
     </style>
 
@@ -24,7 +24,7 @@
         <item name="android:colorForeground">@color/black</item>
     </style>
 
-    <style name="MyToolbarTheme" parent="android:Theme.Material.Dialog.NoActionBar">
+    <style name="MyDailogTheme" parent="android:Theme.Material.Dialog.NoActionBar">
         <item name="android:popupBackground">@color/darkColor</item>
         <item name="android:colorBackgroundFloating">@color/darkColor</item>
     </style>

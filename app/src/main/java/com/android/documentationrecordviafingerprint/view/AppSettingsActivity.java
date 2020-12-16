@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,13 +19,14 @@ import com.android.documentationrecordviafingerprint.internetchecking.CheckInter
 import com.android.documentationrecordviafingerprint.uihelper.CustomConfirmDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomInputDialog;
 import com.android.documentationrecordviafingerprint.uihelper.CustomMsgDialog;
+import com.android.documentationrecordviafingerprint.uihelper.CustomToast;
 import com.google.android.material.snackbar.Snackbar;
 
 public class AppSettingsActivity extends AppCompatActivity implements IMyConstants {
     private Context context;
     private CustomConfirmDialog customConfirmDialog;
     private String newInput;
-
+    private static final int MIN_PASSWORD_CHARS = 6;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +61,6 @@ public class AppSettingsActivity extends AppCompatActivity implements IMyConstan
             }
         });
     }
-
 
     private void changeFirstName() {
         final CustomInputDialog customInputDialog = new CustomInputDialog(context, "Change First Name");
@@ -113,6 +114,10 @@ public class AppSettingsActivity extends AppCompatActivity implements IMyConstan
                             new CustomMsgDialog(context, "Alert", "Can't Set Empty Password.");
                             return;
                         }
+                        if (newInput.length() < MIN_PASSWORD_CHARS) {
+                            CustomToast.makeToast(context, "Password must be " + MIN_PASSWORD_CHARS + " characters or longer", Toast.LENGTH_LONG);
+                            return;
+                        }
                         if (CheckInternetConnectivity.isInternetConnected(context)) {
                             newInput = StringOperations.toMD5String(newInput);
                             MyFirebaseDatabase.changePassword(AppSettingsActivity.this, newInput);
@@ -127,9 +132,9 @@ public class AppSettingsActivity extends AppCompatActivity implements IMyConstan
         customConfirmDialog = new CustomConfirmDialog(context, "WARNING!!!" +
                 "\n\nAll your data will be deleted and can not be recovered!" +
                 "\n\nAre you sure to delete all your data?");
-        customConfirmDialog.setBtnText("Delete All Data")
+        customConfirmDialog.setOkBtnText("Delete All Data")
                 .dangerBtn()
-                .setOkBtn(new View.OnClickListener() {
+                .setOkBtnListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (CheckInternetConnectivity.isInternetConnected(context)) {
@@ -146,9 +151,9 @@ public class AppSettingsActivity extends AppCompatActivity implements IMyConstan
         customConfirmDialog = new CustomConfirmDialog(context, "WARNING!!!" +
                 "\n\nAll your data will be deleted and can not be recovered!" +
                 "\n\nAre you sure to delete your account?");
-        customConfirmDialog.setBtnText("Delete Account")
+        customConfirmDialog.setOkBtnText("Delete Account")
                 .dangerBtn()
-                .setOkBtn(new View.OnClickListener() {
+                .setOkBtnListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (CheckInternetConnectivity.isInternetConnected(context)) {

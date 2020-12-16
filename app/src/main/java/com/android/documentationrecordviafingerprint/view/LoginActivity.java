@@ -30,24 +30,24 @@ public class LoginActivity extends AppCompatActivity implements IMyConstants {
             finish();
             return;
         }
-        setContentView(R.layout.activity_user_login);
-        final EditText email = findViewById(R.id.login_email);
-        final EditText password = findViewById(R.id.login_password);
+        setContentView(R.layout.activity_login);
+        final EditText email_ed = findViewById(R.id.login_email_ed);
+        final EditText password = findViewById(R.id.login_password_ed);
         Button login_btn = findViewById(R.id.login_btn);
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String getEnteredEmail = email.getText().toString().trim();
+                String getEnteredEmail = email_ed.getText().toString().trim();
                 String getEnteredPassword = password.getText().toString();
                 if (StringOperations.isEmpty(getEnteredEmail)) {
-                    email.setError("Email is required field");
-                    email.requestFocus();
+                    email_ed.setError("Email is required field");
+                    email_ed.requestFocus();
                     Toast.makeText(context, "Email is required field", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (!StringOperations.isValidEmail(getEnteredEmail)) {
-                    email.setError("Invalid Email");
-                    email.requestFocus();
+                    email_ed.setError("Invalid Email");
+                    email_ed.requestFocus();
                     Toast.makeText(context, "Enter a Valid Email", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -71,6 +71,13 @@ public class LoginActivity extends AppCompatActivity implements IMyConstants {
             public void onClick(View v) {
                 startActivity(new Intent(context, RegistrationActivity.class));
                 finish();
+            }
+        });
+        Button login_forgetpassword_btn = findViewById(R.id.login_forgetpassword_btn);
+        login_forgetpassword_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, ForgetPasswordActivity.class));
             }
         });
     }

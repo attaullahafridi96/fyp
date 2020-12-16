@@ -14,7 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.android.documentationrecordviafingerprint.R;
 
 public final class CustomConfirmDialog extends AlertDialog {
-    private final Button btn;
+    private final Button ok_btn, neg_btn;
     private final AlertDialog alertDialog;
 
     public CustomConfirmDialog(@NonNull Context context, String msg) {
@@ -25,10 +25,10 @@ public final class CustomConfirmDialog extends AlertDialog {
         builder.setView(view);
         TextView msgTv = view.findViewById(R.id.custom_confirm_msg_tv);
         msgTv.setText(msg);
-        Button btnNeg = view.findViewById(R.id.btnNeg);
-        btn = view.findViewById(R.id.btnPos);
+        neg_btn = view.findViewById(R.id.btnNeg);
+        ok_btn = view.findViewById(R.id.btnPos);
         alertDialog = builder.create();
-        btnNeg.setOnClickListener(new View.OnClickListener() {
+        neg_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismissDialog();
@@ -37,18 +37,22 @@ public final class CustomConfirmDialog extends AlertDialog {
         alertDialog.show();
     }
 
-    public CustomConfirmDialog setBtnText(String text) {
-        btn.setText(text);
+    public CustomConfirmDialog setOkBtnText(String text) {
+        ok_btn.setText(text);
         return this;
     }
 
     public CustomConfirmDialog dangerBtn() {
-        btn.setBackgroundResource(R.drawable.danger_btn_design);
+        ok_btn.setBackgroundResource(R.drawable.danger_btn_design);
         return this;
     }
 
-    public void setOkBtn(View.OnClickListener listener) {
-        btn.setOnClickListener(listener);
+    public void setOkBtnListener(View.OnClickListener listener) {
+        ok_btn.setOnClickListener(listener);
+    }
+
+    public void setNegBtnListener(View.OnClickListener listener) {
+        neg_btn.setOnClickListener(listener);
     }
 
     public void dismissDialog() {

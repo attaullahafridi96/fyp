@@ -15,10 +15,9 @@
 
         <ImageView
             android:id="@+id/open_drawer_btn"
-            android:layout_width="0dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="0.2"
             android:background="@drawable/ripple_effect"
             android:contentDescription="@string/image"
             android:src="@drawable/ic_baseline_menu_32"

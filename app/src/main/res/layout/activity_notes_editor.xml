@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fp"
+    style="@style/AppCustomTheme"
     android:orientation="vertical"
     tools:context=".view.NotesEditorActivity">
 
@@ -15,12 +15,12 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/back_btn"
-            android:layout_width="60dp"
+            android:id="@+id/editor_back_btn"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
             android:background="@drawable/ripple_effect"
             android:contentDescription="@string/image"
+            android:layout_marginStart="10dp"
             android:src="@drawable/ic_baseline_arrow_back_ios_24"
             android:tooltipText="Go Back" />
 
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/MyToolbarTheme"
+            app:popupTheme="@style/MyDailogTheme"
             app:title=" "
             app:titleTextColor="@color/white" />
     </LinearLayout>
