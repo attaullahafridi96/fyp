@@ -39,16 +39,16 @@
         <activity
             android:name=".view.LoginActivity"
             android:windowSoftInputMode="stateHidden">
+
+        </activity>
+        <activity
+            android:name=".view.FingerprintAuthenActivity"
+            android:theme="@style/FingerprintTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".view.FingerprintAuthenActivity"
-            android:theme="@style/FingerprintTheme">
-
         </activity>
         <activity android:name=".view.DashboardActivity" />
         <activity android:name=".view.OfflineFileViewerActivity" />
